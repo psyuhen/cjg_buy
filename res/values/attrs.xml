@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+    </declare-styleable>
+    <declare-styleable name="SwitchButton">
+        <attr name="select_bg" format="color" />
+        <attr name="unselect_bg" format="color" />
+        <attr name="select_border_color" format="color" />
+        <attr name="select_cricle_color" format="color" />
+        <attr name="unselect_cricle_color" format="color" />
+        <attr name="isChecked" format="boolean"></attr>
+    </declare-styleable>
+</resources>

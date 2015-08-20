@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/whitebg"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:layout_below="@+id/title_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20.0dip" >
+
+            <TextView
+                android:id="@+id/evaluate_top_text"
+                style="@style/evaluate_top_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/evaluate_top_text" />
+
+            <RatingBar
+                android:id="@+id/evaluate_ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:layout_toRightOf="@+id/evaluate_top_text" />
+        </RelativeLayout>
+
+        <ImageView style="@style/evaluate_style_line" />
+
+        <EditText
+            android:id="@+id/evaluate_edit"
+            style="@style/evaluate_edit_style"
+            android:layout_width="wrap_content"
+            android:layout_height="200.0dip"
+            android:layout_margin="20.0dip"
+            android:background="@drawable/evaluate_edit"
+            android:hint="@string/evaluate_edit_text"
+            android:gravity="left|center_vertical"
+            android:padding="10.0dip" />
+
+        <ImageView
+            style="@style/evaluate_style_line"
+            android:layout_marginBottom="100.0dip"
+            android:layout_marginLeft="0.0dip"
+            android:layout_marginRight="0.0dip" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/item_evaluate_tip"
+            style="@style/gray_small_style"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5.0dip"
+            android:gravity="center_horizontal"
+            android:text="@string/item_evaluate_tip_text" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/whitebg" >
+
+            <Button
+                android:id="@+id/evaluate_btn"
+                style="@style/white_normal_style"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20.0dip"
+                android:background="@drawable/btn_order_submit"
+                android:text="@string/evaluate_btn_text" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

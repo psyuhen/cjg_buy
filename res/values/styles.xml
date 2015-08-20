@@ -1,0 +1,612 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:windowNoTitle">true</item>
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="title_bar_style">
+        <item name="android:background">@drawable/bg_titlebar</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/title_bar_height</item>
+    </style>
+
+    <style name="title_text_style">
+        <item name="android:textSize">20.0sp</item>
+        <item name="android:textColor">@color/red_weibo</item>
+    </style>
+
+    <!-- 顶部导航 -->
+    <style name="back_view" parent="@style/title_bar_button">
+        <item name="android:gravity">right|center</item>
+        <item name="android:background">@drawable/transparent</item>
+        <item name="android:paddingLeft">12.0dip</item>
+        <item name="android:paddingRight">0.0dip</item>
+        <item name="android:layout_marginLeft">0.0dip</item>
+        <item name="android:layout_marginRight">0.0dip</item>
+        <item name="android:minHeight">44.0dip</item>
+        <item name="android:text">@null</item>
+        <item name="android:drawableLeft">@drawable/btn_back</item>
+        <item name="android:drawablePadding">0.0dip</item>
+    </style>
+
+    <style name="text_on_button">
+        <item name="android:textSize">15.0sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:shadowRadius">0.0</item>
+    </style>
+
+    <style name="common_button" parent="@style/text_on_button">
+        <item name="android:background">@drawable/btn_common</item>
+        <item name="android:paddingLeft">6.0dip</item>
+        <item name="android:paddingRight">6.0dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">50.0dip</item>
+        <item name="android:minHeight">30.0dip</item>
+    </style>
+
+    <style name="title_bar_button" parent="@style/common_button">
+        <item name="android:textSize">20.0sp</item>
+        <item name="android:textColor">@color/orange_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@null</item>
+        <item name="android:paddingRight">17.0dip</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="footbar">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:gravity">bottom|center_horizontal</item>
+        <item name="android:paddingBottom">2dp</item>
+    </style>
+
+    <style name="goods_title">
+        <item name="android:textSize">18.0sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="level_style">
+        <item name="android:textSize">28.0sp</item>
+        <item name="android:textColor">@color/cyanine</item>
+    </style>
+
+    <style name="horn_style">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- 订单 -->
+    <style name="orders_style">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <!-- 订单的style -->
+    <style name="order_item_text">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="order_item_time_text">
+        <item name="android:textSize">12.0dip</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="order_item_line">
+        <item name="android:background">@color/order_item_line</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">0.5dip</item>
+    </style>
+
+    <style name="order_item">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/cyan</item>
+    </style>
+
+    <style name="order_item1">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="order_item2">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+    <style name="order_commication_btn_style">
+        <item name="android:textColor">#FF9F4B</item>
+        <item name="android:textSize">18.0sp</item>
+    </style>
+
+    <style name="btn_completed_style">
+        <item name="android:textColor">#DF3F43</item>
+        <item name="android:textSize">18.0sp</item>
+    </style>
+
+    <style name="me_item_rl">
+        <item name="android:background">@drawable/me_ll_selector</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/me_ll</item>
+        <item name="android:minHeight">50.0dip</item>
+        <item name="android:clickable">true</item>
+        <item name="android:paddingLeft">30.0dip</item>
+    </style>
+
+    <style name="setting_text_details_style">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20.0sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="setting_ll_style">
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">30.0dip</item>
+    </style>
+
+    <style name="setting_item_arrow">
+        <item name="android:layout_width">30.0dip</item>
+        <item name="android:layout_height">30.0dip</item>
+    </style>
+
+    <style name="setting_item_image_head">
+        <item name="android:layout_width">50.0dip</item>
+        <item name="android:layout_height">50.0dip</item>
+    </style>
+
+    <style name="left_drawer_item_line">
+        <item name="android:background">@color/left_drawer_item_line</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">1.0dip</item>
+    </style>
+
+    <style name="search_address_style">
+        <item name="android:textColor">#e27499</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="fragment_home_selector_text_style">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="item_home_style">
+        <item name="android:textColor">@color/gray_deep</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="item_home_buy_btn_text_style">
+        <item name="android:textSize">20.0sp</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="goods_item_tag_style">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textColor">@color/whitebg</item>
+    </style>
+
+    <style name="goods_item_weight_style">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textColor">@color/gray_deep</item>
+    </style>
+
+    <style name="goods_item_price_style">
+        <item name="android:textSize">18.0sp</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="goods_item_title_style">
+        <item name="android:textSize">18.0sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="goods_item_stock_style">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="order_details_black_text">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="order_details_gray_text">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+    <style name="order_details_line">
+        <item name="android:background">@color/gray_text</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">2.0dip</item>
+        <item name="android:layout_marginLeft">7.0dip</item>
+        <item name="android:layout_marginRight">7.0dip</item>
+    </style>
+
+    <style name="order_details_red_text">
+        <item name="android:textSize">18.0dip</item>
+        <item name="android:textColor">#E61388</item>
+    </style>
+
+    <style name="evaluate_top_text_style">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="evaluate_style_line">
+        <item name="android:background">@color/gray</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">2.0dip</item>
+        <item name="android:layout_marginLeft">20.0dip</item>
+        <item name="android:layout_marginRight">20.0dip</item>
+    </style>
+
+    <style name="evaluate_edit_style">
+        <item name="android:textSize">20.0sp</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+    <style name="goods_view_title">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="goods_view_price">
+        <item name="android:textSize">18.0dip</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="goods_view_join_style">
+        <item name="android:textSize">18.0dip</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="goods_view_style">
+        <item name="android:textSize">14.0dip</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="decorate_small_black_style">
+        <item name="android:textSize">14.0dip</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="submit_evaluate_style">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/whitebg</item>
+    </style>
+
+    <style name="login_text_style">
+        <item name="android:textSize">20.0dip</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+    <style name="login_hint_style">
+        <item name="android:textSize">20.0dip</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="login_line">
+        <item name="android:background">@color/gray</item>
+        <item name="android:layout_width">400.0dip</item>
+        <item name="android:layout_height">3.0dip</item>
+        <item name="android:layout_gravity">right</item>
+    </style>
+
+    <style name="login_register_retrieve_style">
+        <item name="android:textSize">20.0dip</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="login_bottom_text_style">
+        <item name="android:textSize">20.0dip</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+    <style name="register_top_text_style">
+        <item name="android:textSize">20.0dip</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="register_details_text_style">
+        <item name="android:textSize">18.0dip</item>
+        <item name="android:textColor">#cfc5ba</item>
+    </style>
+
+    <style name="register_edit_style">
+        <item name="android:textSize">20.0dip</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+    <style name="register_btn_text">
+        <item name="android:textSize">20.0dip</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="register_checkbox_style">
+        <item name="android:textSize">20.0dip</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="register_bottom_text">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">#aeae80</item>
+        <item name="android:layout_margin">10.0dip</item>
+    </style>
+
+    <style name="defaultSwitchButton">
+        <item name="select_bg">@color/default_switch_button_select_bg</item>
+        <item name="unselect_bg">@color/default_switch_button_unselect_bg</item>
+        <item name="select_border_color">@color/default_switch_button_border_color</item>
+        <item name="select_cricle_color">@color/default_switch_button_select_color</item>
+        <item name="unselect_cricle_color">@color/default_switch_button_unselect_color</item>
+        <item name="isChecked">true</item>
+    </style>
+
+    <style name="category_tag_style">
+        <item name="android:textSize">12.0dip</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="category_item_line">
+        <item name="android:layout_width">4.0dip</item>
+        <item name="android:background">@color/orange_text</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_marginTop">5.0dip</item>
+        <item name="android:layout_marginBottom">5.0dip</item>
+    </style>
+
+    <style name="city_button_style">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="city_head_text_style">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="submit_order_style">
+        <item name="android:textSize">20.0dip</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="bottom_text_style">
+        <item name="android:textSize">12.0dip</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="goods_calculate_style">
+        <item name="android:textSize">18.0dip</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="my_order_normal_style">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+    <style name="my_order_orange_style">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/orange_text</item>
+    </style>
+
+    <style name="my_order_top_line">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:background">@color/gray</item>
+        <item name="android:layout_height">1.0dip</item>
+        <item name="android:layout_marginLeft">5.0dip</item>
+        <item name="android:layout_marginRight">5.0dip</item>
+    </style>
+
+    <style name="myshop_title_style">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="cart_goods_list_text_style">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="myorder_wantbuy_text">
+        <item name="android:textSize">20.0dip</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="me_ll_style">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20.0sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">40.0dip</item>
+    </style>
+
+   <!--  <style name="left_drawer_item_line">
+        <item name="android:background">@color/left_drawer_item_line</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">1.0dip</item>
+    </style> -->
+
+    <!-- <style name="me_item_rl">
+        <item name="android:background">@drawable/me_ll_selector</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/me_ll</item>
+        <item name="android:minHeight">50.0dip</item>
+        <item name="android:clickable">true</item>
+        <item name="android:paddingLeft">30.0dip</item>
+    </style> -->
+
+    <style name="me_item_imaga_style">
+        <item name="android:layout_width">40.0dip</item>
+        <item name="android:layout_height">40.0dip</item>
+        <item name="android:paddingLeft">30.0dip</item>
+    </style>
+
+    <style name="me_item_arrow">
+        <item name="android:layout_width">30.0dip</item>
+        <item name="android:layout_height">30.0dip</item>
+    </style>
+
+    <style name="goods_cart_style">
+        <item name="android:textSize">18.0dip</item>
+        <item name="android:textColor">@color/whitebg</item>
+    </style>
+
+    <style name="white_normal_style">
+        <item name="android:textSize">18.0dip</item>
+        <item name="android:textColor">@color/whitebg</item>
+    </style>
+
+    <style name="black_normal_style">
+        <item name="android:textSize">18.0dip</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="gray_small_style">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+    <style name="item_address_line">
+        <item name="android:background">@drawable/me_ll_selector</item>
+        <item name="android:layout_width">1.0dip</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_marginTop">15.0dip</item>
+        <item name="android:layout_marginBottom">15.0dip</item>
+    </style>
+
+    <style name="orange_small_style">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/orange_text</item>
+    </style>
+
+    <style name="black_big_style">
+        <item name="android:textSize">20.0dip</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="white_big_style">
+        <item name="android:textSize">20.0dip</item>
+        <item name="android:textColor">@color/whitebg</item>
+    </style>
+
+    <style name="dialog_item_line">
+        <item name="android:background">@color/gray</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">2.0dip</item>
+    </style>
+
+    <style name="horizontal_two_style_line">
+        <item name="android:background">@color/gray_bg</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">2.0dip</item>
+    </style>
+
+    <style name="black_giant_style">
+        <item name="android:textSize">45.0dip</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="gray_one_style_line">
+        <item name="android:background">@color/gray_bg</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">1.0dip</item>
+    </style>
+
+    <style name="title_right_style">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/blue_text</item>
+    </style>
+
+    <style name="chat_item_title">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="green_normal_style">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/green</item>
+    </style>
+
+    <style name="black_small_style">
+        <item name="android:textSize">14.0dip</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="cyan_small_style">
+        <item name="android:textSize">14.0dip</item>
+        <item name="android:textColor">@color/cyan</item>
+    </style>
+
+    <style name="CustomTopRadioBtn">
+        <item name="android:button">@null</item>
+        <item name="android:drawableLeft">@drawable/search_radio_0</item>
+        <item name="android:background">@color/whitebg</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="CustomBottomRadioBtn">
+        <item name="android:button">@null</item>
+        <item name="android:drawableLeft">@drawable/search_radio_1</item>
+        <item name="android:background">@color/whitebg</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+      <style name="CustomBlackRadioBtn">
+        <item name="android:button">@null</item>
+        <item name="android:drawableLeft">@drawable/search_radio_1</item>
+        <item name="android:background">#130c0e</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    
+      
+       <style name="left_drawer_item_layout">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/left_item_bg</item>
+        <item name="android:paddingLeft">40.0dip</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">50.0dip</item>
+        <item name="android:clickable">true</item>
+    </style>
+     <style name="left_drawer_item_text">
+        <item name="android:textSize">15.0sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">9.0dip</item>
+        <item name="android:paddingBottom">9.0dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawablePadding">25.0dip</item>
+    </style>
+
+</resources>

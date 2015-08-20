@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar" />
+
+    <RelativeLayout
+        android:id="@+id/login_top_rl"
+        android:layout_width="match_parent"
+        android:layout_height="120.0dip"
+        android:background="@drawable/head_bg" >
+
+        <ImageView
+            android:id="@+id/login_top_head"
+            android:layout_width="100.0dip"
+            android:layout_height="100.0dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="40.0dip"
+            android:background="@drawable/login_head_icon" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/login_center_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10.0dip"
+        android:background="@color/white_bg"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/login_username_rl"
+            android:layout_width="match_parent"
+            android:layout_height="60.0dip"
+            android:background="@color/white" >
+
+            <TextView
+                android:id="@+id/login_username_text"
+                style="@style/login_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30.0dip"
+                android:text="@string/login_username_text" />
+
+            <EditText
+                android:id="@+id/login_username_edit"
+                style="@style/login_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:layout_toRightOf="@+id/login_username_text"
+                android:background="@color/white_bg"
+                android:hint="@string/login_username_edit_hint" />
+        </RelativeLayout>
+
+        <ImageView style="@style/login_line" />
+
+        <RelativeLayout
+            android:id="@+id/login_password_rl"
+            android:layout_width="match_parent"
+            android:layout_height="60.0dip"
+            android:background="@color/white" >
+
+            <TextView
+                android:id="@+id/login_password_text"
+                style="@style/login_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30.0dip"
+                android:text="@string/login_password_text" />
+
+            <EditText
+                android:id="@+id/login_password_edit"
+                style="@style/login_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:layout_toRightOf="@+id/login_password_text"
+                android:background="@color/white_bg"
+                android:hint="@string/login_password_edit_hint"
+                android:inputType="textPassword" />
+
+            <com.cjhbuy.utils.SwitchButton
+                style="@style/defaultSwitchButton"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20.0dip"
+                android:background="@drawable/switch_btn" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/login_btn"
+        style="@style/login_hint_style"
+        android:layout_width="500.0dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20.0dip"
+        android:background="@drawable/btn_login"
+        android:text="@string/login_btn_text" />
+
+    <RelativeLayout
+        android:id="@+id/login_registe_retrieve"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20.0dip" >
+
+        <TextView
+            android:id="@+id/login_registe"
+            style="@style/login_register_retrieve_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20.0dip"
+            android:text="@string/login_registe_text" />
+
+        <TextView
+            android:id="@+id/login_retrieve"
+            style="@style/login_register_retrieve_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20.0dip"
+            android:text="@string/login_retrieve_text"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" />
+
+    <LinearLayout
+        android:id="@+id/login_bottom_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="70.0dip"
+        android:background="@color/white_bg"
+        android:baselineAligned="true"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <RelativeLayout
+            android:id="@+id/login_byweixin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/image_weixin_icon"
+                android:layout_width="40.0dip"
+                android:layout_height="40.0dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:background="@drawable/weixin_icon" />
+
+            <TextView
+                android:id="@+id/login_byweixin_text"
+                style="@style/login_bottom_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/image_weixin_icon"
+                android:text="@string/login_by_weixin_text" />
+
+            <ImageView
+                android:id="@+id/weixin_image_divider"
+                android:layout_width="wrap_content"
+                android:layout_height="40.0dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ll_layout_divider" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/login_byqq"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/image_qq_icon"
+                android:layout_width="40.0dip"
+                android:layout_height="40.0dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:background="@drawable/qq_icon" />
+
+            <TextView
+                android:id="@+id/login_byqq_text"
+                style="@style/login_bottom_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/image_qq_icon"
+                android:text="@string/login_by_qq_text" />
+
+            <ImageView
+                android:id="@+id/qq_image_divider"
+                android:layout_width="wrap_content"
+                android:layout_height="40.0dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ll_layout_divider" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/login_byother"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/login_byother_text"
+                style="@style/login_bottom_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20.0dip"
+                android:text="@string/login_by_other_text" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

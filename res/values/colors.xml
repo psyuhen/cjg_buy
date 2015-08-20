@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="white">#ffffffff</color>
+    <color name="red_weibo">#fffa4c3d</color>
+    <color name="transparent">#00000000</color>
+    <color name="cyanine">#102b6a</color>
+    <color name="white_bg">#00FFFFFF</color>
+    <!-- <color name="whitebg">#FFFFFF</color> -->
+    <!-- 文本字体 -->
+    <color name="black_text">#130c0e</color>
+    <color name="gray_text">#a1a3a6</color>
+    <color name="gray_hint">#bcbcbc</color>
+    <color name="gray_deep">#787878</color>
+    <color name="gray_line">#dadada</color>
+    <color name="gray_bg">#e8eaea</color>
+    <color name="red">#ff0000</color>
+    <color name="black">#ff000000</color>
+    <color name="order_item_line">#ff272727</color>
+    <color name="cyan">#009ad6</color>
+    <color name="skin">#fedcbd</color>
+    <!--  -->
+    <color name="order_communication_bg">#E7C179</color>
+    <color name="order_complete_bg">#E76E72</color>
+    <color name="gray">#fff4f4f4</color>
+    <color name="orange">#faa755</color>
+    <color name="orange_text">#ff7802</color>
+    <color name="blue_text">#0d0e8d</color>
+    <color name="left_drawer_item_line">#E4E4E4</color>
+    <!-- 主页 -->
+    <color name="group_item_bg">#E5E5E5</color>
+    <color name="group_item_pressed_bg">#F3F3F3</color>
+    <color name="child_item_bg">#F3F3F3</color>
+    <color name="child_item_diveder">#D6D6D5</color>
+    <color name="list_item_text_pressed_bg">#FF822E</color>
+    <color name="tab_text_color">#787878</color>
+    <color name="tab_text_pressed_color">#CD0000</color>
+    
+      <!-- SwitchButton -->
+    <color name="default_switch_button_unselect_bg">#d3d7d4</color>
+    <color name="default_switch_button_select_bg">#d3d7d4</color>
+    <color name="default_switch_button_border_color">#d3d7d4</color>
+    <color name="default_switch_button_select_color">#ffffff</color>
+    <color name="default_switch_button_unselect_color">#1d953f</color>
+    <color name="swithbutton_bg">#d3d7d4</color>
+
+    <!-- dialog -->
+
+    <color name="dialog_top_bg">#efefef</color>
+    <color name="dialog_border">#d7d7d7</color>
+    <color name="whitebg">#ffffff</color>
+    <color name="green">#1d953f</color>
+    
+     <color name="default_ev_border_color">#CCCCCC</color>
+    <dimen name="default_ev_border_width">5dp</dimen>
+    <dimen name="default_ev_border_radius">3dp</dimen>
+    <color name="default_ev_password_color">#CCCCCC</color>
+    <dimen name="default_ev_password_width">10dp</dimen>
+    <dimen name="default_ev_password_radius">3dp</dimen>
+    <integer name="default_ev_password_length">6</integer>
+
+    <dimen name="custom_ev_border_width">10dp</dimen>
+    <dimen name="custom_ev_border_radius">10dp</dimen>
+    <dimen name="custom_ev_password_width">10dp</dimen>
+
+</resources>

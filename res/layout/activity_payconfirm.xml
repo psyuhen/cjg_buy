@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/whitebg"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar" />
+
+    <TextView
+        android:id="@+id/pay_confirm_shop_name"
+        style="@style/black_big_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20.0dip" />
+
+    <TextView
+        android:id="@+id/pay_confirm_price"
+        style="@style/black_giant_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20.0dip" />
+
+    <ImageView style="@style/gray_one_style_line"
+        android:layout_marginTop="8.0dip" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5.0dip" >
+
+        <TextView
+            android:id="@+id/pay_confirm_receive_text"
+            style="@style/gray_small_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5.0dip"
+            android:text="@string/pay_confirm_receive_text" />
+
+        <TextView
+            android:id="@+id/pay_confirm_receive"
+            style="@style/black_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10.0dip" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5.0dip" >
+
+        <TextView
+            android:id="@+id/pay_confirm_goods_text"
+            style="@style/gray_small_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5.0dip"
+            android:text="@string/pay_confirm_goods_text" />
+
+        <TextView
+            android:id="@+id/pay_confirm_goods"
+            style="@style/black_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10.0dip" />
+    </RelativeLayout>
+
+    <ImageView
+        style="@style/gray_one_style_line"
+        android:layout_marginTop="5.0dip" />
+
+    <Button
+        android:id="@+id/pay_btn"
+        style="@style/white_normal_style"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12.0dip"
+        android:background="@drawable/btn_green"
+        android:text="@string/pay_btn_text" />
+
+</LinearLayout>

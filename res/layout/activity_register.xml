@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:id="@+id/register_top_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/register_top_height"
+        android:background="@drawable/register_head_bg"
+        android:orientation="horizontal" android:visibility="gone">
+
+        <TextView
+            android:id="@+id/register_tel_text"
+            style="@style/register_top_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/register_tel_text" />
+
+        <TextView
+            android:id="@+id/register_sms_text"
+            style="@style/register_top_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/register_sms_text" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/resiger_center_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20.0dip"
+        android:layout_marginRight="20.0dip"
+        android:layout_marginTop="20.0dip"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/register_details_text"
+            style="@style/register_details_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_details_text" android:visibility="gone"/>
+
+        <EditText
+            android:id="@+id/register_tel_edit"
+            style="@style/register_edit_style"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/regiset_edit_height"
+            android:layout_marginTop="20.0dip"
+            android:background="@drawable/register_edit"
+            android:hint="@string/register_tel_hint_text"
+            android:paddingLeft="10.0dip" />
+
+         <!-- 输入密码以及重复输入密码 -->
+        <EditText
+            android:id="@+id/register_password"
+            style="@style/register_edit_style"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/regiset_edit_height"
+            android:layout_marginTop="20.0dip"
+            android:background="@drawable/register_edit"
+            android:hint="@string/login_password_edit_hint"
+            android:inputType="textPassword"
+            android:paddingLeft="10.0dip" />
+        
+        <EditText
+            android:id="@+id/register_password_comfirm"
+            style="@style/register_edit_style"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/regiset_edit_height"
+            android:layout_marginTop="20.0dip"
+            android:background="@drawable/register_edit"
+            android:hint="@string/register_password_comfirm_hint_text"
+            android:inputType="textPassword"
+            android:paddingLeft="10.0dip" />
+        
+        <LinearLayout
+            android:id="@+id/register_telcode_rl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20.0dip"
+            android:orientation="horizontal"  android:visibility="gone">
+
+            <EditText
+                android:id="@+id/register_telcode_edit"
+                style="@style/register_edit_style"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/regiset_edit_height"
+                android:layout_weight="2"
+                android:background="@drawable/register_edit"
+                android:hint="@string/register_telcode_hint_text"
+                android:paddingLeft="10.0dip" />
+
+            <Button
+                android:id="@+id/register_telcode_btn"
+                style="@style/register_btn_text"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/regiset_edit_height"
+                android:layout_marginLeft="10.0dip"
+                android:layout_weight="1"
+                android:background="@drawable/btn_register"
+                android:text="@string/send_telcode" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/register_code_rl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20.0dip"
+            android:orientation="horizontal" android:visibility="gone">
+
+            <EditText
+                android:id="@+id/register_code_edit"
+                style="@style/register_edit_style"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/regiset_edit_height"
+                android:layout_weight="2"
+                android:background="@drawable/register_edit"
+                android:hint="@string/register_code_hint_text"
+                android:paddingLeft="10.0dip" />
+
+            <ImageView
+                android:id="@+id/register_icon_iamge"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/regiset_edit_height"
+                android:layout_marginLeft="10.0dip"
+                android:layout_weight="1"
+                android:background="@drawable/register_code_icon" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/register_checkbox_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.0dip"
+            android:orientation="horizontal" >
+
+            <CheckBox
+                android:id="@+id/register_agree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true" />
+
+            <TextView
+                style="@style/register_checkbox_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5.0dip"
+                android:text="@string/register_checkbox_text" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/register_confirm_btn"
+            style="@style/register_btn_text"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/regiset_edit_height"
+            android:layout_marginTop="20.0dip"
+            android:background="@drawable/btn_register"
+            android:text="@string/register_confirm_text" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/register_bottom_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20.0dip"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/register_bottom_text1"
+            style="@style/register_bottom_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_bottom_text1" />
+
+        <TextView
+            android:id="@+id/register_bottom_text2"
+            style="@style/register_bottom_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_bottom_text2" />
+
+        <TextView
+            android:id="@+id/register_bottom_text3"
+            style="@style/register_bottom_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_bottom_text3" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/gray" >
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:id="@+id/aboutus_buttomLl"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4.0dip"
+            android:text="@string/aboutus_email"
+            android:textColor="@color/gray_deep"
+            android:textSize="14.0sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4.0dip"
+            android:text="@string/aboutus_tel"
+            android:textColor="@color/gray_deep"
+            android:textSize="14.0sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12.0dip"
+            android:layout_marginTop="6.0dip"
+            android:text="@string/aboutus_copyright"
+            android:textColor="@color/gray_deep"
+            android:textSize="12.0sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/aboutus_iconRl"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_bar"
+        android:layout_marginTop="30.0dip" >
+
+        <ImageView
+            android:id="@+id/aboutus_iconIv"
+            android:layout_width="90.0dip"
+            android:layout_height="90.0dip"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/login_head_icon" />
+
+        <TextView
+            android:id="@+id/choumei"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/aboutus_iconIv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="6.0dip"
+            android:text="@string/title_text"
+            android:textColor="@color/black_text"
+            android:textSize="21.5sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/choumei"
+            android:layout_centerHorizontal="true"
+            android:text="@string/aboutus_version"
+            android:textColor="@color/gray_text"
+            android:textSize="14.0sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/aboutus_buttomLl"
+        android:layout_below="@+id/aboutus_iconRl" 
+        android:layout_marginTop="15.0dip">
+
+        <TextView
+            android:id="@+id/aboutus_intr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/aboutus_intro"
+            android:textColor="@color/gray_deep"
+            android:textSize="16.0sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

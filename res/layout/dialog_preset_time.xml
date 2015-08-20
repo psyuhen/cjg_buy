@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/whitebg"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60.0dip"
+        android:background="@color/cyan" >
+
+        <TextView
+            android:id="@+id/preset_time_title_text"
+            style="@style/white_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12.0dip"
+            android:text="@string/preset_time_title_text" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60.0dip" >
+
+        <EditText
+            android:id="@+id/showdate"
+            style="@style/gray_small_style"
+            android:layout_width="fill_parent"
+            android:layout_height="50.0dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginRight="120.0dip"
+            android:background="@drawable/edit_address"
+            android:hint="@string/showdate_hint"
+            android:paddingLeft="6.0dip" />
+
+        <Button
+            android:id="@+id/pickdate"
+            style="@style/white_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10.0dip"
+            android:background="@drawable/btn_login"
+            android:padding="5.0dip"
+            android:text="@string/pickdate_text" >
+        </Button>
+    </RelativeLayout>
+
+    <ImageView style="@style/gray_one_style_line" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60.0dip" >
+
+        <EditText
+            android:id="@+id/showtime"
+            style="@style/gray_small_style"
+            android:layout_width="fill_parent"
+            android:layout_height="50.0dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginRight="120.0dip"
+            android:background="@drawable/edit_address"
+            android:hint="@string/showtime_hint"
+            android:paddingLeft="6.0dip" />
+
+        <Button
+            android:id="@+id/picktime"
+            style="@style/white_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10.0dip"
+            android:background="@drawable/btn_login"
+            android:padding="5.0dip"
+            android:text="@string/picktime_text" >
+        </Button>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/preset_time_confirm_btn"
+        style="@style/white_normal_style"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10.0dip"
+        android:background="@drawable/btn_order_submit"
+        android:padding="5.0dip"
+        android:text="@string/preset_time_confirm" >
+    </Button>
+
+</LinearLayout>

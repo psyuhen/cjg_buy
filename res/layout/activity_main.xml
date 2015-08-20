@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SplashActivity" >
+
+   
+
+    <RelativeLayout
+        android:id="@+id/aboveLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/main_head"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/fragmentRoot"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" />
+
+        <RelativeLayout
+            android:id="@+id/bottomList"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/black"
+            android:orientation="horizontal" >
+
+            <RadioGroup
+                android:id="@+id/bottom_group"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="7.5dip"
+                android:layout_marginLeft="12.5dip"
+                android:layout_marginRight="12.5dip"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/rbHome"
+                    style="@style/footbar"
+                    android:layout_marginRight="60.0dip"
+                    android:checked="true"
+                    android:drawableTop="@drawable/main_bottom_home"
+                    android:paddingTop="8dp" />
+
+                <RadioButton
+                    android:id="@+id/rbOrder"
+                    style="@style/footbar"
+                    android:drawableTop="@drawable/main_bottom_nav"
+                    android:paddingTop="8dp" />
+
+                <RadioButton
+                    android:id="@+id/rbMe"
+                    style="@style/footbar"
+                    android:layout_marginLeft="60.0dip"
+                    android:drawableTop="@drawable/main_bottom_me"
+                    android:paddingTop="8dp" />
+            </RadioGroup>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/title_bar"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/main_head"
+        layout="@layout/main_head" />
+
+    <LinearLayout
+        android:id="@+id/center_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/order_top_rl"
+            android:layout_width="match_parent"
+            android:layout_height="150.0dip"
+            android:background="@drawable/head_bg" android:visibility="gone" >
+
+            <com.cjhbuy.common.CircleImageView
+                android:id="@+id/order_head"
+                android:layout_width="100dip"
+                android:layout_height="100.0dip"
+                android:layout_centerVertical="true"
+                android:background="@drawable/login_head_icon" 
+                android:visibility="gone">
+            </com.cjhbuy.common.CircleImageView>
+
+            <RelativeLayout
+                android:id="@+id/order_top_center_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20.0dip"
+                android:layout_toRightOf="@+id/order_head"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/order_title"
+                    style="@style/goods_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35.0dip"
+                    android:text="@string/order_title_text" />
+
+                <ImageView
+                    android:id="@+id/order_stars"
+                    android:layout_width="40.0dip"
+                    android:layout_height="40.0dip"
+                    android:layout_below="@+id/order_title"
+                    android:layout_marginTop="8.0dip"
+                    android:background="@drawable/star" />
+
+                <TextView
+                    android:id="@+id/order_level"
+                    style="@style/level_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/order_title"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginTop="8.0dip"
+                    android:layout_toRightOf="@+id/order_stars"
+                    android:text="@string/goods_level_text" />
+
+                <ImageView
+                    android:id="@+id/order_horn"
+                    android:layout_width="20.0dip"
+                    android:layout_height="20.0dip"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="30.0dip"
+                    android:background="@drawable/horn_icon"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/order_horn_text"
+                    style="@style/horn_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="30.0dip"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_toRightOf="@+id/order_horn"
+                    android:text="@string/order_horn_text"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/order_top_right_image"
+                android:layout_width="30.0dip"
+                android:layout_height="60.0dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10.0dip"
+                android:background="@drawable/arrow_right" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/order_bottom_rl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:id="@+id/order_center_top_ll"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white_bg"
+                android:orientation="horizontal" >
+
+                <RelativeLayout
+                    android:id="@+id/order_left_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:clickable="true" >
+
+                    <ImageView
+                        android:id="@+id/left_image"
+                        android:layout_width="40.0dip"
+                        android:layout_height="40.0dip"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="30.0dip"
+                        android:background="@drawable/item_running_icon" />
+
+                    <TextView
+                        android:id="@+id/order_left_num"
+                        style="@style/orders_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:layout_toRightOf="@+id/left_image"
+                        android:text="@string/order_sell_num_text" />
+
+                    <TextView
+                        android:id="@+id/order_left_text"
+                        style="@style/orders_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/order_left_num"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginTop="5.0dip"
+                        android:layout_toRightOf="@+id/left_image"
+                        android:text="@string/order_sell_text" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/order_right_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3.0dip"
+                    android:layout_weight="1"
+                    android:background="@color/white" >
+
+                    <ImageView
+                        android:id="@+id/right_image"
+                        android:layout_width="40.0dip"
+                        android:layout_height="40.0dip"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="30.0dip"
+                        android:background="@drawable/item_complete_icon" />
+
+                    <TextView
+                        android:id="@+id/order_right_num"
+                        style="@style/orders_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:layout_toRightOf="@+id/right_image"
+                        android:text="@string/order_complete_num_text" />
+
+                    <TextView
+                        android:id="@+id/order_right_text"
+                        style="@style/orders_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/order_right_num"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginTop="5.0dip"
+                        android:layout_toRightOf="@+id/right_image"
+                        android:text="@string/order_complete_text" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/line_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="10.0dip"
+                android:layout_below="@+id/order_center_top_ll"
+                android:background="@color/white_bg"
+                android:orientation="horizontal" >
+
+                <View
+                    android:id="@+id/order_left_line"
+                    android:layout_width="50.0dip"
+                    android:layout_height="10.0dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/red_line"
+                    android:visibility="visible" />
+
+                <View
+                    android:id="@+id/order_right_line"
+                    android:layout_width="50.0dip"
+                    android:layout_height="10.0dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/red_line"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/order_viewpager"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/line_rl"
+                android:background="@color/white" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

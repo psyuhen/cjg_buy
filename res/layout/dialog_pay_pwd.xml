@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/whitebg"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip" >
+
+        <ImageView
+            android:id="@+id/pay_pwd_image"
+            android:layout_width="40.0dip"
+            android:layout_height="40.0dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10.0dip"
+            android:background="@drawable/head_icon2" />
+
+        <TextView
+            android:id="@+id/pay_pwd_text"
+            style="@style/green_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5.0dip"
+            android:layout_toRightOf="@+id/pay_pwd_image"
+            android:text="@string/pay_pwd_text" />
+
+        <ImageButton
+            android:id="@+id/cancel_dialog_icon_btn"
+            android:layout_width="40.0dip"
+            android:layout_height="40.0dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10.0dip"
+            android:background="@drawable/cancel_dialog_icon" />
+    </RelativeLayout>
+
+    <ImageView style="@style/gray_one_style_line" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/pay_pwd_shop_name"
+            style="@style/black_small_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15.0dip" />
+
+        <TextView
+            android:id="@+id/pay_pwd_price"
+            style="@style/black_big_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pay_pwd_shop_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5.0dip" />
+
+        <com.cjhbuy.common.PwdInputView
+            android:id="@+id/password_edit"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_below="@+id/pay_pwd_price"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="15dp"
+            android:inputType="number"
+            android:maxLength="8"
+            android:padding="0dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/password_edit"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10.0dip"
+            android:layout_marginTop="10.0dip"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/pay_way_bank"
+                style="@style/black_small_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pay_way_bank_text" />
+
+            <TextView
+                android:id="@+id/pay_way_choose_bank"
+                style="@style/cyan_small_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pay_way_choose_bank_text" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/main_head"
+        layout="@layout/main_head" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <RelativeLayout
+            android:id="@+id/setting_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:id="@+id/setting_ll1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:id="@+id/setting_item_me_rl"
+                    style="@style/me_item_rl" >
+
+                    <ImageView 
+                        android:id="@+id/setting_me_myorder"
+                        android:layout_width="@dimen/setting_me_image_width"
+                        android:layout_height="@dimen/setting_me_image_height"
+                        android:background="@drawable/me_order_icon"
+                        android:layout_marginLeft="5.0dip"
+                        />
+                    
+                    <TextView
+                        android:id="@+id/setting_me_textview"
+                        style="@style/setting_ll_style"
+                        android:layout_centerVertical="true"
+                        android:text="@string/setting_me_text" />
+
+
+                    <ImageView
+                        android:id="@+id/setting_me_image_arrow"
+                        style="@style/setting_item_arrow"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30.0dip"
+                        android:background="@drawable/arrow_right" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/setting_me_line"
+                    style="@style/left_drawer_item_line" />
+
+                <RelativeLayout
+                    android:id="@+id/setting_item_name_rl"
+                    style="@style/me_item_rl" >
+
+                    <TextView
+                        android:id="@+id/setting_name_textview"
+                        style="@style/setting_ll_style"
+                        android:layout_centerVertical="true"
+                        android:text="@string/setting_name_text" />
+
+                    <TextView
+                        android:id="@+id/setting_name_text_details"
+                        style="@style/setting_text_details_style"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_toLeftOf="@+id/setting_name_image_arrow"
+                        android:text="张店长" />
+
+                    <ImageView
+                        android:id="@+id/setting_name_image_arrow"
+                        style="@style/setting_item_arrow"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30.0dip"
+                        android:background="@drawable/arrow_icon" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/setting_me_line"
+                    style="@style/left_drawer_item_line" />
+
+                <RelativeLayout
+                    android:id="@+id/setting_item_city_rl"
+                    style="@style/me_item_rl" >
+
+                    <TextView
+                        android:id="@+id/setting_city_textview"
+                        style="@style/setting_ll_style"
+                        android:layout_centerVertical="true"
+                        android:text="@string/setting_city_text" />
+
+                    <TextView
+                        android:id="@+id/setting_city_text_details"
+                        style="@style/setting_text_details_style"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_toLeftOf="@+id/setting_city_image_arrow"
+                        android:text="广州" />
+
+                    <ImageView
+                        android:id="@+id/setting_city_image_arrow"
+                        style="@style/setting_item_arrow"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30.0dip"
+                        android:background="@drawable/arrow_right" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_ll2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/setting_ll1"
+                android:layout_marginTop="30.0dip"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <RelativeLayout
+                    android:id="@+id/setting_item_card_rl"
+                    style="@style/me_item_rl" >
+
+                    <TextView
+                        android:id="@+id/setting_card_textview"
+                        style="@style/setting_ll_style"
+                        android:layout_centerVertical="true"
+                        android:text="@string/setting_card_text" />
+
+                    <TextView
+                        android:id="@+id/setting_card_text_details"
+                        style="@style/setting_text_details_style"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_toLeftOf="@+id/setting_card_image_arrow"
+                        android:text="6225********3422" />
+
+                    <ImageView
+                        android:id="@+id/setting_card_image_arrow"
+                        style="@style/setting_item_arrow"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30.0dip"
+                        android:background="@drawable/arrow_right" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/setting_card_line"
+                    style="@style/left_drawer_item_line" />
+
+                <RelativeLayout
+                    android:id="@+id/setting_item_password_rl"
+                    style="@style/me_item_rl" >
+
+                    <TextView
+                        android:id="@+id/setting_password_textview"
+                        style="@style/setting_ll_style"
+                        android:layout_centerVertical="true"
+                        android:text="@string/setting_password_text" />
+
+                    <TextView
+                        android:id="@+id/setting_password_text_details"
+                        style="@style/setting_text_details_style"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_toLeftOf="@+id/setting_password_image_arrow"
+                        android:text="" />
+
+                    <ImageView
+                        android:id="@+id/setting_password_image_arrow"
+                        style="@style/setting_item_arrow"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30.0dip"
+                        android:background="@drawable/arrow_right" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_ll3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/setting_ll2"
+                android:layout_marginTop="30.0dip"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <RelativeLayout
+                    android:id="@+id/setting_item_remind_rl"
+                    style="@style/me_item_rl" >
+
+                    <TextView
+                        android:id="@+id/setting_remind_textview"
+                        style="@style/setting_ll_style"
+                        android:layout_centerVertical="true"
+                        android:text="@string/setting_remind_text" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/remind_line"
+                    style="@style/left_drawer_item_line" />
+
+                <RelativeLayout
+                    android:id="@+id/setting_item_clearcache_rl"
+                    style="@style/me_item_rl" >
+
+                    <TextView
+                        android:id="@+id/setting_clearcache_textview"
+                        style="@style/setting_ll_style"
+                        android:layout_centerVertical="true"
+                        android:text="@string/setting_clearcache_text" />
+
+                    <TextView
+                        android:id="@+id/setting_clearcache_text_details"
+                        style="@style/setting_text_details_style"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_toLeftOf="@+id/setting_clearcache_image_arrow"
+                        android:text="" />
+
+                    <ImageView
+                        android:id="@+id/setting_clearcache_image_arrow"
+                        style="@style/setting_item_arrow"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30.0dip"
+                        android:background="@drawable/arrow_right" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/clearcache_line"
+                    style="@style/left_drawer_item_line" />
+
+                <RelativeLayout
+                    android:id="@+id/setting_item_update_rl"
+                    style="@style/me_item_rl" >
+
+                    <TextView
+                        android:id="@+id/setting_update_textview"
+                        style="@style/setting_ll_style"
+                        android:layout_centerVertical="true"
+                        android:text="@string/setting_update_text" />
+
+                    <TextView
+                        android:id="@+id/setting_update_text_details"
+                        style="@style/setting_text_details_style"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_toLeftOf="@+id/setting_update_image_arrow"
+                        android:text="" />
+
+                    <ImageView
+                        android:id="@+id/setting_update_image_arrow"
+                        style="@style/setting_item_arrow"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30.0dip"
+                        android:background="@drawable/arrow_right" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting_ll4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/setting_ll3"
+                android:layout_marginTop="30.0dip"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:id="@+id/setting_item_feedback_rl"
+                    style="@style/me_item_rl" >
+
+                    <TextView
+                        android:id="@+id/setting_feedback_textview"
+                        style="@style/setting_ll_style"
+                        android:layout_centerVertical="true"
+                        android:text="@string/setting_feedback_text" />
+
+                    <TextView
+                        android:id="@+id/setting_feedback_text_details"
+                        style="@style/setting_text_details_style"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_toLeftOf="@+id/setting_feedback_image_arrow"
+                        android:text="" />
+
+                    <ImageView
+                        android:id="@+id/setting_feedback_image_arrow"
+                        style="@style/setting_item_arrow"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30.0dip"
+                        android:background="@drawable/arrow_right" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/feedback_line"
+                    style="@style/left_drawer_item_line" />
+
+                <RelativeLayout
+                    android:id="@+id/setting_item_share_rl"
+                    style="@style/me_item_rl"
+                    android:visibility="gone" >
+
+                    <TextView
+                        android:id="@+id/setting_share_textview"
+                        style="@style/setting_ll_style"
+                        android:layout_centerVertical="true"
+                        android:text="@string/setting_share_text" />
+
+                    <TextView
+                        android:id="@+id/setting_share_text_details"
+                        style="@style/setting_text_details_style"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_toLeftOf="@+id/setting_share_image_arrow"
+                        android:text="" />
+
+                    <ImageView
+                        android:id="@+id/setting_share_image_arrow"
+                        style="@style/setting_item_arrow"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30.0dip"
+                        android:background="@drawable/arrow_right" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/share_line"
+                    style="@style/left_drawer_item_line" />
+
+                <RelativeLayout
+                    android:id="@+id/setting_item_about_rl"
+                    style="@style/me_item_rl" >
+
+                    <TextView
+                        android:id="@+id/setting_about_textview"
+                        style="@style/setting_ll_style"
+                        android:layout_centerVertical="true"
+                        android:text="@string/setting_about_text" />
+
+                    <TextView
+                        android:id="@+id/setting_about_text_details"
+                        style="@style/setting_text_details_style"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10.0dip"
+                        android:layout_toLeftOf="@+id/setting_about_image_arrow"
+                        android:text="" />
+
+                    <ImageView
+                        android:id="@+id/setting_about_image_arrow"
+                        style="@style/setting_item_arrow"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30.0dip"
+                        android:background="@drawable/arrow_right" />
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

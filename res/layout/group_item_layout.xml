@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="60dp"
+    android:background="@color/whitebg"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
+
+        <View
+            android:id="@+id/category_item_line"
+            style="@style/category_item_line"
+            android:layout_gravity="left"
+            android:layout_marginLeft="5.0dip"
+            />
+
+        <TextView
+            android:id="@+id/group_textView"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/group_tag_imageview"
+            android:layout_width="@dimen/group_tag_imageView_width"
+            android:layout_height="@dimen/group_tag_imageView_height"
+            android:layout_gravity="right|top"
+            android:background="@drawable/top_tag" />
+
+        <com.cjhbuy.common.TopTagTextView
+            android:id="@+id/top_tag_text"
+            style="@style/category_tag_style"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right|center_vertical"
+            >
+        </com.cjhbuy.common.TopTagTextView>
+    </FrameLayout>
+
+</LinearLayout>

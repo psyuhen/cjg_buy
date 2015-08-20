@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:id="@+id/pay_way_top_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_bar"
+        android:background="@color/whitebg"
+        android:orientation="vertical" >
+
+        <RadioGroup
+            android:id="@+id/pay_way_radioGroup"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/cash_radio"
+                style="@style/CustomTopRadioBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="40.0dip"
+                android:checked="true"
+                android:drawablePadding="10.0dip"
+                android:paddingLeft="10.0dip"
+                android:text="@string/pay_way_cash_text" >
+            </RadioButton>
+
+            <ImageView style="@style/horizontal_two_style_line" />
+
+            <RadioButton
+                android:id="@+id/online_radio"
+                style="@style/CustomTopRadioBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="40.0dip"
+                android:drawablePadding="10.0dip"
+                android:paddingLeft="10.0dip"
+                android:text="@string/pay_way_online_text" >
+            </RadioButton>
+        </RadioGroup>
+
+        <ImageView style="@style/horizontal_two_style_line" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/pay_way_online_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pay_way_top_ll"
+        android:background="@color/whitebg"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="40.0dip" >
+
+            <TextView
+                style="@style/gray_small_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:text="@string/pay_way_online_text" />
+        </RelativeLayout>
+
+        <RadioGroup
+            android:id="@+id/pay_way_online_radiogroup"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/weixin_radio"
+                style="@style/CustomBottomRadioBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="40.0dip"
+                android:checked="true"
+                android:drawablePadding="10.0dip"
+                android:paddingLeft="10.0dip"
+                android:text="@string/weixin_radio_text" >
+            </RadioButton>
+
+            <ImageView style="@style/horizontal_two_style_line" />
+
+            <RadioButton
+                android:id="@+id/zhifubao_radio"
+                style="@style/CustomBottomRadioBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="40.0dip"
+                android:drawablePadding="10.0dip"
+                android:paddingLeft="10.0dip"
+                android:text="@string/zhifubao_radio_text" >
+            </RadioButton>
+
+            <ImageView style="@style/horizontal_two_style_line" />
+
+            <RadioButton
+                android:id="@+id/yinlian_radio"
+                style="@style/CustomBottomRadioBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="40.0dip"
+                android:drawablePadding="10.0dip"
+                android:paddingLeft="10.0dip"
+                android:text="@string/yinlian_radio_text" >
+            </RadioButton>
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/whitebg"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/pay_way_confirm_btn"
+            style="@style/white_normal_style"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="20.0dip"
+            android:background="@drawable/orange_btn"
+            android:text="@string/pay_way_confirm_btn" />
+    </LinearLayout>
+
+</RelativeLayout>

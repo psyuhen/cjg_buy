@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/whitebg"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dip"
+        android:background="@color/whitebg" >
+
+        <TextView
+            android:id="@+id/dialog_receive_time_text"
+            style="@style/black_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10.0dip"
+            android:text="@string/dialog_text" />
+
+        <TextView
+            android:id="@+id/dialog_receive_time"
+            style="@style/orange_small_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5.0dip"
+            android:layout_toRightOf="@+id/dialog_receive_time_text"
+            android:text="@string/dialog_receive_time" />
+
+        <ImageView
+            android:layout_width="@dimen/right_icon_height"
+            android:layout_height="@dimen/right_icon_height"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10.0dip"
+            android:background="@drawable/arrow_right" />
+    </RelativeLayout>
+
+    <ImageView style="@style/dialog_item_line" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10.0dip" >
+
+            <Button
+                android:id="@+id/dialog_now_send"
+                style="@style/white_big_style"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5.0dip"
+                android:layout_marginLeft="20.0dip"
+                android:layout_marginRight="20.0dip"
+                android:layout_marginTop="5.0dip"
+                android:background="@drawable/btn_common"
+                android:padding="10.0dip"
+                android:text="@string/dialog_now_send" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10.0dip" >
+
+            <Button
+                android:id="@+id/dialog_pre_set"
+                style="@style/white_big_style"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5.0dip"
+                android:layout_marginLeft="20.0dip"
+                android:layout_marginRight="20.0dip"
+                android:background="@drawable/btn_common"
+                android:padding="10.0dip"
+                android:text="@string/dialog_pre_set" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

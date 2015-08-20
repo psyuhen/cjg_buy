@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <org.kymjs.aframe.ui.widget.KJListView
+        android:id="@+id/in_order_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-10.0dip"
+        android:background="#f4f4f4"
+        android:cacheColorHint="#ff0000"
+        android:clickable="true"
+        android:divider="#fff4f4f4"
+        android:dividerHeight="10dp"
+        android:scrollbars="none" >
+    </org.kymjs.aframe.ui.widget.KJListView>
+
+</LinearLayout>
