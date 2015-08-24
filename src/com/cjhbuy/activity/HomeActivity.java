@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.Editable;
-import android.text.method.KeyListener;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,7 +39,7 @@ public class HomeActivity extends BaseActivity {
 	private ImageView search_top_more_left;
 	
 	//搜索框
-	private EditText search_head_edit;
+//	private EditText search_head_edit;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +61,7 @@ public class HomeActivity extends BaseActivity {
 		}
 		
 		//搜索框,实现按键事件进行搜索
-		search_head_edit = (EditText)findViewById(R.id.search_head_edit);
+		/*search_head_edit = (EditText)findViewById(R.id.search_head_edit);
 		search_head_edit.setKeyListener(new KeyListener() {
 			@Override
 			public boolean onKeyUp(View view, Editable text, int keyCode, KeyEvent event) {
@@ -91,7 +88,7 @@ public class HomeActivity extends BaseActivity {
 			public void clearMetaKeyState(View view, Editable content, int states) {
 				
 			}
-		});
+		});*/
 	}
 
 	private void initSlidingMenu() {

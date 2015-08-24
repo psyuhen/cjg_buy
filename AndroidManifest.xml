@@ -43,13 +43,14 @@
         <activity android:name="com.cjhbuy.activity.MyOrderActivity" />
         <activity android:name="com.cjhbuy.activity.AddressActivity" />
         <activity android:name="com.cjhbuy.activity.PayWayActivity" />
-         <activity android:name="com.cjhbuy.activity.PayConfirmActivity" />
-        <activity android:name="com.cjhbuy.activity.WaitOrderConfirmActivity" /> 
-         <activity android:name="com.cjhbuy.activity.HomeActivity" /> 
-         <activity android:name="com.cjhbuy.activity.OrderActivity" /> 
-         <activity android:name="com.cjhbuy.activity.MeActivity" />
-         <activity android:name="com.cjhbuy.activity.CouponActivity" />
-          <activity android:name="com.cjhbuy.activity.AboutUsActivity"/>
+        <activity android:name="com.cjhbuy.activity.PayConfirmActivity" />
+        <activity android:name="com.cjhbuy.activity.WaitOrderConfirmActivity" />
+        <activity android:name="com.cjhbuy.activity.HomeActivity" />
+        <activity android:name="com.cjhbuy.activity.OrderActivity" />
+        <activity android:name="com.cjhbuy.activity.MeActivity" />
+        <activity android:name="com.cjhbuy.activity.CouponActivity" />
+        <activity android:name="com.cjhbuy.activity.AboutUsActivity" />
+        <activity android:name="com.cjhbuy.activity.CartActivity" />
     </application>
 
 </manifest>

@@ -72,20 +72,19 @@ public class ChildAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.goodsImage.setImageResource(goodslist.get(position)
-				.getTempImage());
-		holder.weightText.setText(goodslist.get(position).getWeight()
-				+ goodslist.get(position).getUnit());
-		holder.priceText.setText("￥" + goodslist.get(position).getPrice());
-		holder.tag1Text.setText(goodslist.get(position).getTag1());
-		holder.tag2Text.setText(goodslist.get(position).getTag2());
-		if (goodslist.get(position).getTag2() == null
-				|| "".equals(goodslist.get(position).getTag2())) {
+		GoodsItem goodsItem = goodslist.get(position);
+		holder.goodsImage.setImageResource(goodsItem.getTempImage());
+		holder.weightText.setText(goodsItem.getWeight()+ goodsItem.getUnit());
+		holder.priceText.setText("￥" + goodsItem.getPrice());
+		holder.tag1Text.setText(goodsItem.getTag1());
+		holder.tag2Text.setText(goodsItem.getTag2());
+		if (goodsItem.getTag2() == null
+				|| "".equals(goodsItem.getTag2())) {
 			holder.tag2Text.setVisibility(View.INVISIBLE);
 		}
-		holder.standardText.setText(goodslist.get(position).getStandard());
-		holder.titleText.setText(goodslist.get(position).getTitle());
-		holder.stockText.setText(goodslist.get(position).getStock() + "");
+		holder.standardText.setText(goodsItem.getStandard());
+		holder.titleText.setText(goodsItem.getTitle());
+		holder.stockText.setText(goodsItem.getStock() + "");
 		return convertView;
 	}
 

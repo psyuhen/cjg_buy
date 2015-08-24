@@ -13,6 +13,8 @@ public class GoodsItem {
 	private String tag1;
 	private String tag2;
 	
+	private int image;
+	
 	private int tempImage;
 
 	public int getId() {
@@ -139,5 +141,15 @@ public class GoodsItem {
 		this.tag2 = tag2;
 		this.tempImage=tempImage;
 	}
+
+	public int getImage() {
+		return image;
+	}
+
+	public void setImage(int image) {
+		this.image = image;
+	}
+	
+	
 
 }

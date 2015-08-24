@@ -88,6 +88,7 @@
                 android:inputType="textPassword" />
 
             <com.cjhbuy.utils.SwitchButton
+                android:id="@+id/login_show_password"
                 style="@style/defaultSwitchButton"
                 android:layout_width="80dp"
                 android:layout_height="40dp"

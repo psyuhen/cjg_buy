@@ -215,5 +215,10 @@
     <string name="pickdate_text">选择日历</string>
     <string name="picktime_text">选择时间</string>
     <string name="preset_time_confirm">确认</string>
+    <string name="goods_view_standard_text">规格</string>
+    <string name="goods_view_weight_text">重量</string>
+    <string name="goods_view_details_text">图文详情</string>
+    <string name="add_address_city_text">城市</string>
+    <string name="cart_submit_btn_text">下单</string>
 
 </resources>

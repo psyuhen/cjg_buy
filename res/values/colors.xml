@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	<color name="province_line_border">#C7C7C7</color>
     <color name="white">#ffffffff</color>
     <color name="red_weibo">#fffa4c3d</color>
     <color name="transparent">#00000000</color>

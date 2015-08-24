@@ -66,16 +66,11 @@
                  >
 
                 <ImageView
-                    android:id="@+id/goods_cart"
+                    android:id="@+id/goods_cart_image"
                     android:layout_width="@dimen/goods_cart_width"
                     android:layout_height="@dimen/goods_cart_height"
                     android:background="@drawable/goods_cart_icon" />
 
-                <ImageView
-                    android:layout_width="@dimen/goods_icon_width"
-                    android:layout_height="@dimen/goods_icon_height"
-                    android:layout_gravity="top|right"
-                    android:background="@drawable/icon_tip" />
 
                 <TextView
                     android:id="@+id/goods_cart_num"

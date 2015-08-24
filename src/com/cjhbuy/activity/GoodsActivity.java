@@ -13,6 +13,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.cjhbuy.adapter.CategoryAdapter;
@@ -39,10 +40,12 @@ public class GoodsActivity extends BaseActivity {
 	TranslateAnimation animation;// 出现的动画效果
 	public static int screen_width = 0;
 	public static int screen_height = 0;
-	private Button submit_goods_btn;
+	private Button submit_goods_btn;//结算按钮
 
 	private String store_id;
 	private String store_name;
+	
+	private ImageView goods_cart_image;//购物车
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,13 @@ public class GoodsActivity extends BaseActivity {
 		submit_goods_btn = (Button) findViewById(R.id.submit_goods_btn);
 		submit_goods_btn.setOnClickListener(this);
 
+	}
+	
+	@Override
+	public void initView() {
+		super.initView();
+		goods_cart_image=(ImageView) findViewById(R.id.goods_cart_image);
+		goods_cart_image.setOnClickListener(this);
 	}
 
 	private void initData() {
@@ -136,7 +146,9 @@ public class GoodsActivity extends BaseActivity {
 			intent.setClass(GoodsActivity.this, MyOrderActivity.class);
 			startActivity(intent);
 			break;
-
+		case R.id.goods_cart_image:
+			startActivity(new Intent(GoodsActivity.this, CartActivity.class));
+			break;
 		default:
 			break;
 		}

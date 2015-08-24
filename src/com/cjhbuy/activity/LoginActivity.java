@@ -3,6 +3,8 @@ package com.cjhbuy.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -15,6 +17,8 @@ import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.utils.HttpUtil;
 import com.cjhbuy.utils.JsonUtil;
 import com.cjhbuy.utils.SecureUtil;
+import com.cjhbuy.utils.SwitchButton;
+import com.cjhbuy.utils.SwitchButton.OnCheckChangeListener;
 import com.cjhbuy.utils.Validator;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
@@ -28,6 +32,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	//手机号和密码
 	private EditText mMobileView;
 	private EditText mPasswordView;
+	
+	private SwitchButton login_show_password;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +63,18 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		// 初始化登录页面
 		mMobileView = (EditText) findViewById(R.id.login_username_edit);
 		mPasswordView = (EditText) findViewById(R.id.login_password_edit); 
+		
+		login_show_password = (SwitchButton)findViewById(R.id.login_show_password);
+		login_show_password.setOnCheckChangeListener(new OnCheckChangeListener() {
+			@Override
+			public void OnCheck(SwitchButton switchButton, boolean isChecked) {
+				if(!isChecked){
+					mPasswordView.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+				}else{
+					mPasswordView.setTransformationMethod(PasswordTransformationMethod.getInstance());
+				}
+			}
+		});
 	}
 
 	@Override
@@ -110,11 +128,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			mPasswordView.setError(getString(R.string.error_length_password));
 			focusView = mPasswordView;
 			cancel = true;
-		}else if(!Validator.isPassword(password)){
+		}
+		//老板说现在不用检验这么复杂
+		/*else if(!Validator.isPassword(password)){
 			mPasswordView.setError(getString(R.string.error_invalid_password));
 			focusView = mPasswordView;
 			cancel = true;
-		}
+		}*/
 		
 
 		if (cancel) {
