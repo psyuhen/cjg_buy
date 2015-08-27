@@ -12,15 +12,18 @@ import javax.xml.parsers.SAXParserFactory;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,6 +34,7 @@ import com.cjhbuy.bean.AddressItem;
 import com.cjhbuy.bean.CityModel;
 import com.cjhbuy.bean.DistrictModel;
 import com.cjhbuy.bean.ProvinceModel;
+import com.cjhbuy.common.Constants;
 import com.cjhbuy.service.XmlParserHandler;
 import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.utils.HttpUtil;
@@ -82,6 +86,11 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 	private AddressItem deleteAddress;
 	private CommonAdapter<AddressItem> showAdapter = null;
 	
+	//取消添加和修改按钮
+	private ImageButton add_address_btn;
+	
+	private String from = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -96,16 +105,10 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 		
 		super.initView();
 		title.setText("收货地址");
-		address_listview = (ListView) findViewById(R.id.address_listview);
 		right_imgbtn.setVisibility(View.GONE);
 		new_address_btn = (Button) findViewById(R.id.new_address_btn);
 		new_address_btn.setOnClickListener(this);
-	}
-
-	private void initData() {
-		addressList = new ArrayList<AddressItem>();
-		showAdapter = showAdapter();
-		address_listview.setAdapter(showAdapter);
+		address_listview = (ListView) findViewById(R.id.address_listview);
 		address_listview.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent,
@@ -127,6 +130,57 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 				return false;
 			}
 		});
+		//点击选择
+		address_listview.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if("myorder".equals(from)){//返回给订单
+					AddressItem item = (AddressItem)parent.getItemAtPosition(position);
+					Intent returnIntent = new Intent();
+					Bundle bundle = new Bundle();
+					bundle.putSerializable("address", item);
+					returnIntent.putExtras(bundle);
+					setResult(RESULT_OK,returnIntent);
+					finish();
+				}
+			}
+		});
+		
+		Intent intent = getIntent();
+		from = intent.getStringExtra("from");
+		
+		//如果没登录要先登录
+		boolean isLogin = sessionManager.isLoggedIn();
+		if(!isLogin){
+			/*Intent intent1 = new Intent();
+			intent1.setClass(AddressActivity.this, LoginActivity.class);
+			intent1.putExtra("from", "AddressActivity");
+			startActivityForResult(intent1, Constants.ADDRESS_REQUEST_CODE);*/
+			CommonsUtil.showLongToast(getApplicationContext(), "请先登录");
+			finish();
+			return;
+		}
+	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case Constants.ADDRESS_REQUEST_CODE:
+			if(data != null){
+				
+			}
+			break;
+
+		default:
+			break;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private void initData() {
+		addressList = new ArrayList<AddressItem>();
+		showAdapter = showAdapter();
+		address_listview.setAdapter(showAdapter);
 		
 		queryAddress();
 	}
@@ -139,7 +193,7 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 		try {
 			String json = HttpUtil.getRequest(url);
 			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "还没评分");
+				CommonsUtil.showLongToast(getApplicationContext(), "查询常用地址失败");
 				return;
 			}
 			List<AddressItem> list = JsonUtil.parse2ListAddressItem(json);
@@ -147,11 +201,11 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 			addressList.addAll(list);
 			showAdapter.notifyDataSetChanged();
 		} catch (InterruptedException e) {
-			LOGGER.error("评分失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询买家评分信息失败");
+			LOGGER.error("查询常用地址失败", e);
+			CommonsUtil.showLongToast(getApplicationContext(), "查询常用地址失败");
 		} catch (ExecutionException e) {
-			LOGGER.error("评分失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询买家评分信息失败");
+			LOGGER.error("查询常用地址失败", e);
+			CommonsUtil.showLongToast(getApplicationContext(), "查询常用地址失败");
 		}
 	}
 	
@@ -249,6 +303,18 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 				TextView add_address_title_text = (TextView) AddAddressDialog.findViewById(R.id.add_address_title_text);
 				add_address_title_text.setText("修改地址");
 				
+				setUpViews();
+				setUpListener();
+				setUpData();
+				add_address_btn=(ImageButton) AddAddressDialog.findViewById(R.id.add_address_btn);
+				add_address_btn.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						AddAddressDialog.dismiss();
+					}
+				});
+				
 				submit_btn = (Button) AddAddressDialog.findViewById(R.id.submit_btn);
 				submit_btn.setOnClickListener(new OnClickListener() {
 					@Override
@@ -328,8 +394,7 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 				tmpAddress.setUser_name(add_address_name.getText().toString());
 				tmpAddress.setMobile(add_address_tel.getText().toString());
 				
-				LOGGER.info(mCurrentProviceName + ":"+mCurrentCityName+":"+mCurrentDistrictName);
-				//addAddress(tmpAddress);
+				addAddress(tmpAddress);
 			}
 		});
 	}

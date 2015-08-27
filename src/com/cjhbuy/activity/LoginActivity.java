@@ -33,7 +33,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private EditText mMobileView;
 	private EditText mPasswordView;
 	
-	private SwitchButton login_show_password;
+	private SwitchButton login_show_password;//显示密码的按钮
+	
+	private String tmpMobile;
+	private String tmpPwd;
+//	private String from;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,18 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private void initData() {
 		right_imgbtn.setVisibility(View.GONE);
 		title.setText("登录");
+		
+		//从注册跳转过来的，自动登录
+		Intent intent = getIntent();
+		tmpMobile = intent.getStringExtra("mobile");
+		tmpPwd = intent.getStringExtra("password");
+		if(!TextUtils.isEmpty(tmpMobile) && !TextUtils.isEmpty(tmpPwd)){
+			mMobileView.setText(tmpMobile);
+			mPasswordView.setText(tmpPwd);
+			attemptLogin();
+		}
+		
+//		from = intent.getStringExtra("from");
 	}
 
 	@Override
@@ -170,6 +186,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				user = JsonUtil.parse2Object(json, User.class);
 				sessionManager.createLoginSession(user);
 				
+				/*if("AddressActivity".equals(from)){
+					setResult(RESULT_OK,new Intent());
+				}else{
+				}*/
 				startActivity(new Intent(LoginActivity.this, MeActivity.class));
 				finish();
 			}catch (Exception e) {

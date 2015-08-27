@@ -15,6 +15,7 @@
         android:layout_below="@+id/title_bar"
         android:orientation="vertical" >
 
+        <!-- 优惠广告，可以先隐藏 -->
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -50,6 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true" >
 
+                    <!-- 姓名 -->
                     <TextView
                         android:id="@+id/my_order_name"
                         style="@style/my_order_normal_style"
@@ -58,6 +60,7 @@
                         android:layout_marginLeft="10.0dip"
                         android:text="@string/my_order_name_text" />
 
+                    <!-- 电话 -->
                     <TextView
                         android:id="@+id/my_order_tel"
                         style="@style/my_order_normal_style"
@@ -67,6 +70,7 @@
                         android:layout_toRightOf="@+id/my_order_name"
                         android:text="@string/my_order_tel_text" />
 
+                    <!-- 地址 -->
                     <TextView
                         android:id="@+id/my_order_address_text"
                         style="@style/my_order_normal_style"
@@ -75,7 +79,8 @@
                         android:layout_below="@+id/my_order_name"
                         android:layout_marginLeft="10.0dip"
                         android:text="@string/my_order_address_text" />
-
+					
+					<!-- 详细地址 -->
                     <TextView
                         android:id="@+id/my_order_address"
                         style="@style/my_order_normal_style"
@@ -105,6 +110,7 @@
                 android:background="@drawable/relative_btn"
                 android:clickable="true" >
 
+                <!-- 收货时间 -->
                 <TextView
                     android:id="@+id/my_order_receive_time_text"
                     style="@style/my_order_normal_style"
@@ -142,6 +148,7 @@
                 android:background="@drawable/relative_btn"
                 android:clickable="true" >
 
+                <!-- 付款方式 -->
                 <TextView
                     android:id="@+id/my_order_pay_text"
                     style="@style/my_order_normal_style"

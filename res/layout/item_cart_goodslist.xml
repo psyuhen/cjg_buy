@@ -49,6 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
+            <!-- 减少数量 -->
             <Button
                 android:id="@+id/goods_minus_btn"
                 android:layout_width="@dimen/goods_addminus_image_width"
@@ -67,6 +68,7 @@
                 android:focusable="false"
                 android:gravity="center" />
 
+            <!-- 增加数量 -->
             <Button
                 android:id="@+id/goods_add_btn"
                 android:layout_width="@dimen/goods_addminus_image_width"

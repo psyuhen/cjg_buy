@@ -4,7 +4,9 @@ public class Constants {
 	public static final int IMAGE_REQUEST_CODE = 0;
 	public static final int CAMERA_REQUEST_CODE = 1;
 	public static final int RESULT_REQUEST_CODE = 2;
-	 public static final String IMAGE_FILE_NAME = "Test.jpg";
+	public static final int ADDRESS_REQUEST_CODE = 3;
+	public static final int PAYWAY_REQUEST_CODE = 4;
+	public static final String IMAGE_FILE_NAME = "Test.jpg";
 	 
 	 public static final String[][] MIME_MapTable = {
 			// {后缀名，MIME类型}

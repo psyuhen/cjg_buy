@@ -54,7 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/pay_way_top_ll"
         android:background="@color/whitebg"
-        android:orientation="vertical" >
+        android:orientation="vertical" 
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -97,7 +98,7 @@
                 android:text="@string/zhifubao_radio_text" >
             </RadioButton>
 
-            <ImageView style="@style/horizontal_two_style_line" />
+            <ImageView style="@style/horizontal_two_style_line" android:visibility="gone"/>
 
             <RadioButton
                 android:id="@+id/yinlian_radio"
@@ -106,7 +107,7 @@
                 android:layout_height="40.0dip"
                 android:drawablePadding="10.0dip"
                 android:paddingLeft="10.0dip"
-                android:text="@string/yinlian_radio_text" >
+                android:text="@string/yinlian_radio_text" android:visibility="gone">
             </RadioButton>
         </RadioGroup>
     </LinearLayout>

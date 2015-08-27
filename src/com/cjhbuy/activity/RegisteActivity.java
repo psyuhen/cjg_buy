@@ -142,6 +142,7 @@ public class RegisteActivity extends BaseActivity{
 			// 有错误，不登录，焦点在错误的输入框中，并显示错误
 			focusView.requestFocus();
 		} else {
+			String tmpPwd = password;
 			password = SecureUtil.shaEncode(password);
 			//显示进度条，并发送登录请求，准备登录
 			String url1 = HttpUtil.BASE_URL + "/user/register.do";
@@ -156,8 +157,7 @@ public class RegisteActivity extends BaseActivity{
 			try{
 				String request = HttpUtil.postRequest(url1, user);
 				if(request == null){
-					LOGGER.error(">>> 手机号码注册失败");
-					CommonsUtil.showLongToast(getApplicationContext(), "手机号码注册失败!");
+					CommonsUtil.showLongToast(getApplicationContext(), "网络或者服务器异常!");
 					return;
 				}
 				//注册成功后，登录
@@ -169,8 +169,11 @@ public class RegisteActivity extends BaseActivity{
 				}*/
 				
 				//user = JsonUtil.parse2Object(request2, User.class);
-				CommonsUtil.showLongToast(getApplicationContext(), "注册成功");
-				startActivity(new Intent(RegisteActivity.this, LoginActivity.class));
+				CommonsUtil.showLongToast(getApplicationContext(), request);
+				Intent intent = new Intent(RegisteActivity.this, LoginActivity.class);
+				intent.putExtra("mobile", mobile);
+				intent.putExtra("password", tmpPwd);
+				startActivity(intent);
 				finish();
 			}catch (Exception e) {
 				LOGGER.error(">>> 注册失败",e);

@@ -3,9 +3,6 @@ package com.cjhbuy.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cjhbuy.adapter.CommonAdapter;
-import com.cjhbuy.adapter.ViewHolder;
-import com.cjhbuy.bean.GoodsItem;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -24,6 +21,12 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.cjhbuy.adapter.CommonAdapter;
+import com.cjhbuy.adapter.ViewHolder;
+import com.cjhbuy.bean.AddressItem;
+import com.cjhbuy.bean.GoodsItem;
+import com.cjhbuy.common.Constants;
 
 public class MyOrderActivity extends BaseActivity {
 	// 订单列表
@@ -80,10 +83,18 @@ public class MyOrderActivity extends BaseActivity {
 	private int mMinute;
 
 	private Button preset_time_confirm_btn;
+	
+	private TextView my_order_name;//姓名
+	private TextView my_order_tel;//电话
+	private TextView my_order_address;//详细地址
+	private TextView my_order_receive_time;//收货时间
+	private TextView my_order_pay;//付款方式
+	
+	private String payWayOnline = "";//支付方式
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_myorder);
 		initView();
@@ -92,7 +103,7 @@ public class MyOrderActivity extends BaseActivity {
 	}
 
 	private void initData() {
-		// TODO Auto-generated method stub
+		
 		goodsList = new ArrayList<GoodsItem>();
 		for (int i = 0; i < 2; i++) {
 			GoodsItem goodsItem = new GoodsItem();
@@ -113,7 +124,7 @@ public class MyOrderActivity extends BaseActivity {
 
 	@Override
 	public void initView() {
-		// TODO Auto-generated method stub
+		
 		super.initView();
 		title.setText("我的下单");
 		myorder_cart_listview = (ListView) findViewById(R.id.myorder_cart_listview);
@@ -123,7 +134,7 @@ public class MyOrderActivity extends BaseActivity {
 		myorder_receive_time_rl.setOnClickListener(this);
 		myorder_pay_rl = (RelativeLayout) findViewById(R.id.myorder_pay_rl);
 		myorder_pay_rl.setOnClickListener(this);
-		submit_goods_btn = (Button) findViewById(R.id.submit_goods_btn);
+		submit_goods_btn = (Button) findViewById(R.id.submit_goods_btn);//结算
 		submit_goods_btn.setOnClickListener(this);
 
 		my_order_delivery_money = (TextView) findViewById(R.id.my_order_delivery_money);
@@ -133,6 +144,14 @@ public class MyOrderActivity extends BaseActivity {
 		myorder_give_num = (TextView) findViewById(R.id.myorder_give_num);
 		myorder_give_money = (TextView) findViewById(R.id.myorder_give_money);
 		money_count = (TextView) findViewById(R.id.money_count);
+		
+		//姓名
+		my_order_name = (TextView) findViewById(R.id.my_order_name);
+		my_order_tel = (TextView) findViewById(R.id.my_order_tel);
+		my_order_address = (TextView) findViewById(R.id.my_order_address);
+		my_order_receive_time = (TextView) findViewById(R.id.my_order_receive_time);
+		my_order_pay = (TextView) findViewById(R.id.my_order_pay);
+		
 	}
 
 	/**
@@ -146,41 +165,76 @@ public class MyOrderActivity extends BaseActivity {
 
 			@Override
 			public void convert(ViewHolder helper, GoodsItem item) {
-				// TODO Auto-generated method stub
+				
 				helper.setText(R.id.cart_goods_title, item.getTitle());
 				helper.setText(R.id.cart_goods_price, "￥ " + item.getPrice());
 				helper.setText(R.id.goods_item_stock, "0");
 			}
 		};
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case Constants.ADDRESS_REQUEST_CODE://选择地址返回的
+			if(data != null){
+				Bundle extras = data.getExtras();
+				AddressItem item = (AddressItem)extras.getSerializable("address");
+				my_order_name.setText(item.getUser_name());
+				my_order_tel.setText(item.getMobile());
+				my_order_address.setText(item.getAddress());
+			}
+			break;
+		case Constants.PAYWAY_REQUEST_CODE:
+			if(data != null){
+				payWayOnline = data.getStringExtra("payWayOnline");
+				String payWayText = "";
+				if("2".equals(payWayOnline)){
+					payWayText = "货到付款";
+				}else if("1".equals(payWayOnline)){
+					payWayText = "微信付款";
+				}else if("0".equals(payWayOnline)){
+					payWayText = "支付宝付款";
+				}
+				my_order_pay.setText(payWayText);
+			}
+			break;
+		default:
+			break;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
+		
 		super.onClick(v);
 		switch (v.getId()) {
-		case R.id.myorder_address_rl:
+		case R.id.myorder_address_rl://选择地址
 			Intent intent = new Intent();
 			intent.setClass(MyOrderActivity.this, AddressActivity.class);
-			startActivity(intent);
+			intent.putExtra("from", "myorder");
+			startActivityForResult(intent, Constants.ADDRESS_REQUEST_CODE);
 			break;
-		case R.id.myorder_receive_time_rl:
+		case R.id.myorder_receive_time_rl://选择送货时间
 			showReceiveTime();
 			break;
-		case R.id.myorder_pay_rl:
+		case R.id.myorder_pay_rl://选择支付方式
 			Intent it = new Intent();
 			it.setClass(MyOrderActivity.this, PayWayActivity.class);
-			startActivity(it);
+			it.putExtra("from", "myorder");
+			startActivityForResult(it, Constants.PAYWAY_REQUEST_CODE);
 			break;
-		case R.id.dialog_now_send:
+		case R.id.dialog_now_send://现在送货
 			ReceiveTimeDialog.dismiss();
+			my_order_receive_time.setText("");
 			break;
-		case R.id.dialog_pre_set:
+		case R.id.dialog_pre_set://预设时间
 
 			ReceiveTimeDialog.dismiss();
 			showPresetTimeDialog();
 			break;
-		case R.id.submit_goods_btn:
+		case R.id.submit_goods_btn://结算
 			Intent submitIntent = new Intent();
 			submitIntent.setClass(MyOrderActivity.this,
 					PayConfirmActivity.class);
@@ -296,8 +350,9 @@ public class MyOrderActivity extends BaseActivity {
 		}
 	}
 
+	//预设时间
 	private void showPresetTimeDialog() {
-		// TODO Auto-generated method stub
+		
 		PresetTimeDialog = new AlertDialog.Builder(MyOrderActivity.this)
 				.create();
 		PresetTimeDialog.show();
@@ -336,7 +391,7 @@ public class MyOrderActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				
 				PresetTimeDialog.dismiss();
 			}
 		});
@@ -352,7 +407,7 @@ public class MyOrderActivity extends BaseActivity {
 	}
 
 	private void showReceiveTime() {
-		// TODO Auto-generated method stub
+		
 		ReceiveTimeDialog = new AlertDialog.Builder(MyOrderActivity.this)
 				.create();
 		ReceiveTimeDialog.show();

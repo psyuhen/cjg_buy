@@ -608,5 +608,20 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:drawablePadding">25.0dip</item>
     </style>
-
+     <style name="red_big_text_style">
+          <item name="android:textSize">18.0sp</item>
+        <item name="android:textColor">@color/red</item>
+     </style>
+          <style name="gray_normal_underline_text_style">
+         <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/gray_text</item>
+     </style>
+     <style name="gray_normal_style">
+         <item name="android:textSize">18.0sp</item>
+        <item name="android:textColor">@color/gray_text</item>
+     </style>
+     <style name="red_giant_text_style">
+          <item name="android:textSize">25.0sp</item>
+        <item name="android:textColor">@color/red</item>
+     </style>
 </resources>

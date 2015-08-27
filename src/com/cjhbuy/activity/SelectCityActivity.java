@@ -28,7 +28,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-
+/**
+ * 城市选择
+ * @author ps
+ *
+ */
 public class SelectCityActivity extends BaseActivity implements
 		OnItemClickListener, OnScrollListener {
 	private WindowManager mWindowManager;
@@ -38,7 +42,6 @@ public class SelectCityActivity extends BaseActivity implements
 	private List<CityItem> cities;
 	private List<CityItem> hotcities;
 	private SharedPreferences preferences;
-	private int isnext;
 	private AppContext appContext;
 	private boolean mReady;
 	private boolean mShowing;
@@ -53,27 +56,24 @@ public class SelectCityActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_select_city);
+		initView();
 		init();
+	}
+
+	@Override
+	public void initView() {
+		
+		super.initView();
 	}
 
 	private void init() {
 		
+		title.setText("选取城市");
 		hotcities = new ArrayList<CityItem>();
 		appContext = (AppContext) getApplicationContext();
 		preferences = getPreferences(MODE_PRIVATE);
 		appContext.setPreferences(preferences);
-		isnext = preferences.getInt("isnext", 7);
 		show();
-		// if (isnext == 7) {
-		// show();
-		//
-		// } else if (isnext == 3) {
-		//
-		// } else {
-		// startActivity(new Intent(this, MainActivity.class));
-		// finish();
-		// }
-
 	}
 
 	private void show() {
@@ -142,17 +142,7 @@ public class SelectCityActivity extends BaseActivity implements
 				intent.setClass(SelectCityActivity.this, HomeActivity.class);
 				intent.putExtra("city", city);
 				startActivity(intent);
-				// finish();
-				// } else {
-				// String city = hotcities.get(position).getName();
-				// Intent intent = new Intent(SelectCityActivity.this,
-				// MainActivity.class);
-				// intent.putExtra("city", city);
-				// startActivity(intent);
-				// // setResult(1, intent);
-				// // finish();
-				// }
-
+				finish();
 			}
 		});
 		return view;
@@ -201,22 +191,12 @@ public class SelectCityActivity extends BaseActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
-		
-		// if (isnext == 7) {
 		String city = cities.get(position - 1).getName();
 		appContext.setCity(city);
 		Intent intent = new Intent(this, HomeActivity.class);
 		intent.putExtra("city", city);
 		startActivity(intent);
-		// finish();
-		// } else {
-		// String city = cities.get(position-1).getName();
-		// Intent intent = new Intent(this, MainActivity.class);
-		// intent.putExtra("city", city);
-		// startActivity(intent);
-		// //setResult(1, intent);
-		// //finish();
-		// }
+		finish();
 	}
 
 	private void removeWindow() {

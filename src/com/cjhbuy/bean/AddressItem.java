@@ -1,6 +1,12 @@
 package com.cjhbuy.bean;
 
-public class AddressItem {
+import java.io.Serializable;
+
+public class AddressItem  implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int freqa_id;
 	private int user_id;
 	private int town_id;

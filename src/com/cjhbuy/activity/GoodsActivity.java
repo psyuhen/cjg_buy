@@ -27,7 +27,11 @@ import com.cjhbuy.utils.HttpUtil;
 import com.cjhbuy.utils.JsonUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
-
+/**
+ * 商家商品
+ * @author ps
+ *
+ */
 public class GoodsActivity extends BaseActivity {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsActivity.class);
 
@@ -84,6 +88,7 @@ public class GoodsActivity extends BaseActivity {
 			}
 		});
 
+		//结算
 		submit_goods_btn = (Button) findViewById(R.id.submit_goods_btn);
 		submit_goods_btn.setOnClickListener(this);
 

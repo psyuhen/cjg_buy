@@ -30,9 +30,9 @@ import com.google.code.microlog4android.LoggerFactory;
 public class HttpUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtil.class);
 
-	public static final String IP = "192.168.1.104";
+//	public static final String IP = "192.168.1.101";
 //	public static final String IP = "203.195.245.171";
-//	public static final String IP = "192.168.43.191";
+	public static final String IP = "192.168.43.191";
 	public static final String BASE_URL = "http://"+ IP +":8001/sgams";
 	
 	/**

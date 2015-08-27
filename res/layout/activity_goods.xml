@@ -16,6 +16,7 @@
         android:background="@drawable/mypop_bg"
         android:orientation="horizontal" >
 
+        <!-- 分类 -->
         <ListView
             android:id="@+id/listView1"
             android:layout_width="fill_parent"
@@ -32,6 +33,7 @@
             android:layout_height="fill_parent"
             android:background="@color/child_item_diveder" />
 
+        <!-- 商品 -->
         <ListView
             android:id="@+id/listView2"
             android:layout_width="fill_parent"
@@ -44,6 +46,7 @@
             android:scrollbars="none" />
     </LinearLayout>
 
+    <!-- 购物车 -->
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="@dimen/bottom_line_height"
@@ -91,6 +94,7 @@
                 android:text="@string/cart_text" />
         </LinearLayout>
 
+        <!-- 合计信息等 -->
         <LinearLayout
             android:id="@+id/bottom_line_left_calculate_ll"
             android:layout_width="wrap_content"
@@ -128,6 +132,7 @@
                 android:text="@string/goods_calculate_bottom_text" />
         </LinearLayout>
 
+        <!-- 直接下单 -->
         <LinearLayout
             android:id="@+id/bottom_line_right_cart_ll"
             android:layout_width="wrap_content"
@@ -181,6 +186,7 @@
                 android:text="@string/goods_direct_order_text" />
         </LinearLayout>
 
+        <!-- 结算 -->
         <LinearLayout
             android:id="@+id/bottom_right_ll"
             android:layout_width="wrap_content"

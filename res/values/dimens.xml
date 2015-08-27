@@ -52,9 +52,8 @@
     <dimen name="cart_goods_imageview_height">60dp</dimen>
     <dimen name="setting_me_image_width">10.0dip</dimen>
     <dimen name="setting_me_image_height">10.0dip</dimen>
-    
-    
-     <dimen name="shadow_width">15.0dip</dimen>
-     <dimen name="slidingmenu_offset">150.0dip</dimen>
-
+    <dimen name="shadow_width">15.0dip</dimen>
+    <dimen name="slidingmenu_offset">150.0dip</dimen>
+    <dimen name="goods_view_item_height">40.0dip</dimen>
+    <dimen name="view_line_height">10.0dip</dimen>
 </resources>

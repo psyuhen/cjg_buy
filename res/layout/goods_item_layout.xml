@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
+        <!-- 商品图片 -->
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,6 +51,7 @@
                         android:background="@drawable/tag_text"
                         android:gravity="center" />
 
+                    <!-- 单位 -->
                     <TextView
                         android:id="@+id/goods_item_weight"
                         style="@style/goods_item_weight_style"
@@ -74,7 +76,8 @@
                         android:layout_centerVertical="true"
                         android:background="@drawable/tag_text"
                         android:gravity="center" />
-
+			
+                    <!-- 规格 -->
                     <TextView
                         android:id="@+id/goods_item_standard"
                         style="@style/goods_item_weight_style"
@@ -86,6 +89,7 @@
                 </RelativeLayout>
             </RelativeLayout>
 
+            <!-- 价格 -->
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" >
@@ -98,10 +102,12 @@
                     android:layout_centerHorizontal="true" />
             </RelativeLayout>
 
+            <!-- 选择数量 -->
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
+                <!-- 减少 -->
                 <Button
                     android:id="@+id/goods_minus_btn"
                     android:layout_width="@dimen/goods_addminus_image_width"
@@ -109,7 +115,8 @@
                     android:layout_centerVertical="true"
                     android:background="@drawable/goods_minus"
                     android:focusable="false" />
-
+                
+				<!-- 数量 -->
                 <EditText
                     android:id="@+id/goods_item_stock"
                     style="@style/goods_item_stock_style"
@@ -120,6 +127,7 @@
                     android:focusable="false"
                     android:gravity="center" />
 
+                <!-- 增加  -->
                 <Button
                     android:id="@+id/goods_add_btn"
                     android:layout_width="@dimen/goods_addminus_image_width"

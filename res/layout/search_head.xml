@@ -44,6 +44,7 @@
                 android:paddingLeft="5.0dip" />
         </RelativeLayout>
 
+        <!-- 地理位置的城市选择 -->
         <RelativeLayout
             android:id="@+id/search_head_address_ll"
             android:layout_width="fill_parent"

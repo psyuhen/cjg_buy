@@ -11,6 +11,7 @@ import java.util.Map;
 import com.cjhbuy.bean.AddressItem;
 import com.cjhbuy.bean.ClassifyInfo;
 import com.cjhbuy.bean.FavoriteStat;
+import com.cjhbuy.bean.MerchCar;
 import com.cjhbuy.bean.MerchInfo;
 import com.cjhbuy.bean.Order;
 import com.cjhbuy.bean.OrderStat;
@@ -171,5 +172,13 @@ public class JsonUtil {
 	 */
 	public static List<AddressItem> parse2ListAddressItem(String json) {
 		return parse2ListObject(json, new TypeReference<List<AddressItem>>() {});
+	} 
+	/**
+	 * 把json字符串转换为一个List&lt;MerchCar&gt;
+	 * @param json json字符串
+	 * @return
+	 */
+	public static List<MerchCar> parse2ListMerchCar(String json) {
+		return parse2ListObject(json, new TypeReference<List<MerchCar>>() {});
 	} 
 }
