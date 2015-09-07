@@ -107,9 +107,8 @@ public class CartActivity extends BaseActivity {
 				helper.setText(R.id.goods_item_stock, item.getBuy_num() + "");
 				
 				Button goods_minus_btn = helper.getView(R.id.goods_minus_btn);
-				goods_minus_btn.setOnClickListener(new ClickHandler(helper));
-				
 				Button goods_add_btn = helper.getView(R.id.goods_add_btn);
+				goods_minus_btn.setOnClickListener(new ClickHandler(helper));
 				goods_add_btn.setOnClickListener(new ClickHandler(helper));
 			}
 			

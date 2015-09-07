@@ -18,11 +18,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.cjhbuy.activity.GoodsActivity;
+import com.cjhbuy.activity.HomeActivity;
 import com.cjhbuy.activity.R;
 import com.cjhbuy.adapter.CommonAdapter;
 import com.cjhbuy.adapter.ViewHolder;
+import com.cjhbuy.auth.SessionManager;
 import com.cjhbuy.bean.SellerItem;
 import com.cjhbuy.bean.Store;
+import com.cjhbuy.bean.StoreVisitHist;
 import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.utils.FileUtil;
 import com.cjhbuy.utils.HttpUtil;
@@ -137,12 +140,41 @@ public class HomeSaleFragment extends Fragment {
 		}
 		@Override
 		public void onClick(View v) {
+			addStoreVisit(item.getId());
+			
 			Intent intent = new Intent(getActivity(), GoodsActivity.class);
 			intent.putExtra("store_id", ""+item.getId());
 			intent.putExtra("store_name", ""+item.getTitle());
 			startActivity(intent);
 		}
 	}
+	
+	//增加商家访客记录
+	private void addStoreVisit(int store_id){
+		try {
+			int user_id = 0;
+			if(context instanceof HomeActivity){
+				HomeActivity homeActivity = (HomeActivity)context;
+				
+				SessionManager sessionManager = homeActivity.sessionManager;
+				if(sessionManager.isLoggedIn()){
+					user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+				}
+			}
+			
+			StoreVisitHist storeVisitHist = new StoreVisitHist();
+			storeVisitHist.setStore_id(store_id);
+			storeVisitHist.setUser_id(user_id);
+			
+			String url =  HttpUtil.BASE_URL + "/storevisit/addStoreVisitHist.do";
+			HttpUtil.postRequest(url,storeVisitHist);
+		} catch (InterruptedException e) {
+			LOGGER.error(">>> 新增商家访问记录失败", e);
+		} catch (ExecutionException e) {
+			LOGGER.error(">>> 新增商家访问记录失败", e);
+		}
+	}
+	
 	//根据销量查询商家
 	private List<Store> queryStoreBy(String url){
 		//更新商家信息

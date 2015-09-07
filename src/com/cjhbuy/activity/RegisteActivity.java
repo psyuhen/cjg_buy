@@ -170,11 +170,13 @@ public class RegisteActivity extends BaseActivity{
 				
 				//user = JsonUtil.parse2Object(request2, User.class);
 				CommonsUtil.showLongToast(getApplicationContext(), request);
-				Intent intent = new Intent(RegisteActivity.this, LoginActivity.class);
-				intent.putExtra("mobile", mobile);
-				intent.putExtra("password", tmpPwd);
-				startActivity(intent);
-				finish();
+				if("注册成功!".equals(request)){
+					Intent intent = new Intent(RegisteActivity.this, LoginActivity.class);
+					intent.putExtra("mobile", mobile);
+					intent.putExtra("password", tmpPwd);
+					startActivity(intent);
+					finish();
+				}
 			}catch (Exception e) {
 				LOGGER.error(">>> 注册失败",e);
 				CommonsUtil.showLongToast(getApplicationContext(), "注册失败");

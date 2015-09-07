@@ -18,10 +18,12 @@ import android.widget.ListView;
 
 import com.cjhbuy.adapter.CategoryAdapter;
 import com.cjhbuy.adapter.ChildAdapter;
+import com.cjhbuy.auth.SessionManager;
 import com.cjhbuy.bean.CategoryItem;
 import com.cjhbuy.bean.ClassifyInfo;
 import com.cjhbuy.bean.GoodsItem;
 import com.cjhbuy.bean.MerchInfo;
+import com.cjhbuy.bean.MerchVisitHist;
 import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.utils.HttpUtil;
 import com.cjhbuy.utils.JsonUtil;
@@ -81,6 +83,8 @@ public class GoodsActivity extends BaseActivity {
 					int position, long id) {
 				GoodsItem item = (GoodsItem)parent.getItemAtPosition(position);
 				
+				addMerchVisit(item.getId());
+				
 				Intent intent = new Intent();
 				intent.setClass(GoodsActivity.this, GoodsViewActivity.class);
 				intent.putExtra("merch_id", ""+item.getId());
@@ -92,6 +96,26 @@ public class GoodsActivity extends BaseActivity {
 		submit_goods_btn = (Button) findViewById(R.id.submit_goods_btn);
 		submit_goods_btn.setOnClickListener(this);
 
+	}
+	
+	private void addMerchVisit(int merch_id){
+		try {
+			int user_id = 0;
+			if(sessionManager.isLoggedIn()){
+				user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+			}
+			
+			MerchVisitHist merchVisitHist = new MerchVisitHist();
+			merchVisitHist.setMerch_id(merch_id);
+			merchVisitHist.setUser_id(user_id);
+			
+			String url =  HttpUtil.BASE_URL + "/merchvisit/addMerchVisitHist.do";
+			HttpUtil.postRequest(url,merchVisitHist);
+		} catch (InterruptedException e) {
+			LOGGER.error(">>> 新增商品访问记录失败", e);
+		} catch (ExecutionException e) {
+			LOGGER.error(">>> 新增商品访问记录失败", e);
+		}
 	}
 	
 	@Override

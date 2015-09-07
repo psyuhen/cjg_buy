@@ -16,6 +16,8 @@ public class GoodsItem {
 	private int image;
 	
 	private int tempImage;
+	
+	private boolean checked;
 
 	public int getId() {
 		return id;
@@ -149,7 +151,13 @@ public class GoodsItem {
 	public void setImage(int image) {
 		this.image = image;
 	}
-	
-	
 
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+	
 }

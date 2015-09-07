@@ -3,6 +3,8 @@ package com.cjhbuy.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -12,9 +14,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -26,7 +30,9 @@ import com.cjhbuy.adapter.CommonAdapter;
 import com.cjhbuy.adapter.ViewHolder;
 import com.cjhbuy.bean.AddressItem;
 import com.cjhbuy.bean.GoodsItem;
+import com.cjhbuy.bean.Order;
 import com.cjhbuy.common.Constants;
+import com.cjhbuy.utils.CommonsUtil;
 
 public class MyOrderActivity extends BaseActivity {
 	// 订单列表
@@ -92,6 +98,11 @@ public class MyOrderActivity extends BaseActivity {
 	
 	private String payWayOnline = "";//支付方式
 
+	private CheckBox select_all_checkbox;//全选
+	private CommonAdapter<GoodsItem> adapter;
+	private int selectedNum = 0;
+	
+	private List<View> selectedList = new ArrayList<View>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -99,12 +110,10 @@ public class MyOrderActivity extends BaseActivity {
 		setContentView(R.layout.activity_myorder);
 		initView();
 		initData();
-		myorder_cart_listview.setAdapter(showAdapter());
 	}
 
 	private void initData() {
 		
-		goodsList = new ArrayList<GoodsItem>();
 		for (int i = 0; i < 2; i++) {
 			GoodsItem goodsItem = new GoodsItem();
 			goodsItem.setTitle("丹麦进口 Kjeldsens 蓝罐 曲奇 礼盒 908g");
@@ -112,6 +121,8 @@ public class MyOrderActivity extends BaseActivity {
 			goodsList.add(goodsItem);
 		}
 
+		adapter.notifyDataSetChanged();
+		
 		my_order_delivery_money.setText("￥ 5");
 		myorder_favourable_money.setText("￥ 0");
 		myorder_service_money.setText("￥ 0");
@@ -124,10 +135,13 @@ public class MyOrderActivity extends BaseActivity {
 
 	@Override
 	public void initView() {
-		
 		super.initView();
 		title.setText("我的下单");
+		goodsList = new ArrayList<GoodsItem>();
+		adapter = showAdapter();
 		myorder_cart_listview = (ListView) findViewById(R.id.myorder_cart_listview);
+		myorder_cart_listview.setAdapter(adapter);
+		
 		myorder_address_rl = (RelativeLayout) findViewById(R.id.myorder_address_rl);
 		myorder_address_rl.setOnClickListener(this);
 		myorder_receive_time_rl = (RelativeLayout) findViewById(R.id.myorder_receive_time_rl);
@@ -152,6 +166,31 @@ public class MyOrderActivity extends BaseActivity {
 		my_order_receive_time = (TextView) findViewById(R.id.my_order_receive_time);
 		my_order_pay = (TextView) findViewById(R.id.my_order_pay);
 		
+		//全选
+		select_all_checkbox = (CheckBox)findViewById(R.id.select_all_checkbox);
+		select_all_checkbox.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				CheckBox checkBox = (CheckBox)view;
+				boolean isChecked = checkBox.isChecked();
+				int length = goodsList.size();
+				if(isChecked){//全选
+					for (int i = 0; i < length; i++) {
+						GoodsItem item = goodsList.get(i);
+						item.setChecked(true);
+					}
+					selectedNum = length;
+				}else{//反选
+					for (int i = 0; i < length; i++) {
+						GoodsItem item = goodsList.get(i);
+						item.setChecked(false);
+					}
+					selectedNum = 0;
+					selectedList.clear();
+				}
+				adapter.notifyDataSetChanged();
+			}
+		});
 	}
 
 	/**
@@ -165,13 +204,81 @@ public class MyOrderActivity extends BaseActivity {
 
 			@Override
 			public void convert(ViewHolder helper, GoodsItem item) {
+				CheckBox checkbox = (CheckBox)helper.getView(R.id.cart_goods_select_checkbox);
+				checkbox.setChecked(item.isChecked());
 				
 				helper.setText(R.id.cart_goods_title, item.getTitle());
 				helper.setText(R.id.cart_goods_price, "￥ " + item.getPrice());
 				helper.setText(R.id.goods_item_stock, "0");
+				
+				Button goods_minus_btn = helper.getView(R.id.goods_minus_btn);
+				Button goods_add_btn = helper.getView(R.id.goods_add_btn);
+				
+				goods_minus_btn.setOnClickListener(new ClickHandler(helper));
+				goods_add_btn.setOnClickListener(new ClickHandler(helper));
+				checkbox.setOnClickListener(new CheckedHandler(helper));
 			}
 		};
 	}
+	//checkbox点击事件
+	class CheckedHandler implements OnClickListener{
+		ViewHolder holder;
+		public CheckedHandler(ViewHolder holder) {
+			this.holder = holder;
+		}
+		@Override
+		public void onClick(View view) {
+			CheckBox checkBox = (CheckBox)view;
+			boolean isChecked = checkBox.isChecked();
+			if(isChecked){
+				selectedNum ++;
+			}else{
+				selectedNum --;
+			}
+			
+			int length = goodsList.size();
+			
+			if(selectedNum != length){
+				select_all_checkbox.setChecked(false);
+			}else{
+				select_all_checkbox.setChecked(true);
+			}
+		}
+	}
+	
+	//购物车里面的添加或者减少数量
+	class ClickHandler implements OnClickListener{
+		ViewHolder holder;
+		public ClickHandler(ViewHolder holder) {
+			this.holder = holder;
+		}
+		@Override
+		public void onClick(View v) {
+			EditText goods_item_stock = (EditText)holder.getView(R.id.goods_item_stock);
+			String stock = goods_item_stock.getText().toString();
+			stock = StringUtils.trimToEmpty(stock);
+			stock = "".equals(stock) ? "0" : stock;
+			int num = Integer.parseInt(stock);
+			
+			switch(v.getId()){
+			case R.id.goods_minus_btn:
+				num --;
+				if(num < 0){
+					num = 0;
+				}
+				goods_item_stock.setText(String.valueOf(num));
+				break;
+			case R.id.goods_add_btn:
+				num ++;
+				
+				goods_item_stock.setText(String.valueOf(num));
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -227,22 +334,70 @@ public class MyOrderActivity extends BaseActivity {
 			break;
 		case R.id.dialog_now_send://现在送货
 			ReceiveTimeDialog.dismiss();
-			my_order_receive_time.setText("");
+			my_order_receive_time.setText("现在送货");
 			break;
 		case R.id.dialog_pre_set://预设时间
-
 			ReceiveTimeDialog.dismiss();
 			showPresetTimeDialog();
 			break;
 		case R.id.submit_goods_btn://结算
-			Intent submitIntent = new Intent();
-			submitIntent.setClass(MyOrderActivity.this,
-					PayConfirmActivity.class);
-			startActivity(submitIntent);
+			submitOrders();
 			break;
 		default:
 			break;
 		}
+	}
+	
+	private void submitOrders(){
+		//点击结算之前，先判断有没有选择地址了/有没有选择送货时间了/有没有选择商品了
+		String name = my_order_name.getText().toString();//姓名
+		if(TextUtils.isEmpty(StringUtils.trimToEmpty(name))){
+			CommonsUtil.showLongToast(getApplicationContext(), "姓名不能为空!");
+			return;
+		}
+		
+		String tel = my_order_tel.getText().toString();//电话
+		if(TextUtils.isEmpty(StringUtils.trimToEmpty(tel))){
+			CommonsUtil.showLongToast(getApplicationContext(), "电话不能为空!");
+			return;
+		}
+		
+		String address = my_order_address.getText().toString();//详细地址
+		if(TextUtils.isEmpty(StringUtils.trimToEmpty(address))){
+			CommonsUtil.showLongToast(getApplicationContext(), "详细地址不能为空!");
+			return;
+		}
+		
+		String receiveTime = my_order_receive_time.getText().toString();//收货时间
+		if(TextUtils.isEmpty(StringUtils.trimToEmpty(receiveTime))){
+			CommonsUtil.showLongToast(getApplicationContext(), "收货时间不能为空!");
+			return;
+		}
+		
+		String orderPay = my_order_pay.getText().toString();//付款方式
+		if(TextUtils.isEmpty(StringUtils.trimToEmpty(orderPay))){
+			CommonsUtil.showLongToast(getApplicationContext(), "付款方式不能为空!");
+			return;
+		}
+		
+		//有没有选择商品了
+		if(selectedNum == 0){
+			CommonsUtil.showLongToast(getApplicationContext(), "请选择一个需要购买的商品!");
+			return;
+		}
+		
+		Order order = new Order();
+		order.setBuyer_name(name);//收货人
+		order.setAddress(address);//详细地址
+		order.setSend_time(receiveTime);//送货时间
+		order.setPay_type(orderPay);//付款方式
+		
+		//还需要计算价格呢
+		
+		Intent submitIntent = new Intent();
+		submitIntent.setClass(MyOrderActivity.this,
+				PayConfirmActivity.class);
+		startActivity(submitIntent);
 	}
 
 	// /**
@@ -391,8 +546,11 @@ public class MyOrderActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				
 				PresetTimeDialog.dismiss();
+				//
+				String date = showDate.getText().toString();
+				String time = showTime.getText().toString();
+				my_order_receive_time.setText(date + time);
 			}
 		});
 	}

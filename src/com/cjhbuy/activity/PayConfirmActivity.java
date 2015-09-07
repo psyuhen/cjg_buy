@@ -14,6 +14,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * 确认交易
+ * @author ps
+ *
+ */
 public class PayConfirmActivity extends BaseActivity {
 	private TextView pay_confirm_shop_name;
 	private TextView pay_confirm_price;
@@ -33,7 +38,7 @@ public class PayConfirmActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_payconfirm);
 		initView();
@@ -42,7 +47,7 @@ public class PayConfirmActivity extends BaseActivity {
 
 	@Override
 	public void initView() {
-		// TODO Auto-generated method stub
+		
 		super.initView();
 		pay_confirm_shop_name = (TextView) findViewById(R.id.pay_confirm_shop_name);
 		pay_confirm_price = (TextView) findViewById(R.id.pay_confirm_price);
@@ -56,7 +61,7 @@ public class PayConfirmActivity extends BaseActivity {
 	}
 
 	private void initData() {
-		// TODO Auto-generated method stub
+		
 		pay_confirm_shop_name.setText("爱鲜蜂即时送");
 		pay_confirm_price.setText("￥ 35.00");
 		pay_confirm_receive.setText("鲜蜂网");
@@ -65,7 +70,7 @@ public class PayConfirmActivity extends BaseActivity {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
+		
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.pay_btn:
@@ -84,7 +89,7 @@ public class PayConfirmActivity extends BaseActivity {
 	}
 
 	private void showPayPwd() {
-		// TODO Auto-generated method stub
+		
 		payPwdDialog = new AlertDialog.Builder(PayConfirmActivity.this)
 				.create();
 		payPwdDialog.show();
@@ -114,7 +119,7 @@ public class PayConfirmActivity extends BaseActivity {
 			@Override
 			public void onTextChanged(CharSequence text, int start,
 					int lengthBefore, int lengthAfter) {
-				// TODO Auto-generated method stub
+				
 				int textLength = text.toString().length();
 				if (textLength >= 6) {
 					payPwdDialog.dismiss();
@@ -129,13 +134,13 @@ public class PayConfirmActivity extends BaseActivity {
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1,
 					int arg2, int arg3) {
-				// TODO Auto-generated method stub
+				
 
 			}
 
 			@Override
 			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
+				
 
 			}
 		});
