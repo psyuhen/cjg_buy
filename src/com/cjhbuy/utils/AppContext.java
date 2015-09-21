@@ -3,32 +3,39 @@ package com.cjhbuy.utils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.cjhbuy.bean.CityItem;
 
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 
+import com.cjhbuy.bean.CityItem;
+import com.cjhbuy.bean.GoodsItem;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
+
 public class AppContext extends Application {
+	private static final Logger LOGGER = LoggerFactory.getLogger(AppContext.class);
+
 	private SharedPreferences preferences;
 	private List<CityItem> cities;
 	private String city;
-
+	private List<GoodsItem> cartGoodLists;
+ 	
+	
 	@Override
 	public void onCreate() {
-		// TODO Auto-generated method stub
 		super.onCreate();
 		String as;
+		cartGoodLists=new ArrayList<GoodsItem>();
 		try {
 			as = getA();
 			AssetsParser parser = new AssetsParser();
 			List<CityItem> cities = parser.getCities(as);
 			setCities(cities);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("转换出错",e);
 		}
 	}
 
@@ -68,4 +75,13 @@ public class AppContext extends Application {
 		this.city = city;
 	}
 
+	public List<GoodsItem> getCartGoodLists() {
+		return cartGoodLists;
+	}
+
+	public void setCartGoodLists(List<GoodsItem> cartGoodLists) {
+		this.cartGoodLists = cartGoodLists;
+	}
+
+	
 }

@@ -10,10 +10,12 @@ package com.cjhbuy.bean;
  */
 public class ClassifyInfo {
 	private int classify_id;
+	private int user_id;
     private String name;
     private String classify_type;
     private String desc;
     private int classify_num;
+    private String classify_image;
 	public int getClassify_id() {
 		return classify_id;
 	}
@@ -44,4 +46,17 @@ public class ClassifyInfo {
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
+	public int getUser_id() {
+		return user_id;
+	}
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
+	}
+	public String getClassify_image() {
+		return classify_image;
+	}
+	public void setClassify_image(String classify_image) {
+		this.classify_image = classify_image;
+	}
+	
 }

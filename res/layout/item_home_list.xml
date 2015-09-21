@@ -9,6 +9,8 @@
         android:id="@+id/top_ll"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/item_home_image_height"
+        android:layout_marginBottom="10.0dip"
+        android:layout_marginTop="10.0dip"
         android:orientation="horizontal" >
 
         <ImageView
@@ -26,14 +28,14 @@
 
         <Button
             android:id="@+id/item_home_buy_btn"
-            style="@style/item_home_buy_btn_text_style"
+            style="@style/white_normal_style"
             android:layout_width="wrap_content"
-            android:layout_height="50.0dip"
+            android:layout_height="40.0dip"
             android:layout_gravity="center_vertical"
             android:layout_margin="20.0dip"
             android:layout_marginRight="10.0dip"
             android:layout_weight="3"
-            android:background="@drawable/complete_btn"
+            android:background="@drawable/orange_btn"
             android:text="@string/item_home_buy_btn_text" />
     </LinearLayout>
 

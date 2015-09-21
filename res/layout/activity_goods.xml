@@ -76,13 +76,13 @@
 
 
                 <TextView
-                    android:id="@+id/goods_cart_num"
+                    android:id="@+id/goods_cart_num_text"
                     style="@style/goods_cart_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|right"
-                    android:layout_marginRight="4.0dip"
-                    android:layout_marginBottom="4.0dip"
+                    android:gravity="center"
+                     android:background="@drawable/red_dot"
                     android:text="@string/goods_cart_num_text" />
             </FrameLayout>
 
@@ -142,7 +142,9 @@
             android:layout_marginRight="6.0dip"
             android:layout_toLeftOf="@+id/bottom_right_ll"
             android:layout_toRightOf="@+id/bottom_line_left_calculate_ll"
-            android:orientation="vertical" >
+            android:orientation="vertical" 
+            android:visibility="gone"
+            >
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -167,14 +169,6 @@
                         android:layout_marginTop="3.0dip"
                         android:background="@drawable/icon_tip" />
 
-                    <TextView
-                        android:id="@+id/goods_direct_order_num"
-                        style="@style/goods_cart_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="top|right"
-                        android:layout_marginRight="5.0dip"
-                        android:text="@string/goods_cart_num_text" />
                 </FrameLayout>
             </FrameLayout>
 

@@ -127,7 +127,7 @@
     <string name="submit_order_btn_text">结算</string>
     <string name="cart_text">购物车</string>
     <string name="goods_calculate_text">合计</string>
-    <string name="goods_calculate_bottom_text">购物满十元免费配送</string>
+    <string name="goods_calculate_bottom_text">购物满49元免费配送</string>
     <string name="goods_calculate">￥：7</string>
     <!-- myorder -->
     <string name="myorder_top_tip_text">7月新款爆品，同城跨区域支持快递限时送达！</string>
@@ -149,11 +149,12 @@
     <string name="me_help_text">帮助中心</string>
     <string name="me_customerservice_text">联系客服</string>
     <string name="me_remind_text">我的消息</string>
+    <string name="me_version_text">版本</string>
     <string name="me_category_text">类别</string>
     <string name="me_address_text">我的地址</string>
     <string name="me_coupon_text">我的优惠券</string>
     <string name="me_share_text">分享超家伙</string>
-    <string name="goods_cart_num_text">1</string>
+    <string name="goods_cart_num_text">0</string>
     <string name="goods_direct_order_text">直接下单</string>
     <string name="new_address_btn_text">+ 新建地址</string>
     <string name="item_address_tip_text">长按删除当前地址</string>
@@ -186,7 +187,7 @@
     <string name="myorder_service_money_text">服务费</string>
     <string name="myorder_give_text">赠品</string>
     <string name="all_money_text">合计:</string>
-    <string name="count_money_text">购物满10元免费送费</string>
+    <string name="count_money_text">购物满49元免费送费</string>
     <string name="select_all_text">全选</string>
     <string name="left_home">首页</string>
     <string name="left_myorder">我的订单</string>
@@ -206,7 +207,7 @@
     <string name="add_address_name_hint">请输入姓名</string>
     <string name="add_address_tel_text">电话:</string>
     <string name="add_address_tel_hint">请输入电话</string>
-    <string name="add_address_address_text">地址:</string>
+    <string name="add_address_address_text">门牌地址:</string>
     <string name="add_address_address_hint">请输入地址</string>
     <string name="add_address_confirm">确认</string>
     <string name="preset_time_title_text">预设时间</string>
@@ -220,5 +221,11 @@
     <string name="goods_view_details_text">图文详情</string>
     <string name="add_address_city_text">城市</string>
     <string name="cart_submit_btn_text">下单</string>
+    <string name="all_postage_text">邮费:</string>
+    <string name="myorder_goods_num_text">商品数量</string>
+    <string name="all_discount_money_text">优惠金额</string>
+    <string name="order_view">查看订单</string>
+    <string name="order_search_edit">商品名、订单号、手机、姓名等</string>
+    <string name="search_order_text">查找</string>
 
 </resources>

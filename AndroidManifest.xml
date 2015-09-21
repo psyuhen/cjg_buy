@@ -17,7 +17,7 @@
     <application
         android:name="com.cjhbuy.utils.AppContext"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/login_head_icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -51,6 +51,7 @@
         <activity android:name="com.cjhbuy.activity.CouponActivity" />
         <activity android:name="com.cjhbuy.activity.AboutUsActivity" />
         <activity android:name="com.cjhbuy.activity.CartActivity" />
+        <activity android:name="com.cjhbuy.activity.OrderSearchActivity" />
     </application>
 
 </manifest>

@@ -4,18 +4,24 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cjhbuy.activity.R;
 import com.cjhbuy.bean.GoodsItem;
+import com.cjhbuy.bean.MerchDisacount;
+import com.cjhbuy.utils.AppContext;
+import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.utils.StringUtil;
 
 /**
@@ -30,13 +36,32 @@ public class ChildAdapter extends BaseAdapter {
 	// String[] mChildArr;// 子item标题数组
 	private List<GoodsItem> goodslist;
 
+	private AppContext app;
+	private Activity activity;
+	private int good_cart_num;
+	private TextView good_cart_num_text;
+
+	// private IDataLaunch delegate;
+	//
+	// public IDataLaunch getDelegate() {
+	// return delegate;
+	// }
+	//
+	// public void setDelegate(IDataLaunch delegate) {
+	// this.delegate = delegate;
+	// }
+
 	/**
 	 * 构造方法
 	 * 
 	 * @param context
 	 */
-	public ChildAdapter(Context context) {
-		mContext = context;
+	public ChildAdapter(Activity activity, int good_cart_num,
+			TextView good_cart_num_text) {
+		this.activity = activity;
+		app = (AppContext) activity.getApplication();
+		this.good_cart_num = good_cart_num;
+		this.good_cart_num_text = good_cart_num_text;
 	}
 
 	/**
@@ -52,11 +77,11 @@ public class ChildAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder = null;
+	public View getView(final int position, View convertView, ViewGroup parent) {
+		final ViewHolder holder;
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = LayoutInflater.from(mContext).inflate(R.layout.goods_item_layout, null);
+			convertView = LayoutInflater.from(activity).inflate(R.layout.goods_item_layout, null);
 			holder.goodsImage = (ImageView) convertView.findViewById(R.id.goods_item_image);
 			holder.priceText = (TextView) convertView.findViewById(R.id.goods_item_price);
 			holder.tag1Text = (TextView) convertView.findViewById(R.id.goods_item_tag1);
@@ -64,24 +89,36 @@ public class ChildAdapter extends BaseAdapter {
 			holder.standardText = (TextView) convertView.findViewById(R.id.goods_item_standard);
 			holder.titleText = (TextView) convertView.findViewById(R.id.goods_item_title);
 			holder.weightText = (TextView) convertView.findViewById(R.id.goods_item_weight);
-			holder.stockText = (TextView) convertView.findViewById(R.id.goods_item_stock);
+			//holder.stockText = (TextView) convertView.findViewById(R.id.goods_item_stock);
 			holder.goods_minus_btn = (Button) convertView.findViewById(R.id.goods_minus_btn);
-			holder.goods_minus_btn.setOnClickListener(new ClickHandler(holder));
-			
 			holder.goods_add_btn = (Button) convertView.findViewById(R.id.goods_add_btn);
-			holder.goods_add_btn.setOnClickListener(new ClickHandler(holder));
-			
+			holder.goods_item_stock = (EditText) convertView.findViewById(R.id.goods_item_stock);
+			holder.originalpriceText = (TextView) convertView.findViewById(R.id.originalpriceText);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		GoodsItem goodsItem = goodslist.get(position);
+		final GoodsItem goodsItem = goodslist.get(position);
 		
-		holder.goodsImage.setImageResource(goodsItem.getTempImage());
-		holder.weightText.setText(StringUtil.format(goodsItem.getWeight())+ StringUtils.trimToEmpty(goodsItem.getUnit()));
-		holder.priceText.setText("￥" + StringUtil.format(goodsItem.getPrice()));
+		holder.goodsImage.setImageBitmap(goodsItem.getBitmap());//商品图片
+		holder.weightText.setText(StringUtil.format2string(goodsItem.getWeight()) + StringUtils.trimToEmpty(goodsItem.getUnit()));
 		holder.tag1Text.setText(goodsItem.getTag1());
 		holder.tag2Text.setText(goodsItem.getTag2());
+		
+		double price = goodsItem.getPrice();//价格
+		List<MerchDisacount> merchDisacounts = goodsItem.getMerchDisacounts();
+		if(merchDisacounts != null && !merchDisacounts.isEmpty()){
+			MerchDisacount disacount  = merchDisacounts.get(0);
+			
+			float disacount_money = disacount.getDisacount_money();
+			disacount_money = (disacount_money < 0.0f) ? 0.0f : disacount_money;
+			
+			holder.priceText.setText("￥" + StringUtil.format2string(price - disacount_money));
+		}else{//两个都是原价
+			holder.priceText.setText("￥" + StringUtil.format2string(price));
+		}
+		holder.originalpriceText.setText("￥" + StringUtil.format2string(price));
+		holder.originalpriceText.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 		
 		if (goodsItem.getTag1() == null
 				|| "".equals(goodsItem.getTag1())) {
@@ -93,8 +130,133 @@ public class ChildAdapter extends BaseAdapter {
 		}
 		holder.standardText.setText(goodsItem.getStandard());
 		holder.titleText.setText(goodsItem.getTitle());
-		holder.stockText.setText(goodsItem.getStock() + "");
+		//holder.stockText.setText(goodsItem.getStock() + "");
+		
+		int buyNumer = findInCar(goodsItem.getId());
+		holder.goods_item_stock.setText(""+(buyNumer < 0 ? 0 : buyNumer));//默认为0
+
+		holder.goods_add_btn.setOnClickListener(new CarNumClickListener(holder, goodsItem));
+		holder.goods_minus_btn.setOnClickListener(new CarNumClickListener(holder, goodsItem));
 		return convertView;
+	}
+	
+	/**
+	 * 添加或者减少商品数量事件
+	 *
+	 */
+	class CarNumClickListener implements OnClickListener{
+		private ViewHolder holder;
+		private GoodsItem goodsItem;
+		
+		public CarNumClickListener(ViewHolder holder,GoodsItem goodsItem) {
+			this.holder = holder;
+			this.goodsItem = goodsItem;
+		}
+		@Override
+		public void onClick(View v) {
+			
+			switch (v.getId()) {
+			case R.id.goods_add_btn:
+				addOne();
+				break;
+			case R.id.goods_minus_btn:
+				subOne();
+				break;
+
+			default:
+				break;
+			}
+		}
+		
+		private void addCartGoods() {
+			// 存在于购物车商品的位置
+			int cartposition = isExistCart(goodsItem.getId());
+			if (cartposition >= 0) {
+				GoodsItem goodsItem2 = app.getCartGoodLists().get(cartposition);
+				int nowSellmount = goodsItem2.getSellmount();
+				goodsItem2.setSellmount(nowSellmount + 1);
+			} else {//添加到购物车中
+				goodsItem.setSellmount(1);
+				app.getCartGoodLists().add(goodsItem);
+				//在购物图标中显示数量
+				good_cart_num = good_cart_num + 1;
+				String good_cart_numstr = String.valueOf(good_cart_num);
+				good_cart_num_text.setText(good_cart_numstr);
+			}
+		}
+
+		private void addOne() {
+			changeStockEditTextStatus(1);
+			addCartGoods();
+		}
+		
+		private void subOne(){
+			changeStockEditTextStatus(-1);
+			minusCartGoods();
+		}
+		
+		private void changeStockEditTextStatus(int one) {
+			String itemstockStr = holder.goods_item_stock.getText().toString();
+			int itemstock = CommonsUtil.String2Int(itemstockStr);
+			itemstock = itemstock + one;
+			
+			if (itemstock <= 0) {
+				itemstock = 0;
+			}
+			
+			holder.goods_item_stock.setText(itemstock + "");
+		}
+		
+		private void minusCartGoods() {
+			int cartposition = isExistCart(goodsItem.getId());
+			if (cartposition >= 0) {
+				GoodsItem goodsItem2 = app.getCartGoodLists().get(cartposition);
+				int nowSellmount = goodsItem2.getSellmount();
+				
+				//在购物车中删除对应的商品
+				if(nowSellmount == 1){
+					app.getCartGoodLists().remove(goodsItem2);
+					//只有在删除商品时才更新在购物图标中显示数量
+					good_cart_num --;
+					good_cart_num = (good_cart_num < 0) ? 0 : good_cart_num;
+					String good_cart_numstr = String.valueOf(good_cart_num);
+					good_cart_num_text.setText(good_cart_numstr);
+				}else{
+					goodsItem2.setSellmount(nowSellmount - 1);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 判断在购物车中是否存在
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private int isExistCart(int id) {
+		int currentposition = 0;
+		for (GoodsItem goodsItem : app.getCartGoodLists()) {
+			if (goodsItem.getId() == id) {
+				return currentposition;
+			}
+			currentposition++;
+		}
+		return -1;
+	}
+	
+	/**
+	 * 在购物中查询购买数量
+	 * @param merch_id
+	 * @return
+	 */
+	private int findInCar(int merch_id){
+		for (GoodsItem goodsItem : app.getCartGoodLists()) {
+			if (goodsItem.getId() == merch_id) {
+				return goodsItem.getSellmount();
+			}
+		}
+		return -1;
 	}
 
 	static class ViewHolder {
@@ -105,9 +267,11 @@ public class ChildAdapter extends BaseAdapter {
 		TextView weightText;
 		TextView standardText;
 		TextView titleText;
-		TextView stockText;//购买的数量
-		Button goods_minus_btn;//减少
-		Button goods_add_btn;//增加
+		TextView stockText;
+		TextView originalpriceText;
+		Button goods_minus_btn;
+		Button goods_add_btn;
+		EditText goods_item_stock;
 	}
 
 	/**
@@ -137,7 +301,7 @@ public class ChildAdapter extends BaseAdapter {
 		return position;
 	}
 
-	class ClickHandler implements OnClickListener{
+	/*class ClickHandler implements OnClickListener{
 		ViewHolder holder;
 		public ClickHandler(ViewHolder holder) {
 			this.holder = holder;
@@ -166,5 +330,5 @@ public class ChildAdapter extends BaseAdapter {
 				break;
 			}
 		}
-	}
+	}*/
 }

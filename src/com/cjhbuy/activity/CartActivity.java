@@ -1,24 +1,24 @@
 package com.cjhbuy.activity;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import com.cjhbuy.adapter.CommonAdapter;
-import com.cjhbuy.adapter.ViewHolder;
+import com.cjhbuy.adapter.MyOrderGoodsAdapter;
+import com.cjhbuy.bean.GoodsItem;
 import com.cjhbuy.bean.MerchCar;
+import com.cjhbuy.bean.MerchDisacount;
+import com.cjhbuy.utils.AppContext;
 import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.utils.HttpUtil;
 import com.cjhbuy.utils.JsonUtil;
+import com.cjhbuy.utils.StringUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
@@ -28,15 +28,30 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class CartActivity extends BaseActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsViewActivity.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CartActivity.class);
 
 	private ListView cartListView;
 	// 购物车的的商品
-	private List<MerchCar> goodsList;
+//	private List<MerchCar> goodsList;
 
 	//下单
 	private Button cart_submit_btn;
-	private CommonAdapter<MerchCar> adapter;
+//	private Button goods_minus_btn;
+//	private Button goods_add_btn;
+	private AppContext app;
+	/* 商品数量 */
+	private TextView all_num;
+	/* 总金额 */
+	private TextView all_money;
+	/* 邮费 */
+	private TextView all_postage;
+
+	private TextView all_discount_money;
+	private int num = 0;
+	private double money = 0;
+	private double discount_money;
+
+	private MyOrderGoodsAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +59,6 @@ public class CartActivity extends BaseActivity {
 		setContentView(R.layout.activity_cart);
 		initView();
 		initData();
-
 	}
 
 	@Override
@@ -53,17 +67,52 @@ public class CartActivity extends BaseActivity {
 		super.initView();
 		cartListView = (ListView) findViewById(R.id.cartListView);
 		cart_submit_btn = (Button) findViewById(R.id.cart_submit_btn);
+		all_discount_money = (TextView) findViewById(R.id.all_discount_money);
 		cart_submit_btn.setOnClickListener(this);
+		all_num = (TextView) findViewById(R.id.all_num);
+		all_money = (TextView) findViewById(R.id.all_money);
+		all_postage = (TextView) findViewById(R.id.all_postage);
+		app = (AppContext) getApplication();
 	}
 
 	private void initData() {
 		
 		title.setText("购物车");
-		goodsList = new ArrayList<MerchCar>();
-		adapter = showAdapter();
+		initMoney();
+		all_num.setText("共" + num + "件商品");
+		all_money.setText("￥ " + StringUtil.format2string(money));
+		all_postage.setText("￥" + CommonsUtil.postage(money));
+		all_discount_money.setText("￥" + StringUtil.format2string(discount_money));
+		all_discount_money.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+		
+//		goodsList = new ArrayList<MerchCar>();
+		
+		adapter = new MyOrderGoodsAdapter(CartActivity.this,
+				app.getCartGoodLists(), all_money, all_num, all_postage,
+				all_discount_money);
 		cartListView.setAdapter(adapter);
 		
 		queryMerchCar();
+	}
+	
+	private void initMoney() {
+		for (GoodsItem goodsItem : app.getCartGoodLists()) {
+			int sellmount = goodsItem.getSellmount();
+			double price = goodsItem.getPrice();//原价格
+			
+			double disacountMoney = 0;
+			List<MerchDisacount> merchDisacounts = goodsItem.getMerchDisacounts();
+			if(merchDisacounts != null && !merchDisacounts.isEmpty()){
+				MerchDisacount disacount  = merchDisacounts.get(0);
+				
+				float disacount_money = disacount.getDisacount_money();
+				disacountMoney = (disacount_money < 0.0f) ? 0.0f : disacount_money;
+			}
+			
+			num = num + sellmount;//购买数量
+			discount_money = discount_money + (disacountMoney * sellmount);//优惠金额
+			money = money + sellmount * (price - disacountMoney);//实际金额
+		}
 	}
 	
 	//查询购物车信息
@@ -73,16 +122,38 @@ public class CartActivity extends BaseActivity {
 		try {
 			String json = HttpUtil.getRequest(url);
 			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "查询购物车信息失败");
+				//CommonsUtil.showLongToast(getApplicationContext(), "查询购物车信息失败");
 				return;
 			}
 			
 			List<MerchCar> list = JsonUtil.parse2ListMerchCar(json);
-			goodsList.clear();
-			goodsList.addAll(list);
+//			goodsList.clear();
+			if(list != null){
+//				goodsList.addAll(list);
+				int length = list.size();
+				for (int i = 0; i < length; i++) {
+					MerchCar merchCar = list.get(i);
+					
+					GoodsItem goodsItem = new GoodsItem();
+					goodsItem.setId(merchCar.getCar_id());
+					goodsItem.setTitle(merchCar.getName());
+					
+					float originalPrice = StringUtil.format2float(merchCar.getPrice());
+					goodsItem.setOriginalprice(originalPrice);
+					
+					//如果有优惠就优惠，没有就原价
+					List<MerchDisacount> merchDisacounts = merchCar.getMerchDisacounts();
+					if(merchDisacounts != null && !merchDisacounts.isEmpty()){
+						MerchDisacount merchDisacount = merchDisacounts.get(0);
+						
+						float price = merchCar.getPrice() - merchDisacount.getDisacount_money();
+						goodsItem.setPrice(StringUtil.format2float(price));
+					}else{
+						goodsItem.setPrice(originalPrice);
+					}
+				}
+			}
 			adapter.notifyDataSetChanged();
-			
-			
 		}catch (Exception e) {
 			LOGGER.error(">>> 查询商品信息失败",e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询商品信息失败");
@@ -94,7 +165,7 @@ public class CartActivity extends BaseActivity {
 	 * 
 	 * @return
 	 */
-	public CommonAdapter<MerchCar> showAdapter() {
+	/*public CommonAdapter<MerchCar> showAdapter() {
 		return new CommonAdapter<MerchCar>(CartActivity.this, goodsList,
 				R.layout.item_cart_goodslist) {
 
@@ -113,10 +184,10 @@ public class CartActivity extends BaseActivity {
 			}
 			
 		};
-	}
+	}*/
 	
 	//购物车里面的添加或者减少数量
-	class ClickHandler implements OnClickListener{
+	/*class ClickHandler implements OnClickListener{
 		ViewHolder holder;
 		public ClickHandler(ViewHolder holder) {
 			this.holder = holder;
@@ -146,7 +217,7 @@ public class CartActivity extends BaseActivity {
 				break;
 			}
 		}
-	}
+	}*/
 
 	@Override
 	public void onClick(View v) {

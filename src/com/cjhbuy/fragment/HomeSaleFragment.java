@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.commons.lang.StringUtils;
 import org.kymjs.aframe.ui.widget.KJListView;
 
 import android.content.Context;
@@ -120,8 +121,8 @@ public class HomeSaleFragment extends Fragment {
 			@Override
 			public void convert(ViewHolder helper, SellerItem item) {
 				//显示商家的地址和电话
-				helper.setText(R.id.item_home_address, "地址:" + item.getAddress());
-				helper.setText(R.id.item_home_phone, "电话:" + item.getPhone());
+				helper.setText(R.id.item_home_address, "地址:" + StringUtils.trimToEmpty(item.getAddress()));
+				helper.setText(R.id.item_home_phone, "电话:" + StringUtils.trimToEmpty(item.getPhone()));
 
 				//点击抄他家按钮，进入商家
 				mBtn_buy = helper.getView(R.id.item_home_buy_btn);
@@ -133,6 +134,7 @@ public class HomeSaleFragment extends Fragment {
 		};
 	}
 
+	//抄他家点击事件
 	class MyButtonClick implements OnClickListener {
 		private SellerItem item;
 		public MyButtonClick(SellerItem item) {
@@ -143,7 +145,7 @@ public class HomeSaleFragment extends Fragment {
 			addStoreVisit(item.getId());
 			
 			Intent intent = new Intent(getActivity(), GoodsActivity.class);
-			intent.putExtra("store_id", ""+item.getId());
+			intent.putExtra("store_id", item.getId());
 			intent.putExtra("store_name", ""+item.getTitle());
 			startActivity(intent);
 		}

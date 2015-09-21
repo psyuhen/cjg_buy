@@ -3,6 +3,8 @@
  */
 package com.cjhbuy.bean;
 
+import java.util.List;
+
 /**
  * 购物车
  * @author ps
@@ -19,6 +21,10 @@ public class MerchCar {
 	private float price;
 	
 	private int image;
+	
+	private String image_name;
+	
+	private List<MerchDisacount> merchDisacounts;
 	public int getCar_id() {
 		return car_id;
 	}
@@ -66,6 +72,18 @@ public class MerchCar {
 	}
 	public void setImage(int image) {
 		this.image = image;
+	}
+	public String getImage_name() {
+		return image_name;
+	}
+	public void setImage_name(String image_name) {
+		this.image_name = image_name;
+	}
+	public List<MerchDisacount> getMerchDisacounts() {
+		return merchDisacounts;
+	}
+	public void setMerchDisacounts(List<MerchDisacount> merchDisacounts) {
+		this.merchDisacounts = merchDisacounts;
 	}
 	
 }

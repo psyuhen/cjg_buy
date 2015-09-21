@@ -67,5 +67,50 @@ public class CommonsUtil {
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		return format.format(date);
 	}
+	/**
+	 * 从字符串转换成整形
+	 * 
+	 * @param str
+	 *            待转换字符串
+	 * @return
+	 */
+	public static int String2Int(String str) {
+		try {
+			int value = Integer.valueOf(str);
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
 	
+	/**
+	 * 是否免邮费
+	 */
+	public static  int postage(Double money){
+		if (money<49) {
+			return 6;
+		}
+		return 0;
+	}
+	
+	
+	public static String getOrderStatus(char type) {
+		switch (type) {
+		case '1':
+			return "卖方确认订单";
+		case '2':
+			return "等待买方付款";
+		case '3':
+			return "卖方发货";
+		case '4':
+			return "交易完成";
+		case '5':
+			return "交易取消";
+		case '6':
+			return "交易关闭";
+		default:
+			return "";
+		}
+	}
 }

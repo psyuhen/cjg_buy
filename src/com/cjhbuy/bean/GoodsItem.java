@@ -1,23 +1,28 @@
 package com.cjhbuy.bean;
 
+import java.util.List;
+
+import android.graphics.Bitmap;
+
 public class GoodsItem {
-	private int id;
-	private String title;
-	private int stock;
-	private int sellmount;
-	private double price;
-	private double weight;
-	private String unit;
-	private String standard;
-	private String img;
-	private String tag1;
-	private String tag2;
+	private int id; //编号
+	private String title; //标题
+	private int stock;  //库存
+	private int sellmount;  //出售数量
+	private double price;   //价格
+	private double originalprice;   //原始价格 
+	private int image;   //图片
+	private double weight;   //重量
+	private String unit;   //单位
+	private String standard;   //规格
+	private String img;  //图片
+	private String tag1;   //标签1
+	private String tag2;   //标签2
+	private boolean choose;   // 是否选中
 	
-	private int image;
-	
-	private int tempImage;
-	
-	private boolean checked;
+	private String create_time;
+	private Bitmap bitmap;
+	private List<MerchDisacount> merchDisacounts;
 
 	public int getId() {
 		return id;
@@ -110,13 +115,6 @@ public class GoodsItem {
 		this.unit = unit;
 	}
 
-	public int getTempImage() {
-		return tempImage;
-	}
-
-	public void setTempImage(int tempImage) {
-		this.tempImage = tempImage;
-	}
 
 	public void setPrice(double price) {
 		this.price = price;
@@ -126,22 +124,12 @@ public class GoodsItem {
 		this.weight = weight;
 	}
 
-	public GoodsItem(int id, String title, int stock, int sellmount,
-			double price, double weight, String unit, String standard,
-			String img, String tag1, String tag2,int tempImage) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.stock = stock;
-		this.sellmount = sellmount;
-		this.price = price;
-		this.weight = weight;
-		this.unit = unit;
-		this.standard = standard;
-		this.img = img;
-		this.tag1 = tag1;
-		this.tag2 = tag2;
-		this.tempImage=tempImage;
+	public double getOriginalprice() {
+		return originalprice;
+	}
+
+	public void setOriginalprice(double originalprice) {
+		this.originalprice = originalprice;
 	}
 
 	public int getImage() {
@@ -151,13 +139,55 @@ public class GoodsItem {
 	public void setImage(int image) {
 		this.image = image;
 	}
-
-	public boolean isChecked() {
-		return checked;
-	}
-
-	public void setChecked(boolean checked) {
-		this.checked = checked;
-	}
 	
+	
+	public boolean isChoose() {
+		return choose;
+	}
+
+	public void setChoose(boolean choose) {
+		this.choose = choose;
+	}
+
+	public GoodsItem(int id, String title, int stock, int sellmount,double originalprice,
+			double price, double weight, String unit, String standard,
+			String img, String tag1, String tag2,int image) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.stock = stock;
+		this.sellmount = sellmount;
+		this.originalprice=originalprice;
+		this.price = price;
+		this.weight = weight;
+		this.unit = unit;
+		this.standard = standard;
+		this.img = img;
+		this.tag1 = tag1;
+		this.tag2 = tag2;
+		this.image=image;
+	}
+	public String getCreate_time() {
+		return create_time;
+	}
+
+	public void setCreate_time(String create_time) {
+		this.create_time = create_time;
+	}
+
+	public Bitmap getBitmap() {
+		return bitmap;
+	}
+
+	public void setBitmap(Bitmap bitmap) {
+		this.bitmap = bitmap;
+	}
+
+	public List<MerchDisacount> getMerchDisacounts() {
+		return merchDisacounts;
+	}
+
+	public void setMerchDisacounts(List<MerchDisacount> merchDisacounts) {
+		this.merchDisacounts = merchDisacounts;
+	}
 }

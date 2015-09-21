@@ -50,7 +50,7 @@ public class SideBar extends View {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
-		int i = (int) event.getY();
+		/*int i = (int) event.getY();
 		int idx = i / m_nItemHeight;
 		if (idx >= mChar.length) {
 			idx = mChar.length - 1;
@@ -71,21 +71,21 @@ public class SideBar extends View {
 			list.setSelection(position);
 		} else {
 			mDialogText.setVisibility(View.INVISIBLE);
-		}
+		}*/
 		return true;
 	}
 
 	@Override
 	@SuppressLint("DrawAllocation")
 	protected void onDraw(Canvas canvas) {
-		Paint paint = new Paint();
-		paint.setColor(0xff595c61);
-		paint.setTextSize(20);
-		paint.setTextAlign(Paint.Align.CENTER);
-		float widthCenter = getMeasuredWidth() / 2;
-		for (int i = 0; i < mChar.length; i++) {
-			canvas.drawText(String.valueOf(mChar[i]), widthCenter, m_nItemHeight + (i * m_nItemHeight), paint);
-		}
+//		Paint paint = new Paint();
+//		paint.setColor(0xff595c61);
+//		paint.setTextSize(20);
+//		paint.setTextAlign(Paint.Align.CENTER);
+//		float widthCenter = getMeasuredWidth() / 2;
+//		for (int i = 0; i < mChar.length; i++) {
+//			canvas.drawText(String.valueOf(mChar[i]), widthCenter, m_nItemHeight + (i * m_nItemHeight), paint);
+//		}
 		super.onDraw(canvas);
 	}
 }

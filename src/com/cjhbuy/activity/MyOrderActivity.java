@@ -177,13 +177,13 @@ public class MyOrderActivity extends BaseActivity {
 				if(isChecked){//全选
 					for (int i = 0; i < length; i++) {
 						GoodsItem item = goodsList.get(i);
-						item.setChecked(true);
+//						item.setChecked(true);
 					}
 					selectedNum = length;
 				}else{//反选
 					for (int i = 0; i < length; i++) {
 						GoodsItem item = goodsList.get(i);
-						item.setChecked(false);
+//						item.setChecked(false);
 					}
 					selectedNum = 0;
 					selectedList.clear();
@@ -205,7 +205,7 @@ public class MyOrderActivity extends BaseActivity {
 			@Override
 			public void convert(ViewHolder helper, GoodsItem item) {
 				CheckBox checkbox = (CheckBox)helper.getView(R.id.cart_goods_select_checkbox);
-				checkbox.setChecked(item.isChecked());
+//				checkbox.setChecked(item.isChecked());
 				
 				helper.setText(R.id.cart_goods_title, item.getTitle());
 				helper.setText(R.id.cart_goods_price, "￥ " + item.getPrice());

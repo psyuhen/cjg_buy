@@ -4,6 +4,7 @@
 package com.cjhbuy.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 商品信息
@@ -33,6 +34,11 @@ public class MerchInfo implements Serializable{
 	private String order_by_clause;
 	private String sm_recommend;
 	private String free_shipping;
+	private String image_name;
+	private float weight;//重量
+	private String standard;//规格
+	
+	private List<MerchDisacount> merchDisacounts;
 	public int getMerch_id() {
 		return merch_id;
 	}
@@ -141,5 +147,30 @@ public class MerchInfo implements Serializable{
 	public void setFree_shipping(String free_shipping) {
 		this.free_shipping = free_shipping;
 	}
+	public String getImage_name() {
+		return image_name;
+	}
+	public void setImage_name(String image_name) {
+		this.image_name = image_name;
+	}
+	public List<MerchDisacount> getMerchDisacounts() {
+		return merchDisacounts;
+	}
+	public void setMerchDisacounts(List<MerchDisacount> merchDisacounts) {
+		this.merchDisacounts = merchDisacounts;
+	}
+	public float getWeight() {
+		return weight;
+	}
+	public void setWeight(float weight) {
+		this.weight = weight;
+	}
+	public String getStandard() {
+		return standard;
+	}
+	public void setStandard(String standard) {
+		this.standard = standard;
+	}
+	
 	
 }

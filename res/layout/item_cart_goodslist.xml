@@ -12,9 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="40.0dip"
+        android:layout_marginLeft="20.0dip"
         android:checked="true"
-        android:focusable="false" />
+        android:focusable="false"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/cart_goods_imageview"
@@ -22,34 +23,50 @@
         android:layout_height="@dimen/cart_goods_imageview_height"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10.0dip"
-        android:layout_toRightOf="@+id/cart_goods_select_checkbox"
-        android:background="@drawable/fruit1" />
+        android:layout_toRightOf="@+id/cart_goods_select_checkbox" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="8.0dip"
+        android:layout_marginLeft="12.0dip"
         android:layout_toRightOf="@+id/cart_goods_imageview"
         android:orientation="vertical" >
 
         <TextView
             android:id="@+id/cart_goods_title"
-            style="@style/cart_goods_list_text_style"
+            style="@style/black_normal_style"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3.0dip" />
 
-        <TextView
-            android:id="@+id/cart_goods_price"
-            style="@style/cart_goods_list_text_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/cart_goods_price"
+                android:layout_marginLeft="5.0dip"
+                style="@style/cart_goods_list_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3.0dip" />
+
+            <TextView
+                android:layout_marginLeft="10.0dip"
+                android:id="@+id/cart_goods_original_price"
+                style="@style/gray_small_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3.0dip" />
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3.0dip"
+            android:layout_marginTop="3.0dip" >
 
-            <!-- 减少数量 -->
             <Button
                 android:id="@+id/goods_minus_btn"
                 android:layout_width="@dimen/goods_addminus_image_width"

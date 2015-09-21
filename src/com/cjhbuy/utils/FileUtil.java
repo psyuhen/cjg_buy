@@ -98,6 +98,10 @@ public class FileUtil {
 				try {
 					Bitmap bitmap = QiNiuUtil.getQiNiu(imageUrl);
 					
+					if(bitmap == null){
+						return null;
+					}
+					
 					//保存文件到本地
 					File local = new File(getAppFolder() + "/" + fileName);
 					local.createNewFile();

@@ -12,7 +12,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_bar"
-        android:layout_marginBottom="60.0dip" >
+        android:layout_marginBottom="100.0dip" >
 
         <ListView
             android:id="@+id/cartListView"
@@ -25,14 +25,109 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/whitebg" >
+        android:background="@color/whitebg"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/all_num"
+                    style="@style/black_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/all_discount_money_text"
+                    style="@style/black_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_discount_money_text" />
+
+                <TextView
+                    android:id="@+id/all_discount_money"
+                    style="@style/gray_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5.0dip"
+                    android:layout_toRightOf="@+id/all_discount_money_text" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7.0dip"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/all_postage_text"
+                    style="@style/black_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_postage_text" />
+
+                <TextView
+                    android:id="@+id/all_postage"
+                    style="@style/red_big_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5.0dip"
+                    android:layout_toRightOf="@+id/all_postage_text" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                 >
+
+                <TextView
+                    android:id="@+id/all_money_text"
+                    style="@style/black_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_money_text" />
+
+                <TextView
+                    android:id="@+id/all_money"
+                    style="@style/red_big_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5.0dip"
+                    android:layout_toRightOf="@+id/all_money_text" />
+            </RelativeLayout>
+        </LinearLayout>
 
         <Button
             android:id="@+id/cart_submit_btn"
             style="@style/white_normal_style"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20.0dip"
+            android:layout_margin="10.0dip"
             android:background="@drawable/btn_order_submit"
             android:text="@string/cart_submit_btn_text" />
     </LinearLayout>
