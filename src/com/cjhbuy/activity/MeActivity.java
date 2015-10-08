@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cjhbuy.auth.SessionManager;
+import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.view.DrawerView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
@@ -78,7 +78,7 @@ public class MeActivity extends BaseActivity {
 		if(isLogin){
 			goods_top_rl.setVisibility(View.GONE);
 			order_top_rl.setVisibility(View.VISIBLE);
-			order_title.setText("用户:"+sessionManager.get(SessionManager.KEY_NAME)+"");
+			order_title.setText("用户:"+sessionManager.getUserName());
 		}else{
 			goods_top_rl.setVisibility(View.VISIBLE);
 			order_top_rl.setVisibility(View.GONE);
@@ -93,6 +93,10 @@ public class MeActivity extends BaseActivity {
 			startActivity(new Intent(MeActivity.this, LoginActivity.class));
 			break;
 		case R.id.me_order_rl:
+			if(!sessionManager.isLoggedIn()){
+				CommonsUtil.showLongToast(getApplicationContext(), "请先登录");
+				return;
+			}
 			Intent intent = new Intent();
 			intent.putExtra("order", "order");
 			intent.setClass(MeActivity.this, OrderActivity.class);

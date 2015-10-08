@@ -13,6 +13,7 @@ public class Store {
 	private int store_id;
 	private int user_id;
 	private String name;
+	private String person;//负责人
 	private String address;
 	private String phone;
 	private String logo;
@@ -38,6 +39,12 @@ public class Store {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getPerson() {
+		return person;
+	}
+	public void setPerson(String person) {
+		this.person = person;
 	}
 	public String getAddress() {
 		return address;

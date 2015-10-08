@@ -1,5 +1,6 @@
 package com.cjhbuy.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,6 +24,11 @@ import com.cjhbuy.utils.Validator;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
+/**
+ * 登录页面
+ * @author pansen
+ *
+ */
 public class LoginActivity extends BaseActivity implements OnClickListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginActivity.class);
 	private TextView login_register;
@@ -37,7 +43,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	
 	private String tmpMobile;
 	private String tmpPwd;
-//	private String from;
+	private String from;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +68,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			attemptLogin();
 		}
 		
-//		from = intent.getStringExtra("from");
+		from = intent.getStringExtra("from");
 	}
 
 	@Override
@@ -93,9 +99,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		});
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onClick(View v) {
-		
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.login_registe:
@@ -103,6 +109,16 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.login_btn:
 			attemptLogin();
+			break;
+		case R.id.back:
+			if("OrderActivity".equals(from)){
+				startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+				finish();
+			}else if("GoodsActivity".equals(from)){
+				finish();
+			}else{
+				onBackPressed();
+			}
 			break;
 		default:
 			break;
@@ -186,11 +202,19 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				user = JsonUtil.parse2Object(json, User.class);
 				sessionManager.createLoginSession(user);
 				
-				/*if("AddressActivity".equals(from)){
+				if("AddressActivity".equals(from)){
+					setResult(RESULT_OK,new Intent());
+				}else if("OrderInFragment".equals(from)){//已进行订单跳转过来的
+					setResult(RESULT_OK,new Intent());
+				}else if("OrderCompletedFragment".equals(from)){//已完成订单跳转过来的
+					setResult(RESULT_OK,new Intent());
+				}else if("CartActivity".equals(from)){//购物车跳转过来的
+					setResult(RESULT_OK,new Intent());
+				}else if("GoodsActivity".equals(from)){
 					setResult(RESULT_OK,new Intent());
 				}else{
-				}*/
-				startActivity(new Intent(LoginActivity.this, MeActivity.class));
+					startActivity(new Intent(LoginActivity.this, MeActivity.class));
+				}
 				finish();
 			}catch (Exception e) {
 				LOGGER.error(">>> 用户登录失败", e);

@@ -1,370 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical" >
 
     <include
         android:id="@+id/title_bar"
         layout="@layout/title_bar" />
 
-    <LinearLayout
-        android:id="@+id/myorder_center_ll"
+    <ListView
+        android:id="@+id/myorder_cart_listview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_bar"
-        android:orientation="vertical" >
-
-        <!-- 优惠广告，可以先隐藏 -->
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/skin" >
-
-            <TextView
-                android:id="@+id/myorder_top_tip_text"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:padding="5.0dip"
-                android:text="@string/myorder_top_tip_text" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/myorder_top_ll"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5.0dip"
-            android:background="@color/whitebg"
-            android:orientation="vertical" >
-
-            <RelativeLayout
-                android:id="@+id/myorder_address_rl"
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/myorder_top_height"
-                android:background="@drawable/relative_btn"
-                android:clickable="true" >
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true" >
-
-                    <!-- 姓名 -->
-                    <TextView
-                        android:id="@+id/my_order_name"
-                        style="@style/my_order_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10.0dip"
-                        android:text="@string/my_order_name_text" />
-
-                    <!-- 电话 -->
-                    <TextView
-                        android:id="@+id/my_order_tel"
-                        style="@style/my_order_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="40.0dip"
-                        android:layout_toRightOf="@+id/my_order_name"
-                        android:text="@string/my_order_tel_text" />
-
-                    <!-- 地址 -->
-                    <TextView
-                        android:id="@+id/my_order_address_text"
-                        style="@style/my_order_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/my_order_name"
-                        android:layout_marginLeft="10.0dip"
-                        android:text="@string/my_order_address_text" />
-					
-					<!-- 详细地址 -->
-                    <TextView
-                        android:id="@+id/my_order_address"
-                        style="@style/my_order_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/my_order_tel"
-                        android:layout_marginRight="40.0dip"
-                        android:layout_toRightOf="@+id/my_order_address_text"
-                        android:text="@string/my_order_address" />
-                </RelativeLayout>
-
-                <ImageView
-                    android:layout_width="@dimen/right_icon_width"
-                    android:layout_height="@dimen/right_icon_height"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="5.0dip"
-                    android:background="@drawable/arrow_right" />
-            </RelativeLayout>
-
-            <ImageView style="@style/my_order_top_line" />
-
-            <RelativeLayout
-                android:id="@+id/myorder_receive_time_rl"
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/myorder_top_height"
-                android:background="@drawable/relative_btn"
-                android:clickable="true" >
-
-                <!-- 收货时间 -->
-                <TextView
-                    android:id="@+id/my_order_receive_time_text"
-                    style="@style/my_order_normal_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10.0dip"
-                    android:text="@string/my_order_receive_time_text" />
-
-                <TextView
-                    android:id="@+id/my_order_receive_time"
-                    style="@style/my_order_orange_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="4.0dip"
-                    android:layout_toRightOf="@+id/my_order_receive_time_text"
-                    android:text="@string/my_order_receive_time" />
-
-                <ImageView
-                    android:layout_width="@dimen/right_icon_width"
-                    android:layout_height="@dimen/right_icon_height"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="5.0dip"
-                    android:background="@drawable/arrow_right" />
-            </RelativeLayout>
-
-            <ImageView style="@style/my_order_top_line" />
-
-            <RelativeLayout
-                android:id="@+id/myorder_pay_rl"
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/myorder_top_height"
-                android:background="@drawable/relative_btn"
-                android:clickable="true" >
-
-                <!-- 付款方式 -->
-                <TextView
-                    android:id="@+id/my_order_pay_text"
-                    style="@style/my_order_normal_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10.0dip"
-                    android:text="@string/my_order_pay_text" />
-
-                <TextView
-                    android:id="@+id/my_order_pay"
-                    style="@style/my_order_orange_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="4.0dip"
-                    android:layout_toRightOf="@+id/my_order_pay_text"
-                    android:text="@string/my_order_pay" />
-
-                <ImageView
-                    android:layout_width="@dimen/right_icon_width"
-                    android:layout_height="@dimen/right_icon_height"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="5.0dip"
-                    android:background="@drawable/arrow_right" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5.0dip"
-            android:background="@color/whitebg"
-            android:orientation="vertical" >
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/myorder_top_height" >
-
-                <ImageView
-                    android:id="@+id/goods_myorder_shop_image"
-                    android:layout_width="@dimen/right_icon_width"
-                    android:layout_height="@dimen/right_icon_height"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20.0dip"
-                    android:background="@drawable/weixin_icon" />
-
-                <TextView
-                    android:id="@+id/goods_myorder_shop_name"
-                    style="@style/myshop_title_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="4.0dip"
-                    android:layout_toRightOf="@+id/goods_myorder_shop_image"
-                    android:text="@string/goods_myorder_shop_name_text" />
-
-                <ImageView
-                    android:layout_width="@dimen/right_icon_width"
-                    android:layout_height="@dimen/right_icon_height"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="5.0dip"
-                    android:layout_toRightOf="@+id/goods_myorder_shop_name"
-                    android:background="@drawable/arrow_right" />
-            </RelativeLayout>
-
-            <ListView
-                android:id="@+id/myorder_cart_listview"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
-            </ListView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10.0dip"
-            android:background="@color/whitebg"
-            android:orientation="vertical" >
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/myorder_top_height" >
-
-                <TextView
-                    android:id="@+id/myorder_money"
-                    style="@style/gray_small_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10.0dip"
-                    android:text="@string/myorder_money_text" />
-            </RelativeLayout>
-
-            <ImageView
-                style="@style/gray_one_style_line"
-                android:layout_margin="5.0dip" />
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5.0dip" >
-
-                    <TextView
-                        style="@style/black_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10.0dip"
-                        android:text="@string/myorder_delivery_text" />
-
-                    <TextView
-                        android:id="@+id/my_order_delivery_money"
-                        style="@style/black_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="5.0dip" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5.0dip" >
-
-                    <TextView
-                        style="@style/black_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10.0dip"
-                        android:text="@string/myorder_favourable_money_text" />
-
-                    <TextView
-                        android:id="@+id/myorder_favourable_money"
-                        style="@style/black_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="5.0dip" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5.0dip" >
-
-                    <TextView
-                        style="@style/black_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10.0dip"
-                        android:text="@string/myorder_service_money_text" />
-
-                    <TextView
-                        android:id="@+id/myorder_service_money"
-                        style="@style/black_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="5.0dip" />
-                </RelativeLayout>
-
-                <ImageView
-                    style="@style/gray_one_style_line"
-                    android:layout_margin="5.0dip" />
-
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5.0dip" >
-
-                    <TextView
-                        android:id="@+id/myorder_give_text"
-                        style="@style/white_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10.0dip"
-                        android:background="@drawable/tag_text"
-                        android:text="@string/myorder_give_text" />
-
-                    <TextView
-                        android:id="@+id/myorder_give"
-                        style="@style/black_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="5.0dip"
-                        android:layout_toRightOf="@+id/myorder_give_text" />
-
-                    <TextView
-                        android:id="@+id/myorder_give_num"
-                        style="@style/black_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="5.0dip"
-                        android:layout_toRightOf="@+id/myorder_give" />
-
-                    <TextView
-                        android:id="@+id/myorder_give_money"
-                        style="@style/black_normal_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5.0dip" />
-                </RelativeLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
+        android:layout_marginBottom="60.0dip" >
+    </ListView>
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -372,33 +22,34 @@
         android:layout_alignParentBottom="true"
         android:background="@color/black_text" >
 
-        <CheckBox 
+        <CheckBox
             android:id="@+id/select_all_checkbox"
+            style="@style/CustomBlackRadioBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10.0dip"
             android:layout_centerVertical="true"
-            style="@style/CustomBlackRadioBtn"
-            />
+            android:layout_marginLeft="10.0dip"
+            android:checked="true"
+            android:visibility="gone" />
 
         <TextView 
             android:id="@+id/select_all_text"
+            style="@style/white_normal_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="3.0dip"
             android:layout_toRightOf="@+id/select_all_checkbox"
             android:text="@string/select_all_text"
-            style="@style/white_normal_style"
-            android:layout_marginLeft="3.0dip"
-            />
-        
+            android:visibility="gone" />
+
         <RelativeLayout
-            android:layout_toRightOf="@+id/select_all_text"
             android:id="@+id/bottom_line_left_cart_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="12.0dip" >
+            android:layout_marginLeft="12.0dip"
+            android:layout_toRightOf="@+id/select_all_text" >
 
             <LinearLayout
                 android:id="@+id/count_money_ll"
@@ -408,26 +59,25 @@
 
                 <TextView
                     android:id="@+id/all_money_text"
-                    style="@style/white_big_style"
+                    style="@style/white_normal_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/all_money_text" />
 
                 <TextView
                     android:id="@+id/money_count"
-                    style="@style/white_big_style"
+                    style="@style/red_normal_text_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
             <TextView
-                android:layout_below="@+id/count_money_ll"
+                style="@style/bottom_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/count_money_text"
-                style="@style/bottom_text_style" />
+                android:layout_below="@+id/count_money_ll"
+                android:text="@string/count_money_text" />
         </RelativeLayout>
-
 
         <Button
             android:id="@+id/submit_goods_btn"

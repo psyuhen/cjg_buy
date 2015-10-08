@@ -1,6 +1,7 @@
 package com.cjhbuy.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 订单详情表
@@ -28,6 +29,9 @@ public class OrderDetail implements Serializable{
 	private int amount;
 	private String unit;
 	private float price;
+	
+	private List<MerchGallery> merchGallerys;//商品图片
+
 	public String getOrder_id() {
 		return order_id;
 	}
@@ -63,6 +67,12 @@ public class OrderDetail implements Serializable{
 	}
 	public void setPrice(float price) {
 		this.price = price;
+	}
+	public List<MerchGallery> getMerchGallerys() {
+		return merchGallerys;
+	}
+	public void setMerchGallerys(List<MerchGallery> merchGallerys) {
+		this.merchGallerys = merchGallerys;
 	}
 	
 }

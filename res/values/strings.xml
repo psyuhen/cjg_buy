@@ -20,9 +20,9 @@
     <string name="good_level_text">LV1</string>
     <string name="order_horn_text">你还有未领取的商家补贴</string>
     <string name="order_complete_num_text">0</string>
-    <string name="order_complete_text">进行中</string>
+    <string name="order_complete_text">已完成</string>
     <string name="order_sell_num_text">1</string>
-    <string name="order_sell_text">已完成</string>
+    <string name="order_sell_text">进行中</string>
     <string name="order_in">进行中</string>
     <string name="order_complete">已完成</string>
     <string name="order_num_text">订单编号:</string>
@@ -128,14 +128,14 @@
     <string name="cart_text">购物车</string>
     <string name="goods_calculate_text">合计</string>
     <string name="goods_calculate_bottom_text">购物满49元免费配送</string>
-    <string name="goods_calculate">￥：7</string>
+    <string name="goods_calculate">￥：0</string>
     <!-- myorder -->
     <string name="myorder_top_tip_text">7月新款爆品，同城跨区域支持快递限时送达！</string>
     <string name="my_order_name_text">刘岚江</string>
     <string name="my_order_tel_text">18801081288</string>
     <string name="my_order_address_text">地 址:</string>
     <string name="my_order_address">广州市越秀区万国城4-a-1205</string>
-    <string name="my_order_receive_time_text">收货时间：</string>
+    <string name="my_order_receive_time_text">收货时间:</string>
     <string name="my_order_receive_time">24小时(0:00-24:00)</string>
     <string name="my_order_pay_text">付款方式:</string>
     <string name="my_order_pay">微信支付</string>

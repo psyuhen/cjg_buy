@@ -11,6 +11,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 public class HomeFragmentAdapter extends FragmentStatePagerAdapter {
 	private int pageCount =3; 
 	private Context context;
+	private HomeSaleFragment saleFragment;//按销量
+	private HomeSaleFragment distanceFragment;//按距离
+	private HomeSaleFragment populatiryFragment;//按人气
 	
 	public HomeFragmentAdapter(FragmentManager fm) {
 		super(fm);
@@ -20,6 +23,10 @@ public class HomeFragmentAdapter extends FragmentStatePagerAdapter {
 	public HomeFragmentAdapter(FragmentManager fm, Context context) {
 		super(fm);
 		this.context = context;
+		
+		this.saleFragment = HomeSaleFragment.newInstance(this.context,0);
+		this.distanceFragment = HomeSaleFragment.newInstance(this.context,1);
+		this.populatiryFragment = HomeSaleFragment.newInstance(this.context,2);
 	}
 
 	@Override
@@ -27,11 +34,11 @@ public class HomeFragmentAdapter extends FragmentStatePagerAdapter {
 		
 		switch (position) {
 		case 0:
-			return HomeSaleFragment.newInstance(this.context,0);
+			return this.saleFragment;
 		case 1:
-			return HomeSaleFragment.newInstance(this.context,1);
+			return this.distanceFragment;
 		case 2:
-			return HomeSaleFragment.newInstance(this.context,2);
+			return this.populatiryFragment;
 		}
 		return null;
 	}

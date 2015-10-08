@@ -5,12 +5,14 @@
     android:background="@drawable/kjlibrary_bg"
     android:orientation="vertical" >
 
-    <ImageView style="@style/order_item_line" />
+    <ImageView
+        style="@style/order_item_line"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/time_rl"
         android:layout_width="fill_parent"
-        android:layout_height="50.0dip"
+        android:layout_height="40.0dip"
         android:paddingBottom="3.0dip"
         android:paddingTop="3.0dip" >
 
@@ -21,7 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20.0dip"
-            android:text="@string/order_serial_text" />
+            android:text="@string/order_serial_text"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/order_serial"
@@ -31,6 +34,42 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="5.0dip"
             android:layout_toRightOf="@+id/order_serial_text" />
+
+        <TextView
+            android:id="@+id/order_status"
+            style="@style/red_normal_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10.0dip" />
+    </RelativeLayout>
+
+    <ImageView style="@style/order_item_line" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <GridView
+            android:id="@+id/order_grid_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6.0dip"
+            android:layout_marginLeft="30.0dip"
+            android:layout_marginTop="6.0dip"
+            android:focusable="false"
+            android:numColumns="6" >
+        </GridView>
+
+        <TextView
+            android:id="@+id/order_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/arrow_icon"
+            android:paddingRight="5.0dip" />
     </RelativeLayout>
 
     <ImageView style="@style/order_item_line" />
@@ -40,14 +79,15 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="6.0dip"
-        android:paddingTop="6.0dip" >
+        android:paddingBottom="2.0dip"
+        android:paddingTop="2.0dip" >
 
         <RelativeLayout
             android:id="@+id/order_buyer_ll"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:visibility="gone" >
 
             <TextView
                 android:id="@+id/order_buyer_text"
@@ -63,29 +103,16 @@
                 style="@style/order_item2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/order_buyer_text"
-                android:layout_marginLeft="5.0dip"
                 android:layout_centerVertical="true"
-                />
-
-            <Button
-                android:id="@+id/order_communication_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-				android:layout_centerVertical="true"
-                android:layout_marginRight="55.0dip"
-                android:layout_alignParentRight="true"
-                android:focusable="false"
-                style="@style/order_commication_btn_style"
-                android:background="@drawable/communication_btn"
-                android:text="@string/commication_text" />
+                android:layout_marginLeft="5.0dip"
+                android:layout_toRightOf="@+id/order_buyer_text" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/in_order_rl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="15.0dip" >
+            android:padding="5.0dip" >
 
             <ImageView
                 android:id="@+id/order_item_image"
@@ -93,7 +120,8 @@
                 android:layout_height="60.0dip"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10.0dip"
-                android:background="@drawable/order_item_image1" />
+                android:background="@drawable/order_item_image1"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/order_title"
@@ -102,77 +130,99 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20.0dip"
                 android:layout_marginRight="20.0dip"
-                android:layout_toRightOf="@+id/order_item_image" />
+                android:layout_toRightOf="@+id/order_item_image"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/order_number_text"
                 style="@style/order_item1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5.0dip"
                 android:layout_below="@+id/order_title"
                 android:layout_marginLeft="20.0dip"
+                android:layout_marginTop="5.0dip"
                 android:layout_toRightOf="@+id/order_item_image"
-                android:text="@string/order_number_text" />
-
-            <TextView
-                android:id="@+id/order_number"
-                style="@style/order_item1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/order_title"
-                 android:layout_marginTop="5.0dip"
-                android:layout_marginRight="20.0dp"
-                android:layout_toRightOf="@+id/order_number_text"
-                android:maxLines="1"
-                android:paddingLeft="3.0dp" />
-
-
-            <Button 
-                android:id="@+id/order_ratingBar_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/btn_completed_style"
-                android:focusable="false"
-                android:text="@string/btn_ratingBar_btn_text"
-                android:background="@drawable/complete_btn"
-				 android:layout_below="@+id/order_title"
-				android:layout_alignParentRight="true"
-				android:layout_marginRight="40.0dip"
-                />            
-                
-            <TextView
-                android:id="@+id/order_arrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/arrow_icon"
-                android:paddingRight="5.0dip" />
-        </RelativeLayout>
-
-        <ImageView style="@style/order_item_line" />
-
-        <LinearLayout
-            android:id="@+id/order_item_bottom_ll"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+                android:text="@string/order_number_text"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/order_price_text"
                 style="@style/order_item1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/order_number_text"
                 android:layout_marginLeft="20.0dip"
-                android:text="@string/order_item_price_text" />
+                android:layout_marginTop="3.0dip"
+                android:layout_toRightOf="@+id/order_item_image"
+                android:text="@string/order_item_price_text"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/order_price"
+                style="@style/red_normal_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="5.0dip"
+                android:layout_marginRight="5.0dip"
+                android:layout_marginTop="5.0dip" />
+
+            <TextView
+                android:id="@+id/order_number"
                 style="@style/order_item1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5.0dip" />
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="5.0dip"
+                android:layout_marginRight="5.0dp"
+                android:layout_marginTop="5.0dip"
+                android:layout_toLeftOf="@+id/order_price"
+                android:maxLines="1"
+                android:paddingLeft="3.0dp" />
+        </RelativeLayout>
+
+        <ImageView style="@style/order_item_line" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/order_communication_btn"
+                style="@style/white_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="30.0dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="5.0dip"
+                android:layout_marginRight="15.0dip"
+                android:layout_marginTop="5.0dip"
+                android:background="@drawable/communication_btn"
+                android:focusable="false"
+                android:text="@string/commication_text" />
+
+            <Button
+                android:id="@+id/order_view_btn"
+                style="@style/white_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="30.0dip"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="5.0dip"
+                android:layout_marginRight="10.0dip"
+                android:layout_marginTop="5.0dip"
+                android:layout_toLeftOf="@+id/order_communication_btn"
+                android:background="@drawable/complete_btn"
+                android:focusable="false"
+                android:text="@string/order_view" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/order_item_bottom_ll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone" >
 
             <TextView
                 android:id="@+id/order_time_text"

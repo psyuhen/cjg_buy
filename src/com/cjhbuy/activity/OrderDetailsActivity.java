@@ -163,10 +163,7 @@ public class OrderDetailsActivity extends BaseActivity {
 			
 			Order order = JsonUtil.parse2Object(json, Order.class);
 			return order;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 查询订单信息失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询订单信息失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 查询订单信息失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询订单信息失败");
 		}

@@ -89,9 +89,7 @@ public class QiNiuUtil {
 			if(json != null){
 				return json;
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 获取token失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 获取token失败",e);
 		}
 		
@@ -113,9 +111,7 @@ public class QiNiuUtil {
 			if(json != null){
 				return json;
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 获取文件URL失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 获取文件URL失败",e);
 		}
 		

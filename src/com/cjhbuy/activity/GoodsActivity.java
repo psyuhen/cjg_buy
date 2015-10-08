@@ -2,7 +2,6 @@ package com.cjhbuy.activity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,13 +20,17 @@ import com.cjhbuy.auth.SessionManager;
 import com.cjhbuy.bean.CategoryItem;
 import com.cjhbuy.bean.ClassifyInfo;
 import com.cjhbuy.bean.GoodsItem;
+import com.cjhbuy.bean.MerchCar;
+import com.cjhbuy.bean.MerchDisacount;
 import com.cjhbuy.bean.MerchInfo;
 import com.cjhbuy.bean.MerchVisitHist;
+import com.cjhbuy.common.Constants;
 import com.cjhbuy.utils.AppContext;
 import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.utils.FileUtil;
 import com.cjhbuy.utils.HttpUtil;
 import com.cjhbuy.utils.JsonUtil;
+import com.cjhbuy.utils.StringUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 /**
@@ -49,13 +52,19 @@ public class GoodsActivity extends BaseActivity {
 	public static int screen_height = 0;
 	private Button submit_goods_btn;//结算按钮
 
+	//商家ID和商家名称
 	private int store_id;
 	private String store_name;
 	
-	private ImageView goods_cart_image;//购物车
+	//合计金额
+	private TextView goods_calculate;
+	private double calculate_money;
 	
+	private ImageView goods_cart_image;//购物车图标
+	//购物车的商品数量
 	private TextView goods_cart_num_text;
 	private int good_cart_num;
+	
 	private AppContext app;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,17 +73,31 @@ public class GoodsActivity extends BaseActivity {
 		setContentView(R.layout.activity_goods);
 		initView();
 		initData();
+	}
+	
+	@Override
+	public void initView() {
+		super.initView();
+		right_imgbtn.setVisibility(View.GONE);
+		groupListView = (ListView) findViewById(R.id.listView1);
+		childListView = (ListView) findViewById(R.id.listView2);
+		goods_cart_image=(ImageView) findViewById(R.id.goods_cart_image);
+		goods_cart_image.setOnClickListener(this);
+		goods_cart_num_text = (TextView) findViewById(R.id.goods_cart_num_text);
+		goods_calculate = (TextView) findViewById(R.id.goods_calculate);
 		/**
 		 * 加载类别
 		 */
+		categoryList = new ArrayList<CategoryItem>();
 		groupAdapter = new CategoryAdapter(this, categoryList);
 		groupListView.setAdapter(groupAdapter);
 		groupListView.setOnItemClickListener(new MyItemClick());
 		/**
 		 * 加载商品
 		 */
-		childAdapter = new ChildAdapter(GoodsActivity.this, good_cart_num,
-				goods_cart_num_text);
+		childAdapter = new ChildAdapter(GoodsActivity.this, good_cart_num, goods_cart_num_text);
+		childAdapter.setCalculate_money(calculate_money);
+		childAdapter.setGoods_calculate(goods_calculate);
 		childListView.setAdapter(childAdapter);
 		childAdapter.setChildData(allgoodsList);
 
@@ -96,22 +119,21 @@ public class GoodsActivity extends BaseActivity {
 		//结算
 		submit_goods_btn = (Button) findViewById(R.id.submit_goods_btn);
 		submit_goods_btn.setOnClickListener(this);
-
-	}
-	
-	@Override
-	public void initView() {
-		super.initView();
-		right_imgbtn.setVisibility(View.GONE);
-		groupListView = (ListView) findViewById(R.id.listView1);
-		childListView = (ListView) findViewById(R.id.listView2);
-		goods_cart_image=(ImageView) findViewById(R.id.goods_cart_image);
-		goods_cart_image.setOnClickListener(this);
-		goods_cart_num_text = (TextView) findViewById(R.id.goods_cart_num_text);
-		//购物图标中显示数量
+		
+		
 		app = (AppContext) getApplication();
-		good_cart_num = app.getCartGoodLists().size();
+		//登录了，查询数据库的购物车
+		if(sessionManager.isLoggedIn()){
+			queryMerchCar();
+		}
+		
+		//购物图标中显示数量
+		good_cart_num = app.getListNumber();
 		goods_cart_num_text.setText(String.valueOf(good_cart_num));
+		
+		//合计金额
+		calculate_money = app.getListCalMoney();
+		goods_calculate.setText(StringUtil.format2string(calculate_money));
 	}
 
 	private void initData() {
@@ -120,13 +142,63 @@ public class GoodsActivity extends BaseActivity {
 		store_name = intent.getStringExtra("store_name");
 		title.setText(store_name);
 		
-		categoryList = new ArrayList<CategoryItem>();
 		queryclassify();
 
 		allgoodsList = new ArrayList<GoodsItem>();
 		if(!categoryList.isEmpty()){//默认查询出第一个分类的商品信息
 			CategoryItem categoryItem = categoryList.get(0);
 			queryByClassifyId(categoryItem.getId());
+		}
+	}
+	
+	//查询购物车信息
+	private void queryMerchCar(){
+		int user_id = sessionManager.getUserId();
+		String url = HttpUtil.BASE_URL + "/merchcar/queryMerchCarByUser.do?user_id="+user_id;
+		
+		try {
+			String json = HttpUtil.getRequest(url);
+			if(json == null){
+				//CommonsUtil.showLongToast(getApplicationContext(), "查询购物车信息失败");
+				return;
+			}
+			
+			List<MerchCar> list = JsonUtil.parse2ListMerchCar(json);
+			if(list != null){
+				int length = list.size();
+				List<GoodsItem> goodsList = new ArrayList<GoodsItem>();
+				for (int i = 0; i < length; i++) {
+					MerchCar merchCar = list.get(i);
+					
+					GoodsItem goodsItem = new GoodsItem();
+					goodsItem.setId(merchCar.getMerch_id());//商品ID
+					goodsItem.setSellmount(merchCar.getBuy_num());//购买数量
+					
+					MerchInfo merchInfo = merchCar.getMerch();
+					if(merchInfo != null){
+						goodsItem.setTitle(merchInfo.getName());
+						goodsItem.setPrice(merchInfo.getPrice());//价格
+						
+						goodsItem.setUnit(merchInfo.getUnit());//单位
+						goodsItem.setStandard(merchInfo.getStandard());//规格
+						goodsItem.setWeight(merchInfo.getWeight());
+						
+						goodsItem.setBitmap(FileUtil.getCacheFile(merchInfo.getImage_name()));//商品图片
+						
+					}
+					
+					List<MerchDisacount> merchDisacounts = merchCar.getMerchDisacounts();
+					goodsItem.setMerchDisacounts(merchDisacounts);
+					
+					goodsList.add(goodsItem);
+				}
+				
+				app.getCartGoodLists().clear();
+				app.getCartGoodLists().addAll(goodsList);
+			}
+		}catch (Exception e) {
+			LOGGER.error(">>> 查询商品信息失败",e);
+			CommonsUtil.showLongToast(getApplicationContext(), "查询商品信息失败");
 		}
 	}
 
@@ -141,8 +213,7 @@ public class GoodsActivity extends BaseActivity {
 			groupAdapter.setSelectedPosition(position);
 
 			if (childAdapter == null) {
-				childAdapter = new ChildAdapter(GoodsActivity.this,
-						good_cart_num, goods_cart_num_text);
+				childAdapter = new ChildAdapter(GoodsActivity.this, good_cart_num, goods_cart_num_text);
 				childListView.setAdapter(childAdapter);
 			}
 			queryByClassifyId(item.getId());
@@ -153,13 +224,41 @@ public class GoodsActivity extends BaseActivity {
 		}
 
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case Constants.GOODS_REQUEST_CODE:
+			if(!sessionManager.isLoggedIn()){
+				return;
+			}
+			Intent intent = new Intent();
+			intent.putExtra("store_name", store_name);
+			intent.setClass(GoodsActivity.this, MyOrderActivity.class);//结算
+			startActivity(intent);
+			break;
+
+		default:
+			break;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.submit_goods_btn:
+			if(!sessionManager.isLoggedIn()){
+				Intent intent = new Intent(GoodsActivity.this, LoginActivity.class);
+				intent.putExtra("from", "GoodsActivity");
+//				startActivity(intent);
+				startActivityForResult(intent, Constants.GOODS_REQUEST_CODE);
+				return;
+			}
+			
 			Intent intent = new Intent();
+			intent.putExtra("store_name", store_name);
 			intent.setClass(GoodsActivity.this, MyOrderActivity.class);//结算
 			startActivity(intent);
 			break;
@@ -199,10 +298,7 @@ public class GoodsActivity extends BaseActivity {
 			if(groupAdapter != null){
 				groupAdapter.notifyDataSetChanged();
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 查询分类列表失败",e);
-			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 查询分类列表失败",e);
 			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
 		}
@@ -214,6 +310,7 @@ public class GoodsActivity extends BaseActivity {
 		MerchInfo info = new MerchInfo();
 		info.setStore_id(store_id);
 		info.setClassify_id(classify_id);
+		info.setOut_published("0");
 		/*Map<String,String> map = new HashMap<String, String>();
 		map.put("store_id", store_id);
 		map.put("classify_id", ""+classify_id);*/
@@ -239,10 +336,7 @@ public class GoodsActivity extends BaseActivity {
 					allgoodsList.add(goodsItem);
 				}
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 查询商品信息失败",e);
-			CommonsUtil.showShortToast(getApplicationContext(), "查询商品信息失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 查询商品信息失败",e);
 			CommonsUtil.showShortToast(getApplicationContext(), "查询商品信息失败");
 		}
@@ -262,9 +356,7 @@ public class GoodsActivity extends BaseActivity {
 			
 			String url =  HttpUtil.BASE_URL + "/merchvisit/addMerchVisitHist.do";
 			HttpUtil.postRequest(url,merchVisitHist);
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 新增商品访问记录失败", e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 新增商品访问记录失败", e);
 		}
 	}

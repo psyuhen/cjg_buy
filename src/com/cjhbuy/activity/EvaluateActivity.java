@@ -1,7 +1,5 @@
 package com.cjhbuy.activity;
 
-import java.util.concurrent.ExecutionException;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -78,10 +76,7 @@ public class EvaluateActivity extends BaseActivity{
 			}
 			evaluate_ratingBar.setRating(Float.valueOf(buyerScore));
 			
-		} catch (InterruptedException e) {
-			LOGGER.error("查询买家评分信息失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询买家评分信息失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("查询买家评分信息失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询买家评分信息失败");
 		}
@@ -110,10 +105,7 @@ public class EvaluateActivity extends BaseActivity{
 				return;
 			}
 			CommonsUtil.showLongToast(getApplicationContext(), "评分成功");
-		} catch (InterruptedException e) {
-			LOGGER.error("评分失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "评分失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("评分失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "评分失败");
 		}

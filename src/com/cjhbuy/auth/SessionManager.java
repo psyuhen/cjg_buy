@@ -144,7 +144,28 @@ public class SessionManager {
 	public int getInt(String key){
 		return pref.getInt(key, 0);
 	}
+	/**
+	 * 获取用户ID
+	 * @return
+	 */
+	public int getUserId(){
+		return getInt(KEY_USER_ID);
+	}
+	/**
+	 * 获取商家ID
+	 * @return
+	 */
+	public int getStoreId(){
+		return getInt("store_id");
+	}
 
+	/**
+	 * 获取用户名称
+	 * @return
+	 */
+	public String getUserName(){
+		return get(KEY_NAME);
+	}
 	/**
 	 * Create login session
 	 * */

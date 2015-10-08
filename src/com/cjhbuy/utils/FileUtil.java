@@ -7,7 +7,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -54,7 +53,22 @@ public class FileUtil {
 	public static String getAppFolder() {
 		return Environment.getExternalStorageDirectory() + "/" + FOLDER;
 	}
-
+	/**
+	 * 获取APP目录
+	 * 
+	 * @return
+	 */
+	public static File getAppFolderFile() {
+		return new File(getAppFolder());
+	}
+	/**
+	 * 获取APP目录
+	 * @param fileName
+	 * @return
+	 */
+	public static File getAppFolderFile(String fileName) {
+		return new File(getAppFolder() + "/" + fileName);
+	}
 	/**
 	 * 判断文件是否存在
 	 * 
@@ -103,7 +117,7 @@ public class FileUtil {
 					}
 					
 					//保存文件到本地
-					File local = new File(getAppFolder() + "/" + fileName);
+					File local = getAppFolderFile(fileName);
 					local.createNewFile();
 					
 					fos = new FileOutputStream(local);
@@ -112,12 +126,8 @@ public class FileUtil {
 					bos.flush();
 					
 					return bitmap;
-				} catch (InterruptedException e) {
+				} catch (Exception e) {
 					LOGGER.error("从7牛中获取文件出错",e);
-				} catch (ExecutionException e) {
-					LOGGER.error("从7牛中获取文件出错",e);
-				} catch (IOException e) {
-					LOGGER.error("保存文件到本地出错",e);
 				}finally{
 					if(bos != null){
 						try {

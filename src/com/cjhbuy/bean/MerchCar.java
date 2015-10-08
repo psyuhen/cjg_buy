@@ -14,13 +14,12 @@ public class MerchCar {
 	private int car_id;
 	private int merch_id;
 	private int buy_num;
+	private int user_id;
 	private String create_time;
 	
-	private String name;
-	private String desc;
-	private float price;
-	
 	private int image;
+	
+	private MerchInfo merch;
 	
 	private String image_name;
 	
@@ -49,24 +48,6 @@ public class MerchCar {
 	public void setCreate_time(String create_time) {
 		this.create_time = create_time;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getDesc() {
-		return desc;
-	}
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
-	public float getPrice() {
-		return price;
-	}
-	public void setPrice(float price) {
-		this.price = price;
-	}
 	public int getImage() {
 		return image;
 	}
@@ -84,6 +65,18 @@ public class MerchCar {
 	}
 	public void setMerchDisacounts(List<MerchDisacount> merchDisacounts) {
 		this.merchDisacounts = merchDisacounts;
+	}
+	public MerchInfo getMerch() {
+		return merch;
+	}
+	public void setMerch(MerchInfo merch) {
+		this.merch = merch;
+	}
+	public int getUser_id() {
+		return user_id;
+	}
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
 	}
 	
 }

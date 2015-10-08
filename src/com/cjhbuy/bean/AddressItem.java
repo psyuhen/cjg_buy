@@ -9,9 +9,9 @@ public class AddressItem  implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private int freqa_id;
 	private int user_id;
-	private int town_id;
-	private String province_code;//详细地址
-	private String city_code;//详细地址
+	private String town;
+	private String province;//详细地址
+	private String city;//详细地址
 	private String address;//详细地址
 	private String mobile;
 	private String user_name;
@@ -28,23 +28,23 @@ public class AddressItem  implements Serializable{
 	public void setUser_id(int user_id) {
 		this.user_id = user_id;
 	}
-	public int getTown_id() {
-		return town_id;
+	public String getTown() {
+		return town;
 	}
-	public void setTown_id(int town_id) {
-		this.town_id = town_id;
+	public void setTown(String town) {
+		this.town = town;
 	}
-	public String getProvince_code() {
-		return province_code;
+	public String getProvince() {
+		return province;
 	}
-	public void setProvince_code(String province_code) {
-		this.province_code = province_code;
+	public void setProvince(String province) {
+		this.province = province;
 	}
-	public String getCity_code() {
-		return city_code;
+	public String getCity() {
+		return city;
 	}
-	public void setCity_code(String city_code) {
-		this.city_code = city_code;
+	public void setCity(String city) {
+		this.city = city;
 	}
 	public String getAddress() {
 		return address;

@@ -11,14 +11,15 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -26,19 +27,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.cjhbuy.adapter.CommonAdapter;
-import com.cjhbuy.adapter.ViewHolder;
+import com.cjhbuy.adapter.MyOrderGoodsAdapter;
 import com.cjhbuy.bean.AddressItem;
 import com.cjhbuy.bean.GoodsItem;
+import com.cjhbuy.bean.MerchDisacount;
 import com.cjhbuy.bean.Order;
+import com.cjhbuy.bean.OrderDetail;
 import com.cjhbuy.common.Constants;
+import com.cjhbuy.utils.AppContext;
 import com.cjhbuy.utils.CommonsUtil;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 
 public class MyOrderActivity extends BaseActivity {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MyOrderActivity.class);
+
 	// 订单列表
 	private ListView myorder_cart_listview;
-	// 购物车的的商品
-	private List<GoodsItem> goodsList;
 	// 地址
 	private RelativeLayout myorder_address_rl;
 	// 收获时间
@@ -57,8 +62,6 @@ public class MyOrderActivity extends BaseActivity {
 	private TextView my_order_delivery_money;
 	// 优惠金额
 	private TextView myorder_favourable_money;
-	// 服务费
-	private TextView myorder_service_money;
 	// 赠品
 	private TextView myorder_give;
 	// 赠品数量
@@ -67,6 +70,8 @@ public class MyOrderActivity extends BaseActivity {
 	private TextView myorder_give_money;
 	// 总价
 	private TextView money_count;
+	// 商品数量
+	private TextView myorder_goods_num;
 
 	// 预设时间对话框
 	private AlertDialog PresetTimeDialog = null;
@@ -89,23 +94,41 @@ public class MyOrderActivity extends BaseActivity {
 	private int mMinute;
 
 	private Button preset_time_confirm_btn;
+	// 全局参数
+	private AppContext app;
+	// 列表的头和尾部
+	private View headView;
+	private View footView;
+	// 全选按钮
+//	private CheckBox select_all_checkbox;
+	// 适配器
+	private MyOrderGoodsAdapter adapter;
+	private double allmoney;
+	private double discountmoney;
+	private int postage;
+	private int allnum;
 	
-	private TextView my_order_name;//姓名
+	//收货地址
+	private TextView my_order_name;//收货人
 	private TextView my_order_tel;//电话
 	private TextView my_order_address;//详细地址
-	private TextView my_order_receive_time;//收货时间
+	
+	//收货时间
+	private TextView my_order_receive_time;//时间
+	
+	//付款方式
 	private TextView my_order_pay;//付款方式
+	private String payWayOnline = "1";//默认为微信支付
 	
-	private String payWayOnline = "";//支付方式
+	//商店名称
+	private TextView goods_myorder_shop_name;//商店名称
+	
+	//地址
+	private AddressItem addressItem;
+	
 
-	private CheckBox select_all_checkbox;//全选
-	private CommonAdapter<GoodsItem> adapter;
-	private int selectedNum = 0;
-	
-	private List<View> selectedList = new ArrayList<View>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_myorder);
 		initView();
@@ -113,84 +136,117 @@ public class MyOrderActivity extends BaseActivity {
 	}
 
 	private void initData() {
+		// 初始化商品状态
+		initMoney();
+		postage = CommonsUtil.postage(allmoney);//计算邮费 TODO 以后可能要修改哟
 		
-		for (int i = 0; i < 2; i++) {
-			GoodsItem goodsItem = new GoodsItem();
-			goodsItem.setTitle("丹麦进口 Kjeldsens 蓝罐 曲奇 礼盒 908g");
-			goodsItem.setPrice(109);
-			goodsList.add(goodsItem);
-		}
-
-		adapter.notifyDataSetChanged();
+		my_order_delivery_money.setText("￥ " + postage);//邮费
+		myorder_favourable_money.setText("￥ " + discountmoney);//优惠金额
+		myorder_favourable_money.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+		myorder_goods_num.setText("共" + allnum + "件商品");//共多少商品
+		// myorder_service_money.setText("￥ 0");
 		
-		my_order_delivery_money.setText("￥ 5");
-		myorder_favourable_money.setText("￥ 0");
-		myorder_service_money.setText("￥ 0");
+		
+		//TODO 赠品以后再修改吧
 		myorder_give.setText("福成有机牛奶原味[赠]");
 		myorder_give_num.setText("X2");
 		myorder_give_money.setText("￥ 0");
-		money_count.setText("￥ 7+5");
-
+		if (postage > 0) {
+			money_count.setText("￥" + allmoney + "+" + postage);
+		} else {
+			money_count.setText("￥" + allmoney);
+		}
+		
+		Intent intent = getIntent();
+		String store_name = intent.getStringExtra("store_name");
+		goods_myorder_shop_name.setText(store_name);
+	}
+	
+	//计算购物车里面的金额
+	private void initMoney() {
+		for (GoodsItem goodsItem : app.getCartGoodLists()) {
+			int sellmount = goodsItem.getSellmount();
+			double price = goodsItem.getPrice();//原价格
+			
+			double disacountMoney = 0;
+			List<MerchDisacount> merchDisacounts = goodsItem.getMerchDisacounts();
+			if(merchDisacounts != null && !merchDisacounts.isEmpty()){
+				MerchDisacount disacount  = merchDisacounts.get(0);
+				
+				float disacount_money = disacount.getDisacount_money();
+				disacountMoney = (disacount_money < 0.0f) ? 0.0f : disacount_money;
+			}
+			
+			allnum = allnum + sellmount;//购买数量
+			this.discountmoney = this.discountmoney + (disacountMoney * sellmount);//优惠金额
+			allmoney = allmoney + sellmount * (price - disacountMoney);//实际金额
+		}
 	}
 
 	@Override
 	public void initView() {
 		super.initView();
 		title.setText("我的下单");
-		goodsList = new ArrayList<GoodsItem>();
-		adapter = showAdapter();
-		myorder_cart_listview = (ListView) findViewById(R.id.myorder_cart_listview);
-		myorder_cart_listview.setAdapter(adapter);
+		//下单的头和尾
+		headView = LayoutInflater.from(this).inflate(R.layout.item_myorder_top,null);
+		footView = LayoutInflater.from(this).inflate(R.layout.item_myorder_bottom, null);
 		
-		myorder_address_rl = (RelativeLayout) findViewById(R.id.myorder_address_rl);
+		//要购买的所有商品
+		myorder_cart_listview = (ListView) findViewById(R.id.myorder_cart_listview);
+		
+		//地址
+		myorder_address_rl = (RelativeLayout) headView.findViewById(R.id.myorder_address_rl);
 		myorder_address_rl.setOnClickListener(this);
-		myorder_receive_time_rl = (RelativeLayout) findViewById(R.id.myorder_receive_time_rl);
+		
+		//收货人，电话，详细地址
+		my_order_name = (TextView) headView.findViewById(R.id.my_order_name);
+		my_order_tel = (TextView) headView.findViewById(R.id.my_order_tel);
+		my_order_address = (TextView) headView.findViewById(R.id.my_order_address);
+		
+		//收货时间
+		myorder_receive_time_rl = (RelativeLayout) headView.findViewById(R.id.myorder_receive_time_rl);
 		myorder_receive_time_rl.setOnClickListener(this);
-		myorder_pay_rl = (RelativeLayout) findViewById(R.id.myorder_pay_rl);
+		
+		//具体时间
+		my_order_receive_time = (TextView) headView.findViewById(R.id.my_order_receive_time);
+		
+		//支付方式
+		myorder_pay_rl = (RelativeLayout) headView.findViewById(R.id.myorder_pay_rl);
 		myorder_pay_rl.setOnClickListener(this);
-		submit_goods_btn = (Button) findViewById(R.id.submit_goods_btn);//结算
+		
+		//付款方式
+		my_order_pay = (TextView) headView.findViewById(R.id.my_order_pay);
+		
+		//商店名称
+		goods_myorder_shop_name = (TextView) headView.findViewById(R.id.goods_myorder_shop_name);
+		
+		//结算
+		submit_goods_btn = (Button) findViewById(R.id.submit_goods_btn);
 		submit_goods_btn.setOnClickListener(this);
 
-		my_order_delivery_money = (TextView) findViewById(R.id.my_order_delivery_money);
-		myorder_favourable_money = (TextView) findViewById(R.id.myorder_favourable_money);
-		myorder_service_money = (TextView) findViewById(R.id.myorder_service_money);
-		myorder_give = (TextView) findViewById(R.id.myorder_give);
-		myorder_give_num = (TextView) findViewById(R.id.myorder_give_num);
-		myorder_give_money = (TextView) findViewById(R.id.myorder_give_money);
+		//邮费
+		my_order_delivery_money = (TextView) footView.findViewById(R.id.my_order_delivery_money);
+		//优惠金额
+		myorder_favourable_money = (TextView) footView.findViewById(R.id.myorder_favourable_money);
+		//商品数量
+		myorder_goods_num = (TextView) footView.findViewById(R.id.myorder_goods_num);
+		//赠品信息（TODO 赠品信息以后可能也得修改）
+		myorder_give = (TextView) footView.findViewById(R.id.myorder_give);
+		myorder_give_num = (TextView) footView.findViewById(R.id.myorder_give_num);
+		myorder_give_money = (TextView) footView.findViewById(R.id.myorder_give_money);
 		money_count = (TextView) findViewById(R.id.money_count);
+		//
+		app = (AppContext) getApplication();
+
+//		select_all_checkbox = (CheckBox) findViewById(R.id.select_all_checkbox);
 		
-		//姓名
-		my_order_name = (TextView) findViewById(R.id.my_order_name);
-		my_order_tel = (TextView) findViewById(R.id.my_order_tel);
-		my_order_address = (TextView) findViewById(R.id.my_order_address);
-		my_order_receive_time = (TextView) findViewById(R.id.my_order_receive_time);
-		my_order_pay = (TextView) findViewById(R.id.my_order_pay);
-		
-		//全选
-		select_all_checkbox = (CheckBox)findViewById(R.id.select_all_checkbox);
-		select_all_checkbox.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				CheckBox checkBox = (CheckBox)view;
-				boolean isChecked = checkBox.isChecked();
-				int length = goodsList.size();
-				if(isChecked){//全选
-					for (int i = 0; i < length; i++) {
-						GoodsItem item = goodsList.get(i);
-//						item.setChecked(true);
-					}
-					selectedNum = length;
-				}else{//反选
-					for (int i = 0; i < length; i++) {
-						GoodsItem item = goodsList.get(i);
-//						item.setChecked(false);
-					}
-					selectedNum = 0;
-					selectedList.clear();
-				}
-				adapter.notifyDataSetChanged();
-			}
-		});
+		adapter = new MyOrderGoodsAdapter(MyOrderActivity.this,
+				app.getCartGoodLists(), money_count, myorder_goods_num,
+				my_order_delivery_money, myorder_favourable_money);
+		// myorder_cart_listview.setAdapter(showAdapter());
+		myorder_cart_listview.setAdapter(adapter);
+		myorder_cart_listview.addHeaderView(headView);
+		myorder_cart_listview.addFooterView(footView);
 	}
 
 	/**
@@ -198,87 +254,21 @@ public class MyOrderActivity extends BaseActivity {
 	 * 
 	 * @return
 	 */
-	public CommonAdapter<GoodsItem> showAdapter() {
-		return new CommonAdapter<GoodsItem>(MyOrderActivity.this, goodsList,
-				R.layout.item_cart_goodslist) {
+	/*public CommonAdapter<GoodsItem> showAdapter() {
+		return new CommonAdapter<GoodsItem>(MyOrderActivity.this,
+				app.getCartGoodLists(), R.layout.item_cart_goodslist) {
 
 			@Override
-			public void convert(ViewHolder helper, GoodsItem item) {
-				CheckBox checkbox = (CheckBox)helper.getView(R.id.cart_goods_select_checkbox);
-//				checkbox.setChecked(item.isChecked());
-				
+			public void convert(ViewHolder helper, final GoodsItem item) {
 				helper.setText(R.id.cart_goods_title, item.getTitle());
 				helper.setText(R.id.cart_goods_price, "￥ " + item.getPrice());
 				helper.setText(R.id.goods_item_stock, "0");
-				
-				Button goods_minus_btn = helper.getView(R.id.goods_minus_btn);
-				Button goods_add_btn = helper.getView(R.id.goods_add_btn);
-				
-				goods_minus_btn.setOnClickListener(new ClickHandler(helper));
-				goods_add_btn.setOnClickListener(new ClickHandler(helper));
-				checkbox.setOnClickListener(new CheckedHandler(helper));
+				helper.setImageResource(R.id.cart_goods_imageview,item.getImage());
+				CheckBox checkBox = helper.getView(R.id.cart_goods_select_checkbox);
+				checkBox.setChecked(item.isChoose());
 			}
 		};
-	}
-	//checkbox点击事件
-	class CheckedHandler implements OnClickListener{
-		ViewHolder holder;
-		public CheckedHandler(ViewHolder holder) {
-			this.holder = holder;
-		}
-		@Override
-		public void onClick(View view) {
-			CheckBox checkBox = (CheckBox)view;
-			boolean isChecked = checkBox.isChecked();
-			if(isChecked){
-				selectedNum ++;
-			}else{
-				selectedNum --;
-			}
-			
-			int length = goodsList.size();
-			
-			if(selectedNum != length){
-				select_all_checkbox.setChecked(false);
-			}else{
-				select_all_checkbox.setChecked(true);
-			}
-		}
-	}
-	
-	//购物车里面的添加或者减少数量
-	class ClickHandler implements OnClickListener{
-		ViewHolder holder;
-		public ClickHandler(ViewHolder holder) {
-			this.holder = holder;
-		}
-		@Override
-		public void onClick(View v) {
-			EditText goods_item_stock = (EditText)holder.getView(R.id.goods_item_stock);
-			String stock = goods_item_stock.getText().toString();
-			stock = StringUtils.trimToEmpty(stock);
-			stock = "".equals(stock) ? "0" : stock;
-			int num = Integer.parseInt(stock);
-			
-			switch(v.getId()){
-			case R.id.goods_minus_btn:
-				num --;
-				if(num < 0){
-					num = 0;
-				}
-				goods_item_stock.setText(String.valueOf(num));
-				break;
-			case R.id.goods_add_btn:
-				num ++;
-				
-				goods_item_stock.setText(String.valueOf(num));
-				break;
-			default:
-				break;
-			}
-		}
-	}
-
+	}*/
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -287,14 +277,18 @@ public class MyOrderActivity extends BaseActivity {
 			if(data != null){
 				Bundle extras = data.getExtras();
 				AddressItem item = (AddressItem)extras.getSerializable("address");
+				addressItem = item;
 				my_order_name.setText(item.getUser_name());
 				my_order_tel.setText(item.getMobile());
-				my_order_address.setText(item.getAddress());
+				my_order_address.setText(StringUtils.trimToEmpty(item.getProvince())
+						+ StringUtils.trimToEmpty(item.getCity())
+						+ StringUtils.trimToEmpty(item.getTown())
+						+ StringUtils.trimToEmpty(item.getAddress()));
 			}
 			break;
-		case Constants.PAYWAY_REQUEST_CODE:
+		case Constants.PAYWAY_REQUEST_CODE://付款方式
 			if(data != null){
-				payWayOnline = data.getStringExtra("payWayOnline");
+				String payWayOnline = data.getStringExtra("payWayOnline");
 				String payWayText = "";
 				if("2".equals(payWayOnline)){
 					payWayText = "货到付款";
@@ -312,9 +306,9 @@ public class MyOrderActivity extends BaseActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+
 	@Override
 	public void onClick(View v) {
-		
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.myorder_address_rl://选择地址
@@ -347,7 +341,7 @@ public class MyOrderActivity extends BaseActivity {
 			break;
 		}
 	}
-	
+
 	private void submitOrders(){
 		//点击结算之前，先判断有没有选择地址了/有没有选择送货时间了/有没有选择商品了
 		String name = my_order_name.getText().toString();//姓名
@@ -381,52 +375,66 @@ public class MyOrderActivity extends BaseActivity {
 		}
 		
 		//有没有选择商品了
-		if(selectedNum == 0){
-			CommonsUtil.showLongToast(getApplicationContext(), "请选择一个需要购买的商品!");
+		List<GoodsItem> cartGoodLists = app.getCartGoodLists();
+		if(cartGoodLists.isEmpty()){
+			CommonsUtil.showLongToast(getApplicationContext(), "没有购买的商品!");
 			return;
 		}
+		double amount_money = adapter.getAll_money();//获取实际金额
+		
 		
 		Order order = new Order();
 		order.setBuyer_name(name);//收货人
+		order.setBuyer_mobile(tel);
 		order.setAddress(address);//详细地址
 		order.setSend_time(receiveTime);//送货时间
-		order.setPay_type(orderPay);//付款方式
+		order.setPay_type(payWayOnline);//付款方式
+		
+		int postage = CommonsUtil.postage(amount_money);
+		order.setAmount_money((float)amount_money + postage);//成交金额
+		order.setFreight(postage);//邮费
+		
+		//买家ID和名称
+		int user_id = sessionManager.getUserId();
+		order.setBuyer_user_id(user_id);
+		String buyer_user_name = sessionManager.getUserName();
+		order.setBuyer_user_name(buyer_user_name);
+		order.setCurrency_unit("人民币");//币种
+		order.setInvoice_need("0");//默认不需要发票
+		
+		order.setBuyer_del("0");//默认未删除
+		order.setSeller_del("0");//默认未删除
+		order.setBuyer_score("0");//默认未评分
+		order.setSeller_score("0");//默认未评分
+		
+		//如果有多个商家的商品，将拆分订单。
+		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
+		for (GoodsItem goodsItem : cartGoodLists) {
+			OrderDetail orderDetail = new OrderDetail();
+			orderDetail.setMerch_id(goodsItem.getId());
+			orderDetail.setAmount(goodsItem.getSellmount());//成交数量
+			orderDetail.setPrice((float)goodsItem.getPrice());//价格
+			orderDetail.setUnit(goodsItem.getUnit());
+			orderDetail.setMerch_name(goodsItem.getTitle());
+			
+			orderDetails.add(orderDetail);
+		}
+		order.setOrderDetails(orderDetails);
 		
 		//还需要计算价格呢
 		
 		Intent submitIntent = new Intent();
-		submitIntent.setClass(MyOrderActivity.this,
-				PayConfirmActivity.class);
+		submitIntent.setClass(MyOrderActivity.this,PayConfirmActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable("order", order);
+		submitIntent.putExtras(bundle);
 		startActivity(submitIntent);
 	}
-
-	// /**
-	// * 设置时间
-	// */
-	// private void setTimeOfDay() {
-	// final Calendar c = Calendar.getInstance();
-	// mHour = c.get(Calendar.HOUR_OF_DAY);
-	// mMinute = c.get(Calendar.MINUTE);
-	// updateTimeDisplay();
-	// }
-	//
-	// /**
-	// * 设置日期
-	// */
-	// private void setDateTime() {
-	// final Calendar c = Calendar.getInstance();
-	//
-	// mYear = c.get(Calendar.YEAR);
-	// mMonth = c.get(Calendar.MONTH);
-	// mDay = c.get(Calendar.DAY_OF_MONTH);
-	// updateDateDisplay();
-	// }
-
+	
 	/**
 	 * 处理日期和时间控件的Handler
 	 */
 	Handler dateandtimeHandler = new Handler() {
-
 		@SuppressLint("HandlerLeak")
 		@SuppressWarnings("deprecation")
 		@Override
@@ -446,7 +454,6 @@ public class MyOrderActivity extends BaseActivity {
 	 * 日期控件的事件
 	 */
 	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-
 		@Override
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
@@ -475,11 +482,9 @@ public class MyOrderActivity extends BaseActivity {
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DATE_DIALOG_ID:
-			return new DatePickerDialog(this, mDateSetListener, mYear, mMonth,
-					mDay);
+			return new DatePickerDialog(this, mDateSetListener, mYear, mMonth,mDay);
 		case TIME_DIALOG_ID:
-			return new TimePickerDialog(this, mTimeSetListener, mHour, mMinute,
-					true);
+			return new TimePickerDialog(this, mTimeSetListener, mHour, mMinute,true);
 		}
 
 		return null;
@@ -505,20 +510,17 @@ public class MyOrderActivity extends BaseActivity {
 		}
 	}
 
-	//预设时间
 	private void showPresetTimeDialog() {
-		
-		PresetTimeDialog = new AlertDialog.Builder(MyOrderActivity.this)
-				.create();
+		PresetTimeDialog = new AlertDialog.Builder(MyOrderActivity.this).create();
 		PresetTimeDialog.show();
-		PresetTimeDialog.getWindow()
-				.setContentView(R.layout.dialog_preset_time);
+		PresetTimeDialog.getWindow().setContentView(R.layout.dialog_preset_time);
+		
 		showDate = (EditText) PresetTimeDialog.findViewById(R.id.showdate);
 		pickDate = (Button) PresetTimeDialog.findViewById(R.id.pickdate);
 		showTime = (EditText) PresetTimeDialog.findViewById(R.id.showtime);
 		pickTime = (Button) PresetTimeDialog.findViewById(R.id.picktime);
-		preset_time_confirm_btn = (Button) PresetTimeDialog
-				.findViewById(R.id.preset_time_confirm_btn);
+		preset_time_confirm_btn = (Button) PresetTimeDialog.findViewById(R.id.preset_time_confirm_btn);
+		
 		pickDate.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -547,7 +549,7 @@ public class MyOrderActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				PresetTimeDialog.dismiss();
-				//
+				//设置收货时间
 				String date = showDate.getText().toString();
 				String time = showTime.getText().toString();
 				my_order_receive_time.setText(date + time);
@@ -565,17 +567,12 @@ public class MyOrderActivity extends BaseActivity {
 	}
 
 	private void showReceiveTime() {
-		
-		ReceiveTimeDialog = new AlertDialog.Builder(MyOrderActivity.this)
-				.create();
+		ReceiveTimeDialog = new AlertDialog.Builder(MyOrderActivity.this).create();
 		ReceiveTimeDialog.show();
-		ReceiveTimeDialog.getWindow().setContentView(
-				R.layout.dialog_receive_time);
-		nowSendBtn = (Button) ReceiveTimeDialog
-				.findViewById(R.id.dialog_now_send);
+		ReceiveTimeDialog.getWindow().setContentView(R.layout.dialog_receive_time);
+		nowSendBtn = (Button) ReceiveTimeDialog.findViewById(R.id.dialog_now_send);
 		nowSendBtn.setOnClickListener(this);
-		preSetBtn = (Button) ReceiveTimeDialog
-				.findViewById(R.id.dialog_pre_set);
+		preSetBtn = (Button) ReceiveTimeDialog.findViewById(R.id.dialog_pre_set);
 		preSetBtn.setOnClickListener(this);
 	}
 

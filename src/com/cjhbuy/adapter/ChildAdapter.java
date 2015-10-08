@@ -17,12 +17,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cjhbuy.activity.GoodsActivity;
 import com.cjhbuy.activity.R;
 import com.cjhbuy.bean.GoodsItem;
-import com.cjhbuy.bean.MerchDisacount;
 import com.cjhbuy.utils.AppContext;
 import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.utils.StringUtil;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 
 /**
  * 子ListView适配器
@@ -31,6 +33,7 @@ import com.cjhbuy.utils.StringUtil;
  * 
  */
 public class ChildAdapter extends BaseAdapter {
+	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsActivity.class);
 
 	Context mContext;
 	// String[] mChildArr;// 子item标题数组
@@ -39,7 +42,10 @@ public class ChildAdapter extends BaseAdapter {
 	private AppContext app;
 	private Activity activity;
 	private int good_cart_num;
-	private TextView good_cart_num_text;
+	private TextView goods_cart_num_text;
+	//合计金额
+	private TextView goods_calculate;
+	private double calculate_money;
 
 	// private IDataLaunch delegate;
 	//
@@ -56,12 +62,27 @@ public class ChildAdapter extends BaseAdapter {
 	 * 
 	 * @param context
 	 */
-	public ChildAdapter(Activity activity, int good_cart_num,
-			TextView good_cart_num_text) {
+	public ChildAdapter(Activity activity, int good_cart_num, TextView goods_cart_num_text) {
 		this.activity = activity;
 		app = (AppContext) activity.getApplication();
 		this.good_cart_num = good_cart_num;
-		this.good_cart_num_text = good_cart_num_text;
+		this.goods_cart_num_text = goods_cart_num_text;
+	}
+
+	public TextView getGoods_calculate() {
+		return goods_calculate;
+	}
+
+	public void setGoods_calculate(TextView goods_calculate) {
+		this.goods_calculate = goods_calculate;
+	}
+
+	public double getCalculate_money() {
+		return calculate_money;
+	}
+
+	public void setCalculate_money(double calculate_money) {
+		this.calculate_money = calculate_money;
 	}
 
 	/**
@@ -105,19 +126,10 @@ public class ChildAdapter extends BaseAdapter {
 		holder.tag1Text.setText(goodsItem.getTag1());
 		holder.tag2Text.setText(goodsItem.getTag2());
 		
-		double price = goodsItem.getPrice();//价格
-		List<MerchDisacount> merchDisacounts = goodsItem.getMerchDisacounts();
-		if(merchDisacounts != null && !merchDisacounts.isEmpty()){
-			MerchDisacount disacount  = merchDisacounts.get(0);
-			
-			float disacount_money = disacount.getDisacount_money();
-			disacount_money = (disacount_money < 0.0f) ? 0.0f : disacount_money;
-			
-			holder.priceText.setText("￥" + StringUtil.format2string(price - disacount_money));
-		}else{//两个都是原价
-			holder.priceText.setText("￥" + StringUtil.format2string(price));
-		}
-		holder.originalpriceText.setText("￥" + StringUtil.format2string(price));
+		//计算金额
+		double price = app.getCalMoney(goodsItem);//价格
+		holder.priceText.setText("￥" + StringUtil.format2string(price));
+		holder.originalpriceText.setText("￥" + StringUtil.format2string(goodsItem.getPrice()));
 		holder.originalpriceText.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 		
 		if (goodsItem.getTag1() == null
@@ -171,25 +183,34 @@ public class ChildAdapter extends BaseAdapter {
 		private void addCartGoods() {
 			// 存在于购物车商品的位置
 			int cartposition = isExistCart(goodsItem.getId());
+			int oper = 1;
+			int nowSellmount = 0;
 			if (cartposition >= 0) {
 				GoodsItem goodsItem2 = app.getCartGoodLists().get(cartposition);
-				int nowSellmount = goodsItem2.getSellmount();
+				nowSellmount = goodsItem2.getSellmount();
 				goodsItem2.setSellmount(nowSellmount + 1);
 			} else {//添加到购物车中
 				goodsItem.setSellmount(1);
 				app.getCartGoodLists().add(goodsItem);
-				//在购物图标中显示数量
-				good_cart_num = good_cart_num + 1;
-				String good_cart_numstr = String.valueOf(good_cart_num);
-				good_cart_num_text.setText(good_cart_numstr);
+				oper = 0;
 			}
+			
+			//在购物图标中显示数量
+			goods_cart_num_text.setText(app.getListNumber()+"");
+			//显示金额
+			calculate_money = app.getListCalMoney();
+			goods_calculate.setText(StringUtil.format2string(calculate_money));
+			
+//			save2MerchCar(goodsItem.getId(), nowSellmount + 1, oper);
+			app.save2MerchCar(((GoodsActivity)ChildAdapter.this.activity).sessionManager,goodsItem.getId(), nowSellmount + 1, oper);
 		}
 
+		//增加一个数量
 		private void addOne() {
 			changeStockEditTextStatus(1);
 			addCartGoods();
 		}
-		
+		//减少一个数量
 		private void subOne(){
 			changeStockEditTextStatus(-1);
 			minusCartGoods();
@@ -214,20 +235,30 @@ public class ChildAdapter extends BaseAdapter {
 				int nowSellmount = goodsItem2.getSellmount();
 				
 				//在购物车中删除对应的商品
+				int oper = 1;
 				if(nowSellmount == 1){
 					app.getCartGoodLists().remove(goodsItem2);
 					//只有在删除商品时才更新在购物图标中显示数量
 					good_cart_num --;
 					good_cart_num = (good_cart_num < 0) ? 0 : good_cart_num;
 					String good_cart_numstr = String.valueOf(good_cart_num);
-					good_cart_num_text.setText(good_cart_numstr);
+					goods_cart_num_text.setText(good_cart_numstr);
+					oper = 2;
 				}else{
 					goodsItem2.setSellmount(nowSellmount - 1);
 				}
+				//在购物图标中显示数量
+				goods_cart_num_text.setText(app.getListNumber()+"");
+				//显示金额
+				calculate_money = app.getListCalMoney();
+				goods_calculate.setText(StringUtil.format2string(calculate_money));
+				
+//				save2MerchCar(goodsItem.getId(), nowSellmount - 1, oper);
+				app.save2MerchCar(((GoodsActivity)ChildAdapter.this.activity).sessionManager,goodsItem.getId(), nowSellmount - 1, oper);
 			}
 		}
 	}
-
+	
 	/**
 	 * 判断在购物车中是否存在
 	 * 

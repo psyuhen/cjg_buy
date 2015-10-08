@@ -14,7 +14,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cjhbuy.activity.CartActivity;
+import com.cjhbuy.activity.MyOrderActivity;
 import com.cjhbuy.activity.R;
+import com.cjhbuy.auth.SessionManager;
 import com.cjhbuy.bean.GoodsItem;
 import com.cjhbuy.bean.MerchDisacount;
 import com.cjhbuy.utils.AppContext;
@@ -40,6 +43,9 @@ public class MyOrderGoodsAdapter extends BaseAdapter {
 	private TextView postage_text;
 	private TextView discount_money_text;
 
+	public double getAll_money() {
+		return all_money;
+	}
 	/**
 	 * 构造方法
 	 * 
@@ -100,23 +106,13 @@ public class MyOrderGoodsAdapter extends BaseAdapter {
 		final GoodsItem item = goodslist.get(position);
 		holder.cart_goods_title.setText(item.getTitle());
 		holder.goods_item_stock.setText("" + item.getSellmount());
-		holder.cart_goods_imageview.setImageResource(item.getImage());
+//		holder.cart_goods_imageview.setImageResource(item.getImage());
+		holder.cart_goods_imageview.setImageBitmap(item.getBitmap());
 		
-		double price = item.getPrice();//价格
-		double disacountMoney = 0;
-		List<MerchDisacount> merchDisacounts = item.getMerchDisacounts();
-		if(merchDisacounts != null && !merchDisacounts.isEmpty()){
-			MerchDisacount disacount  = merchDisacounts.get(0);
-			
-			float disacount_money = disacount.getDisacount_money();
-			disacount_money = (disacount_money < 0.0f) ? 0.0f : disacount_money;
-			
-			holder.cart_goods_price.setText("￥" + StringUtil.format2string(price - disacount_money));
-			disacountMoney = disacount_money;
-		}else{//两个都是原价
-			holder.cart_goods_price.setText("￥" + StringUtil.format2string(price));
-		}
-		holder.cart_goods_original_price.setText("￥" + StringUtil.format2string(price));
+		double price = app.getCalMoney(item);//价格
+		double disacountMoney = app.getDisacountMoney(item);
+		holder.cart_goods_price.setText("￥" + StringUtil.format2string(price));
+		holder.cart_goods_original_price.setText("￥" + StringUtil.format2string(item.getPrice()));
 		holder.cart_goods_original_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 		
 		//购物车中的数量增减
@@ -144,23 +140,40 @@ public class MyOrderGoodsAdapter extends BaseAdapter {
 			double originalPrice  = item.getPrice();//这个默认是原价的
 			double price = originalPrice - disacountMoney;//优惠后的价格
 			int goodstock = CommonsUtil.String2Int(holder.goodstockedit.getText().toString());//商品数量
+			int oper = 1;
+			
+			SessionManager sessionManager = null;
+			if(MyOrderGoodsAdapter.this.activity instanceof CartActivity){
+				sessionManager = ((CartActivity)MyOrderGoodsAdapter.this.activity).sessionManager;
+			}else if(MyOrderGoodsAdapter.this.activity instanceof MyOrderActivity){
+				sessionManager = ((MyOrderActivity)MyOrderGoodsAdapter.this.activity).sessionManager;
+			}
+			
+			
 			
 			switch (v.getId()) {
 			case R.id.goods_add_btn:
 				holder.goodstockedit.setText(goodstock + 1 + "");
 				item.setSellmount(goodstock + 1);
 				changeNumPrice(price, originalPrice, 1);
+				if(goodstock == 0){
+					oper = 0;
+				}
+				
+				app.save2MerchCar(sessionManager,item.getId(), goodstock + 1, oper);
 				break;
 			case R.id.goods_minus_btn:
 				if (goodstock == 1) {
 					//TODO 虽然在此删除了商品，但在GoodsActivity中无法更新购物车数量，只有重新打开时才更新
 					app.getCartGoodLists().remove(item);
 					notifyDataSetChanged();
+					oper = 2;
 				} else {
 					item.setSellmount(goodstock - 1);
 				}
 				holder.goodstockedit.setText(goodstock - 1 + "");
 				changeNumPrice(-price, -originalPrice, -1);
+				app.save2MerchCar(sessionManager,item.getId(), goodstock + 1, oper);
 				break;
 
 			default:
@@ -223,4 +236,5 @@ public class MyOrderGoodsAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+	
 }

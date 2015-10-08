@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -96,9 +95,7 @@ public class ChatActivity extends BaseActivity {
 				});
 				mAdapter.notifyDataSetChanged();
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error("接收信息失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("接收信息失败",e);
 		}
 	}

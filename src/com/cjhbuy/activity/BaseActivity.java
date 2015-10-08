@@ -55,7 +55,6 @@ public class BaseActivity extends FragmentActivity implements OnClickListener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
@@ -66,8 +65,8 @@ public class BaseActivity extends FragmentActivity implements OnClickListener {
 			// 设置对话框消息
 			isExit.setMessage("确定要退出吗");
 			// 添加选择按钮并注册监听
-			isExit.setButton("确定", listener);
-			isExit.setButton2("取消", listener);
+			isExit.setButton(DialogInterface.BUTTON_POSITIVE,"确定", listener);
+			isExit.setButton(DialogInterface.BUTTON_NEGATIVE,"取消", listener);
 			// 显示对话框
 			isExit.show();
 		}
@@ -80,6 +79,7 @@ public class BaseActivity extends FragmentActivity implements OnClickListener {
 		public void onClick(DialogInterface dialog, int which) {
 			switch (which) {
 			case DialogInterface.BUTTON_POSITIVE:// "确认"按钮退出程序
+				sessionManager.logoutUser();
 				/**
 				 * 完全退出程序
 				 */

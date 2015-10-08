@@ -10,7 +10,9 @@ import java.util.Map;
 
 import com.cjhbuy.bean.AddressItem;
 import com.cjhbuy.bean.ClassifyInfo;
+import com.cjhbuy.bean.Coupon;
 import com.cjhbuy.bean.FavoriteStat;
+import com.cjhbuy.bean.Gallery;
 import com.cjhbuy.bean.MerchCar;
 import com.cjhbuy.bean.MerchInfo;
 import com.cjhbuy.bean.Order;
@@ -180,5 +182,21 @@ public class JsonUtil {
 	 */
 	public static List<MerchCar> parse2ListMerchCar(String json) {
 		return parse2ListObject(json, new TypeReference<List<MerchCar>>() {});
+	} 
+	/**
+	 * 把json字符串转换为一个List&lt;Coupon&gt;
+	 * @param json json字符串
+	 * @return
+	 */
+	public static List<Coupon> parse2ListCoupon(String json) {
+		return parse2ListObject(json, new TypeReference<List<Coupon>>() {});
+	}
+	/**
+	 * 把json字符串转换为一个List&lt;Gallery&gt;
+	 * @param json json字符串
+	 * @return
+	 */
+	public static List<Gallery> parse2ListGallery(String json) {
+		return parse2ListObject(json, new TypeReference<List<Gallery>>() {});
 	} 
 }

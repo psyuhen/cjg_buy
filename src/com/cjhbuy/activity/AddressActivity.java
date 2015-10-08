@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
+import org.apache.commons.lang.StringUtils;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -29,7 +30,6 @@ import android.widget.TextView;
 
 import com.cjhbuy.adapter.CommonAdapter;
 import com.cjhbuy.adapter.ViewHolder;
-import com.cjhbuy.auth.SessionManager;
 import com.cjhbuy.bean.AddressItem;
 import com.cjhbuy.bean.CityModel;
 import com.cjhbuy.bean.DistrictModel;
@@ -45,6 +45,11 @@ import com.cjhbuy.widght.adapter.ArrayWheelAdapter;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
+/**
+ * 地址管理
+ * @author pansen
+ *
+ */
 public class AddressActivity extends BaseActivity implements OnWheelChangedListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressActivity.class);
 	// 所在省
@@ -137,6 +142,7 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 					int position, long id) {
 				if("myorder".equals(from)){//返回给订单
 					AddressItem item = (AddressItem)parent.getItemAtPosition(position);
+					
 					Intent returnIntent = new Intent();
 					Bundle bundle = new Bundle();
 					bundle.putSerializable("address", item);
@@ -187,7 +193,7 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 	
 	//查询常用地址哟
 	private void queryAddress(){
-		int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+		int user_id = sessionManager.getUserId();
 		
 		String url = HttpUtil.BASE_URL + "/freqa/query.do?user_id="+user_id;
 		try {
@@ -200,10 +206,7 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 			addressList.clear();
 			addressList.addAll(list);
 			showAdapter.notifyDataSetChanged();
-		} catch (InterruptedException e) {
-			LOGGER.error("查询常用地址失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询常用地址失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("查询常用地址失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询常用地址失败");
 		}
@@ -239,10 +242,7 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 				return;
 			}
 			queryAddress();
-		} catch (InterruptedException e) {
-			LOGGER.error("删除地址失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "删除地址失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("删除地址失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "删除地址失败");
 		}
@@ -261,7 +261,10 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 			public void convert(ViewHolder helper, AddressItem item) {
 				
 				helper.setText(R.id.item_address_name, item.getUser_name());
-				helper.setText(R.id.item_address_details, item.getAddress());
+				helper.setText(R.id.item_address_details, StringUtils.trimToEmpty(item.getProvince())
+						+ " " + StringUtils.trimToEmpty(item.getCity())
+						+ " " + StringUtils.trimToEmpty(item.getTown())
+						+ " " + item.getAddress());
 				helper.setText(R.id.item_address_tel, item.getMobile());
 				item_address_edit = helper.getView(R.id.item_address_edit);
 				item_address_edit.setTag("MODIFY");
@@ -290,12 +293,9 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 				AddAddressDialog.getWindow().setSoftInputMode(
 						WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 				
-				final EditText add_address_address = (EditText) AddAddressDialog
-						.findViewById(R.id.add_address_address);
-				final EditText add_address_tel = (EditText) AddAddressDialog
-						.findViewById(R.id.add_address_tel);
-				final EditText add_address_name = (EditText) AddAddressDialog
-						.findViewById(R.id.add_address_name);
+				final EditText add_address_address = (EditText) AddAddressDialog.findViewById(R.id.add_address_address);
+				final EditText add_address_tel = (EditText) AddAddressDialog.findViewById(R.id.add_address_tel);
+				final EditText add_address_name = (EditText) AddAddressDialog.findViewById(R.id.add_address_name);
 				
 				add_address_address.setText(tmpAddress.getAddress());
 				add_address_tel.setText(tmpAddress.getMobile());
@@ -306,6 +306,19 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 				setUpViews();
 				setUpListener();
 				setUpData();
+				
+				//根据省来查询
+				int currentIndex = findIndexBy(mProvinceDatas,tmpAddress.getProvince());
+				mViewProvince.setCurrentItem(currentIndex);
+				
+				//根据省份和城市查找对应的index
+				currentIndex = findIndexBy(mCitisDatasMap, tmpAddress.getProvince(), tmpAddress.getCity());
+				mViewCity.setCurrentItem(currentIndex);
+				
+				//根据城市和区查找对应的index
+				currentIndex = findIndexBy(mDistrictDatasMap, tmpAddress.getCity(), tmpAddress.getTown());
+				mViewDistrict.setCurrentItem(currentIndex);
+				
 				add_address_btn=(ImageButton) AddAddressDialog.findViewById(R.id.add_address_btn);
 				add_address_btn.setOnClickListener(new OnClickListener() {
 					
@@ -322,6 +335,22 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 						tmpAddress.setAddress(add_address_address.getText().toString());
 						tmpAddress.setUser_name(add_address_name.getText().toString());
 						tmpAddress.setMobile(add_address_tel.getText().toString());
+						
+						//省
+						int currentItem = mViewProvince.getCurrentItem();
+						String province = mProvinceDatas[currentItem];
+						
+						//市
+						currentItem = mViewCity.getCurrentItem();
+						String city = mCitisDatasMap.get(province)[currentItem];
+						
+						//区或者县
+						currentItem = mViewDistrict.getCurrentItem();
+						String district = mDistrictDatasMap.get(city)[currentItem];
+						
+						tmpAddress.setProvince(province);
+						tmpAddress.setCity(city);
+						tmpAddress.setTown(district);
 						
 						updateAddress(tmpAddress);
 						AddAddressDialog.dismiss();
@@ -341,13 +370,10 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 				return;
 			}
 			queryAddress();
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			LOGGER.error("修改地址失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "修改地址失败");
-		} catch (ExecutionException e) {
-			LOGGER.error("修改地址失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "修改地址失败");
-		}
+		} 
 	}
 
 	@Override
@@ -390,16 +416,35 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 				EditText add_address_name = (EditText) AddAddressDialog.findViewById(R.id.add_address_name);
 				
 				AddressItem tmpAddress = new AddressItem();
-				tmpAddress.setAddress(add_address_address.getText().toString());
-				tmpAddress.setUser_name(add_address_name.getText().toString());
-				tmpAddress.setMobile(add_address_tel.getText().toString());
 				
+				tmpAddress.setUser_id(sessionManager.getUserId());
+				tmpAddress.setAddress(add_address_address.getText().toString());//详细地址
+				tmpAddress.setUser_name(add_address_name.getText().toString());//姓名
+				tmpAddress.setMobile(add_address_tel.getText().toString());//电话
+				
+				//省
+				int currentItem = mViewProvince.getCurrentItem();
+				String province = mProvinceDatas[currentItem];
+				
+				//市
+				currentItem = mViewCity.getCurrentItem();
+				String city = mCitisDatasMap.get(province)[currentItem];
+				
+				//区或者县
+				currentItem = mViewDistrict.getCurrentItem();
+				String district = mDistrictDatasMap.get(city)[currentItem];
+				
+				tmpAddress.setProvince(province);
+				tmpAddress.setCity(city);
+				tmpAddress.setTown(district);
+				
+//				CommonsUtil.showLongToast(getApplicationContext(), province+";"+city+";"+district);
 				addAddress(tmpAddress);
 			}
 		});
 	}
 	
-	//更新地址
+	//新增地址
 	private void addAddress(AddressItem tmpAddress){
 		String url = HttpUtil.BASE_URL + "/freqa/add.do";
 		try {
@@ -410,21 +455,16 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 			}
 			
 			queryAddress();
-		} catch (InterruptedException e) {
-			LOGGER.error("新增地址失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "新增地址失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("新增地址失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "新增地址失败");
 		}
 	}
 	
 	private void setUpViews() {
-		mViewProvince = (WheelView) AddAddressDialog
-				.findViewById(R.id.id_province);
+		mViewProvince = (WheelView) AddAddressDialog.findViewById(R.id.id_province);
 		mViewCity = (WheelView) AddAddressDialog.findViewById(R.id.id_city);
-		mViewDistrict = (WheelView) AddAddressDialog
-				.findViewById(R.id.id_district);
+		mViewDistrict = (WheelView) AddAddressDialog.findViewById(R.id.id_district);
 	}
 
 	private void setUpListener() {
@@ -439,8 +479,7 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 
 	private void setUpData() {
 		initProvinceDatas();
-		mViewProvince.setViewAdapter(new ArrayWheelAdapter<String>(
-				AddressActivity.this, mProvinceDatas));
+		mViewProvince.setViewAdapter(new ArrayWheelAdapter<String>(AddressActivity.this, mProvinceDatas));
 		// 设置可见条目数量
 		mViewProvince.setVisibleItems(7);
 		mViewCity.setVisibleItems(7);
@@ -475,8 +514,7 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 		if (areas == null) {
 			areas = new String[] { "" };
 		}
-		mViewDistrict
-				.setViewAdapter(new ArrayWheelAdapter<String>(this, areas));
+		mViewDistrict.setViewAdapter(new ArrayWheelAdapter<String>(this, areas));
 		mViewDistrict.setCurrentItem(0);
 		
 		mCurrentDistrictName = mDistrictDatasMap.get(mCurrentCityName)[mViewDistrict.getCurrentItem()];
@@ -505,8 +543,7 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 				List<CityModel> cityList = provinceList.get(0).getCityList();
 				if (cityList != null && !cityList.isEmpty()) {
 					mCurrentCityName = cityList.get(0).getName();
-					List<DistrictModel> districtList = cityList.get(0)
-							.getDistrictList();
+					List<DistrictModel> districtList = cityList.get(0).getDistrictList();
 					mCurrentDistrictName = districtList.get(0).getName();
 					mCurrentZipCode = districtList.get(0).getZipcode();
 				}
@@ -521,12 +558,9 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 				for (int j = 0; j < cityList.size(); j++) {
 					// 遍历省下面的所有市的数据
 					cityNames[j] = cityList.get(j).getName();
-					List<DistrictModel> districtList = cityList.get(j)
-							.getDistrictList();
-					String[] distrinctNameArray = new String[districtList
-							.size()];
-					DistrictModel[] distrinctArray = new DistrictModel[districtList
-							.size()];
+					List<DistrictModel> districtList = cityList.get(j).getDistrictList();
+					String[] distrinctNameArray = new String[districtList.size()];
+					DistrictModel[] distrinctArray = new DistrictModel[districtList.size()];
 					for (int k = 0; k < districtList.size(); k++) {
 						// 遍历市下面所有区/县的数据
 						DistrictModel districtModel = new DistrictModel(
@@ -562,5 +596,30 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 			mCurrentDistrictName = mDistrictDatasMap.get(mCurrentCityName)[newValue];
 			mCurrentZipCode = mZipcodeDatasMap.get(mCurrentDistrictName);
 		}
+	}
+	
+	//根据省份查找对应的index
+	private int findIndexBy(String[] strs,String up){
+		if(strs == null || strs.length == 0){
+			return 0;
+		}
+		
+		for (int i = 0; i < strs.length; i++) {
+			String up1 = strs[i];
+			if(up.equals(up1)){
+				return i;
+			}
+		}
+		
+		return 0;
+	}
+	//查询index
+	private int findIndexBy(Map<String, String[]> map,String up,String down){
+		if(map == null || map.isEmpty()){
+			return 0;
+		}
+		
+		String[] downs = map.get(up);
+		return findIndexBy(downs, down);
 	}
 }

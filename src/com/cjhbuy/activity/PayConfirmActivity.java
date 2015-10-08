@@ -1,7 +1,5 @@
 package com.cjhbuy.activity;
 
-import com.cjhbuy.common.PwdInputView;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +11,10 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.cjhbuy.bean.Order;
+import com.cjhbuy.common.PwdInputView;
+import com.cjhbuy.utils.StringUtil;
 
 /**
  * 确认交易
@@ -47,13 +49,13 @@ public class PayConfirmActivity extends BaseActivity {
 
 	@Override
 	public void initView() {
-		
 		super.initView();
+		title.setText("确认交易");
+		
 		pay_confirm_shop_name = (TextView) findViewById(R.id.pay_confirm_shop_name);
 		pay_confirm_price = (TextView) findViewById(R.id.pay_confirm_price);
 		pay_confirm_receive = (TextView) findViewById(R.id.pay_confirm_receive);
 		pay_confirm_goods = (TextView) findViewById(R.id.pay_confirm_goods);
-		title.setText("确认交易");
 		right_imgbtn.setVisibility(View.GONE);
 		pay_btn = (Button) findViewById(R.id.pay_btn);
 		pay_btn.setOnClickListener(this);
@@ -61,11 +63,13 @@ public class PayConfirmActivity extends BaseActivity {
 	}
 
 	private void initData() {
+		Intent intent = getIntent();
+		Order order = (Order)intent.getSerializableExtra("order");
 		
-		pay_confirm_shop_name.setText("爱鲜蜂即时送");
-		pay_confirm_price.setText("￥ 35.00");
-		pay_confirm_receive.setText("鲜蜂网");
-		pay_confirm_goods.setText("爱鲜蜂即时送");
+		pay_confirm_shop_name.setText("超家伙即时送");
+		pay_confirm_price.setText("￥ "+StringUtil.format2string(order.getAmount_money()));
+		pay_confirm_receive.setText("超家伙");
+		pay_confirm_goods.setText("超家伙即时送");
 	}
 
 	@Override
@@ -80,8 +84,7 @@ public class PayConfirmActivity extends BaseActivity {
 			payPwdDialog.dismiss();
 			break;
 		case R.id.pay_way_choose_bank:
-			Toast.makeText(PayConfirmActivity.this, "更换", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(PayConfirmActivity.this, "更换", Toast.LENGTH_SHORT).show();
 			break;
 		default:
 			break;
@@ -90,8 +93,7 @@ public class PayConfirmActivity extends BaseActivity {
 
 	private void showPayPwd() {
 		
-		payPwdDialog = new AlertDialog.Builder(PayConfirmActivity.this)
-				.create();
+		payPwdDialog = new AlertDialog.Builder(PayConfirmActivity.this).create();
 		payPwdDialog.show();
 		/**
 		 * 解决键盘不显示
@@ -102,18 +104,13 @@ public class PayConfirmActivity extends BaseActivity {
 		payPwdDialog.getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		payPwdDialog.getWindow().setContentView(R.layout.dialog_pay_pwd);
-		pay_pwd_shop_name = (TextView) payPwdDialog
-				.findViewById(R.id.pay_pwd_shop_name);
-		pay_pwd_price = (TextView) payPwdDialog
-				.findViewById(R.id.pay_pwd_price);
-		cancel_dialog_icon_btn = (ImageButton) payPwdDialog
-				.findViewById(R.id.cancel_dialog_icon_btn);
+		pay_pwd_shop_name = (TextView) payPwdDialog.findViewById(R.id.pay_pwd_shop_name);
+		pay_pwd_price = (TextView) payPwdDialog.findViewById(R.id.pay_pwd_price);
+		cancel_dialog_icon_btn = (ImageButton) payPwdDialog.findViewById(R.id.cancel_dialog_icon_btn);
 		cancel_dialog_icon_btn.setOnClickListener(this);
-		pay_way_choose_bank = (TextView) payPwdDialog
-				.findViewById(R.id.pay_way_choose_bank);
+		pay_way_choose_bank = (TextView) payPwdDialog.findViewById(R.id.pay_way_choose_bank);
 		pay_way_choose_bank.setOnClickListener(this);
-		password_edit = (PwdInputView) payPwdDialog
-				.findViewById(R.id.password_edit);
+		password_edit = (PwdInputView) payPwdDialog.findViewById(R.id.password_edit);
 		password_edit.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -144,7 +141,7 @@ public class PayConfirmActivity extends BaseActivity {
 
 			}
 		});
-		pay_pwd_shop_name.setText("鲜蜂网");
+		pay_pwd_shop_name.setText("超家伙");
 		pay_pwd_price.setText("￥ 35.00");
 
 	}

@@ -2,10 +2,10 @@ package com.cjhbuy.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang.StringUtils;
 import org.kymjs.aframe.ui.widget.KJListView;
+import org.kymjs.aframe.ui.widget.KJListView.KJListViewListener;
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +31,7 @@ import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.utils.FileUtil;
 import com.cjhbuy.utils.HttpUtil;
 import com.cjhbuy.utils.JsonUtil;
+import com.cjhbuy.utils.PageUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 //
@@ -42,6 +43,9 @@ public class HomeSaleFragment extends Fragment {
 	private Button mBtn_buy;
 	private Context context;
 	private int type;
+	
+	private CommonAdapter<SellerItem> commonAdapter;
+	private int start = PageUtil.START;//分页的开始
 	
 	public void setContext(Context context) {
 		this.context = context;
@@ -70,43 +74,28 @@ public class HomeSaleFragment extends Fragment {
 		View contentView = inflater.inflate(R.layout.view_home_sale, container, false);
 		kjListView = (KJListView) contentView.findViewById(R.id.home_fragment_listview);
 		sellerlist = new ArrayList<SellerItem>();
+		commonAdapter = showAdapter();
+		kjListView.setAdapter(commonAdapter);
+		//上下拉刷新
+		kjListView.setPullLoadEnable(true);
+		kjListView.setKJListViewListener(new KJListViewListener() {
+			@Override
+			public void onRefresh() {
+				queryData(PageUtil.START);
+			}
+
+			@Override
+			public void onLoadMore() {
+				queryData(HomeSaleFragment.this.start);
+			}
+		});
+		
 		initData();
-		kjListView.setAdapter(showAdapter());
 		return contentView;
 	}
 
 	private void initData() {
-		List<Store> list = null;
-		if(this.type == 0){
-			String url = HttpUtil.BASE_URL + "/store/queryStoreBySalesVolume.do";
-			list = queryStoreBy(url);
-		}else if(this.type == 1){
-			
-		}else if(this.type == 2){
-			String url = HttpUtil.BASE_URL + "/store/queryStoreByFavoriteCount.do";
-			list = queryStoreBy(url);
-		}
-		if(list == null){
-			list = new ArrayList<Store>();
-		}
-		
-		for (Store store : list) {
-			SellerItem sellerItem = new SellerItem();
-			sellerItem.setId(store.getStore_id());
-			sellerItem.setTitle(store.getName());
-			sellerItem.setAddress(store.getAddress());
-//			sellerItem.setDistance(100);
-			sellerItem.setPhone(store.getPhone());
-//			sellerItem.setTempImage(store.getLogo());
-			//再从7牛上获取图片
-			//先在本地查看，如果有就不从7牛中获取了
-			String logoName = store.getLogo();
-			
-			Bitmap bitmap = FileUtil.getCacheFile(logoName);
-			sellerItem.setBitmap(bitmap);
-			
-			sellerlist.add(sellerItem);
-		}
+		queryData(PageUtil.START);
 	}
 
 	/**
@@ -170,9 +159,7 @@ public class HomeSaleFragment extends Fragment {
 			
 			String url =  HttpUtil.BASE_URL + "/storevisit/addStoreVisitHist.do";
 			HttpUtil.postRequest(url,storeVisitHist);
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 新增商家访问记录失败", e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 新增商家访问记录失败", e);
 		}
 	}
@@ -189,11 +176,53 @@ public class HomeSaleFragment extends Fragment {
 			}
 			List<Store> list =JsonUtil.parse2ListStore(json);
 			return list;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 查询商家信息失败", e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 查询商家信息失败", e);
 		}
 		return null;
+	}
+	
+	//查询商家数据
+	private void queryData(int start){
+		List<Store> list = null;
+		if(this.type == 0){
+			String url = HttpUtil.BASE_URL + "/store/queryStoreBySalesVolumePage.do?start="+start+"&limit="+PageUtil.LIMIT;
+			list = queryStoreBy(url);
+		}else if(this.type == 1){
+			
+		}else if(this.type == 2){
+			String url = HttpUtil.BASE_URL + "/store/queryStoreByFavoriteCountPage.do?start="+start+"&limit="+PageUtil.LIMIT;
+			list = queryStoreBy(url);
+		}
+		if(list == null){
+			list = new ArrayList<Store>();
+		}
+		
+		//默认开始的时候，先清空列表数据
+		if(start == PageUtil.START){
+			sellerlist.clear();
+		}
+		
+		for (Store store : list) {
+			SellerItem sellerItem = new SellerItem();
+			sellerItem.setId(store.getStore_id());
+			sellerItem.setTitle(store.getName());
+			sellerItem.setAddress(store.getAddress());
+//			sellerItem.setDistance(100);
+			sellerItem.setPhone(store.getPhone());
+//			sellerItem.setTempImage(store.getLogo());
+			//再从7牛上获取图片
+			//先在本地查看，如果有就不从7牛中获取了
+			String logoName = store.getLogo();
+			
+			Bitmap bitmap = FileUtil.getCacheFile(logoName);
+			sellerItem.setBitmap(bitmap);
+			
+			sellerlist.add(sellerItem);
+		}
+		
+		this.start += PageUtil.LIMIT;//每次改变start的值 
+		commonAdapter.notifyDataSetChanged();
+		kjListView.stopRefreshData();
 	}
 }

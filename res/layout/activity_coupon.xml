@@ -8,4 +8,15 @@
         android:id="@+id/title_bar"
         layout="@layout/title_bar" />
 
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+        <ListView 
+            android:id="@+id/couponListView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ></ListView>
+    </LinearLayout>
 </LinearLayout>

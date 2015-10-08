@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/myorder_center_ll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/skin" >
+
+        <TextView
+            android:id="@+id/myorder_top_tip_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="5.0dip"
+            android:text="@string/myorder_top_tip_text" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/myorder_top_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5.0dip"
+        android:background="@color/whitebg"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/myorder_address_rl"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/myorder_top_height"
+            android:background="@drawable/relative_btn"
+            android:clickable="true" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true" >
+
+                <TextView
+                    android:id="@+id/my_order_name"
+                    style="@style/my_order_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10.0dip"
+                    android:text="@string/my_order_name_text" />
+
+                <TextView
+                    android:id="@+id/my_order_tel"
+                    style="@style/my_order_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="40.0dip"
+                    android:layout_toRightOf="@+id/my_order_name"
+                    android:text="@string/my_order_tel_text" />
+
+                <TextView
+                    android:id="@+id/my_order_address_text"
+                    style="@style/my_order_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/my_order_name"
+                    android:layout_marginLeft="10.0dip"
+                    android:text="@string/my_order_address_text" />
+
+                <TextView
+                    android:id="@+id/my_order_address"
+                    style="@style/my_order_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/my_order_tel"
+                    android:layout_marginRight="40.0dip"
+                    android:layout_toRightOf="@+id/my_order_address_text"
+                    android:text="@string/my_order_address" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="@dimen/right_icon_width"
+                android:layout_height="@dimen/right_icon_height"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5.0dip"
+                android:background="@drawable/arrow_right" />
+        </RelativeLayout>
+
+        <ImageView style="@style/my_order_top_line" />
+
+        <RelativeLayout
+            android:id="@+id/myorder_receive_time_rl"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/myorder_top_height"
+            android:background="@drawable/relative_btn"
+            android:clickable="true" >
+
+            <TextView
+                android:id="@+id/my_order_receive_time_text"
+                style="@style/my_order_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:text="@string/my_order_receive_time_text" />
+
+            <TextView
+                android:id="@+id/my_order_receive_time"
+                style="@style/my_order_orange_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4.0dip"
+                android:layout_toRightOf="@+id/my_order_receive_time_text"
+                android:text="@string/my_order_receive_time" />
+
+            <ImageView
+                android:layout_width="@dimen/right_icon_width"
+                android:layout_height="@dimen/right_icon_height"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5.0dip"
+                android:background="@drawable/arrow_right" />
+        </RelativeLayout>
+
+        <ImageView style="@style/my_order_top_line" />
+
+        <RelativeLayout
+            android:id="@+id/myorder_pay_rl"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/myorder_top_height"
+            android:background="@drawable/relative_btn"
+            android:clickable="true" >
+
+            <TextView
+                android:id="@+id/my_order_pay_text"
+                style="@style/my_order_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:text="@string/my_order_pay_text" />
+
+            <TextView
+                android:id="@+id/my_order_pay"
+                style="@style/my_order_orange_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4.0dip"
+                android:layout_toRightOf="@+id/my_order_pay_text"
+                android:text="@string/my_order_pay" />
+
+            <ImageView
+                android:layout_width="@dimen/right_icon_width"
+                android:layout_height="@dimen/right_icon_height"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5.0dip"
+                android:background="@drawable/arrow_right" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5.0dip"
+        android:background="@color/whitebg"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/myorder_top_height" >
+
+            <ImageView
+                android:id="@+id/goods_myorder_shop_image"
+                android:layout_width="@dimen/right_icon_width"
+                android:layout_height="@dimen/right_icon_height"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20.0dip"
+                android:background="@drawable/weixin_icon" />
+
+            <TextView
+                android:id="@+id/goods_myorder_shop_name"
+                style="@style/myshop_title_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4.0dip"
+                android:layout_toRightOf="@+id/goods_myorder_shop_image"
+                android:text="@string/goods_myorder_shop_name_text" />
+
+            <ImageView
+                android:layout_width="@dimen/right_icon_width"
+                android:layout_height="@dimen/right_icon_height"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5.0dip"
+                android:layout_toRightOf="@+id/goods_myorder_shop_name"
+                android:background="@drawable/arrow_right" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
