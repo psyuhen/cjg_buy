@@ -61,24 +61,12 @@ public class MyOrderGoodsAdapter extends BaseAdapter {
 		this.all_num_text = all_num_text;
 		this.postage_text = postage_text;
 		this.discount_money_text = discount_money_text;
+		
 		//计算购物车中的商品价格
-		for (GoodsItem goodsItem : goodslist) {
-			int sellmount = goodsItem.getSellmount();
-			double price = goodsItem.getPrice();//原价格
-			
-			double disacountMoney = 0;
-			List<MerchDisacount> merchDisacounts = goodsItem.getMerchDisacounts();
-			if(merchDisacounts != null && !merchDisacounts.isEmpty()){
-				MerchDisacount disacount  = merchDisacounts.get(0);
-				
-				float disacount_money = disacount.getDisacount_money();
-				disacountMoney = (disacount_money < 0.0f) ? 0.0f : disacount_money;
-			}
-			
-			all_num = all_num + sellmount;//购买数量
-			discount_money = discount_money + (disacountMoney * sellmount);//优惠金额
-			all_money = all_money + sellmount * (price - disacountMoney);//实际金额
-		}
+		double[] listDisacount = app.getListDisacount();
+		all_num = (int)listDisacount[0];
+		discount_money = listDisacount[1];
+		all_money = listDisacount[2];
 	}
 
 	public void setChildData(List<GoodsItem> goodslist) {
@@ -173,7 +161,7 @@ public class MyOrderGoodsAdapter extends BaseAdapter {
 				}
 				holder.goodstockedit.setText(goodstock - 1 + "");
 				changeNumPrice(-price, -originalPrice, -1);
-				app.save2MerchCar(sessionManager,item.getId(), goodstock + 1, oper);
+				app.save2MerchCar(sessionManager,item.getId(), goodstock - 1, oper);
 				break;
 
 			default:

@@ -109,6 +109,31 @@ public class AppContext extends Application {
 		return 0;
 	}
 	/**
+	 * 获取商品的优惠金额
+	 * @param goodsItem
+	 * @return
+	 */
+	public double getListDisacountMoney(){
+		if(cartGoodLists == null || cartGoodLists.isEmpty()){
+			return 0;
+		}
+		//计算金额
+		int length = cartGoodLists.size();
+		double price = 0;
+		for (int i = 0; i < length; i++) {
+			GoodsItem goodsItem = cartGoodLists.get(i);
+			
+			double discountmoney = getDisacountMoney(goodsItem);
+			int sellmount = goodsItem.getSellmount();
+			
+			discountmoney = discountmoney * sellmount;
+			
+			price += discountmoney;
+		}
+		
+		return price;
+	}
+	/**
 	 * 获取单个商品的金额，原价减去优惠价
 	 * @param goodsItem
 	 * @return
@@ -167,6 +192,44 @@ public class AppContext extends Application {
 		}
 		
 		return number;
+	}
+	/**
+	 * 获取购物车的商品数量、所有商品的优惠金额、以及合计金额
+	 * 返回一个数组，第一位为商品数量，第二位为优惠金额，第三位为合计金额
+	 * @return
+	 */
+	public double[] getListDisacount(){
+		if(cartGoodLists == null || cartGoodLists.isEmpty()){
+			return new double[]{0,0,0};
+		}
+		
+		int length = cartGoodLists.size();
+		int number = 0;
+		double price0 = 0;
+		double price1 = 0;
+		for (int i = 0; i < length; i++) {
+			GoodsItem goodsItem = cartGoodLists.get(i);
+			
+			//原价格
+			double price = goodsItem.getPrice();
+			//单个商品的优惠金额
+			double disacountMoney = 0;
+			List<MerchDisacount> merchDisacounts = goodsItem.getMerchDisacounts();
+			if(merchDisacounts != null && !merchDisacounts.isEmpty()){
+				MerchDisacount disacount  = merchDisacounts.get(0);
+				
+				float disacount_money = disacount.getDisacount_money();
+				disacountMoney = (disacount_money < 0.0f) ? 0.0f : disacount_money;
+			}
+			
+			//商品数量 
+			int sellmount = goodsItem.getSellmount();
+			number += sellmount;
+			price0 += (disacountMoney * sellmount);//多个商品的优惠金额累加
+			price1 += (price - disacountMoney) * sellmount;//多个商品的金额累加
+		}
+		
+		return new double[]{number,price0,price1};
 	}
 	
 	

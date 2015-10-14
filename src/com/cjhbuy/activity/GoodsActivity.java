@@ -95,6 +95,7 @@ public class GoodsActivity extends BaseActivity {
 		/**
 		 * 加载商品
 		 */
+		allgoodsList = new ArrayList<GoodsItem>();
 		childAdapter = new ChildAdapter(GoodsActivity.this, good_cart_num, goods_cart_num_text);
 		childAdapter.setCalculate_money(calculate_money);
 		childAdapter.setGoods_calculate(goods_calculate);
@@ -122,6 +123,28 @@ public class GoodsActivity extends BaseActivity {
 		
 		
 		app = (AppContext) getApplication();
+	}
+
+	private void initData() {
+		Intent intent = getIntent();
+		store_id = intent.getIntExtra("store_id",0);
+		store_name = intent.getStringExtra("store_name");
+		title.setText(store_name);
+		
+		queryclassify();
+
+		if(!categoryList.isEmpty()){//默认查询出第一个分类的商品信息
+			CategoryItem categoryItem = categoryList.get(0);
+			queryByClassifyId(categoryItem.getId());
+		}
+	}
+	/**
+	 * 当activity可见时会回调此方法
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
 		//登录了，查询数据库的购物车
 		if(sessionManager.isLoggedIn()){
 			queryMerchCar();
@@ -134,21 +157,6 @@ public class GoodsActivity extends BaseActivity {
 		//合计金额
 		calculate_money = app.getListCalMoney();
 		goods_calculate.setText(StringUtil.format2string(calculate_money));
-	}
-
-	private void initData() {
-		Intent intent = getIntent();
-		store_id = intent.getIntExtra("store_id",0);
-		store_name = intent.getStringExtra("store_name");
-		title.setText(store_name);
-		
-		queryclassify();
-
-		allgoodsList = new ArrayList<GoodsItem>();
-		if(!categoryList.isEmpty()){//默认查询出第一个分类的商品信息
-			CategoryItem categoryItem = categoryList.get(0);
-			queryByClassifyId(categoryItem.getId());
-		}
 	}
 	
 	//查询购物车信息

@@ -164,23 +164,10 @@ public class MyOrderActivity extends BaseActivity {
 	
 	//计算购物车里面的金额
 	private void initMoney() {
-		for (GoodsItem goodsItem : app.getCartGoodLists()) {
-			int sellmount = goodsItem.getSellmount();
-			double price = goodsItem.getPrice();//原价格
-			
-			double disacountMoney = 0;
-			List<MerchDisacount> merchDisacounts = goodsItem.getMerchDisacounts();
-			if(merchDisacounts != null && !merchDisacounts.isEmpty()){
-				MerchDisacount disacount  = merchDisacounts.get(0);
-				
-				float disacount_money = disacount.getDisacount_money();
-				disacountMoney = (disacount_money < 0.0f) ? 0.0f : disacount_money;
-			}
-			
-			allnum = allnum + sellmount;//购买数量
-			this.discountmoney = this.discountmoney + (disacountMoney * sellmount);//优惠金额
-			allmoney = allmoney + sellmount * (price - disacountMoney);//实际金额
-		}
+		double[] listDisacount = app.getListDisacount();
+		allnum = (int)listDisacount[0];
+		discountmoney = listDisacount[1];
+		allmoney = listDisacount[2];
 	}
 
 	@Override
