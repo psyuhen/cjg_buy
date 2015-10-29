@@ -1,7 +1,10 @@
 package com.cjhbuy.activity;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -19,26 +22,42 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.cjhbuy.adapter.CommonAdapter;
 import com.cjhbuy.adapter.MyOrderGoodsAdapter;
+import com.cjhbuy.adapter.ViewHolder;
 import com.cjhbuy.bean.AddressItem;
+import com.cjhbuy.bean.Coupon;
+import com.cjhbuy.bean.CouponItem;
 import com.cjhbuy.bean.GoodsItem;
-import com.cjhbuy.bean.MerchDisacount;
 import com.cjhbuy.bean.Order;
 import com.cjhbuy.bean.OrderDetail;
+import com.cjhbuy.bean.ResponseInfo;
 import com.cjhbuy.common.Constants;
 import com.cjhbuy.utils.AppContext;
 import com.cjhbuy.utils.CommonsUtil;
+import com.cjhbuy.utils.DateUtil;
+import com.cjhbuy.utils.HttpUtil;
+import com.cjhbuy.utils.JsonUtil;
+import com.cjhbuy.utils.StringUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
+/**
+ * 下单
+ * @author pansen
+ *
+ */
 public class MyOrderActivity extends BaseActivity {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MyOrderActivity.class);
 
@@ -72,6 +91,22 @@ public class MyOrderActivity extends BaseActivity {
 	private TextView money_count;
 	// 商品数量
 	private TextView myorder_goods_num;
+
+	// 默认加入的优惠券
+	private TextView coupons_text;
+	private float coupons_money = 0f;
+	// 选择优惠券
+	private AlertDialog chooseCouponsDialog = null;
+	// 优惠券的相对布局
+	private RelativeLayout myorder_coupons_rl;
+	// 删除优惠券alertdiolag布局
+	private ImageButton delete_coupon_list_btn;
+	private CommonAdapter<CouponItem> couponsAdapter;
+
+	// 选择优惠券的ListView
+	private ListView couponsListView;
+
+	private List<CouponItem> couponslist;
 
 	// 预设时间对话框
 	private AlertDialog PresetTimeDialog = null;
@@ -118,7 +153,7 @@ public class MyOrderActivity extends BaseActivity {
 	
 	//付款方式
 	private TextView my_order_pay;//付款方式
-	private String payWayOnline = "1";//默认为微信支付
+	private String payWayOnline = "2";//默认为货到付款
 	
 	//商店名称
 	private TextView goods_myorder_shop_name;//商店名称
@@ -136,38 +171,53 @@ public class MyOrderActivity extends BaseActivity {
 	}
 
 	private void initData() {
-		// 初始化商品状态
-		initMoney();
-		postage = CommonsUtil.postage(allmoney);//计算邮费 TODO 以后可能要修改哟
-		
-		my_order_delivery_money.setText("￥ " + postage);//邮费
-		myorder_favourable_money.setText("￥ " + discountmoney);//优惠金额
-		myorder_favourable_money.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-		myorder_goods_num.setText("共" + allnum + "件商品");//共多少商品
-		// myorder_service_money.setText("￥ 0");
-		
-		
-		//TODO 赠品以后再修改吧
+		coupons_text.setText("");
+
+		// TODO 赠品以后再修改吧
 		myorder_give.setText("福成有机牛奶原味[赠]");
 		myorder_give_num.setText("X2");
 		myorder_give_money.setText("￥ 0");
-		if (postage > 0) {
-			money_count.setText("￥" + allmoney + "+" + postage);
-		} else {
-			money_count.setText("￥" + allmoney);
-		}
 		
 		Intent intent = getIntent();
 		String store_name = intent.getStringExtra("store_name");
 		goods_myorder_shop_name.setText(store_name);
+		
+		queryAddress();
+		
+		queryCoupon();
+		
+		
+		// 计算金额
+		initMoney();
+		
+		//计算金额并显示
+		calMoney();
 	}
-	
-	//计算购物车里面的金额
+
+	// 计算购物车里面的金额
 	private void initMoney() {
 		double[] listDisacount = app.getListDisacount();
 		allnum = (int)listDisacount[0];
 		discountmoney = listDisacount[1];
 		allmoney = listDisacount[2];
+	}
+	
+	//
+	private void calMoney(){
+		double money = allmoney - coupons_money;//减去优惠金额
+		double discount = discountmoney + coupons_money;//加上优惠金额
+		postage = CommonsUtil.postage(allmoney);//计算邮费 TODO 以后可能要修改哟
+		
+		my_order_delivery_money.setText("￥ " + postage);//邮费
+		myorder_favourable_money.setText("￥ " + discount);//优惠金额
+		myorder_favourable_money.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+		myorder_goods_num.setText("共" + allnum + "件商品");//共多少商品
+		// myorder_service_money.setText("￥ 0");
+		if (postage > 0) {
+			money_count.setText("￥" + money + "+" + postage);
+		} else {
+			money_count.setText("￥" + money);
+		}
 	}
 
 	@Override
@@ -180,9 +230,14 @@ public class MyOrderActivity extends BaseActivity {
 		
 		//要购买的所有商品
 		myorder_cart_listview = (ListView) findViewById(R.id.myorder_cart_listview);
-		
-		//地址
-		myorder_address_rl = (RelativeLayout) headView.findViewById(R.id.myorder_address_rl);
+		// 优惠券
+		coupons_text = (TextView) headView.findViewById(R.id.my_order_coupons);
+		myorder_coupons_rl = (RelativeLayout) headView.findViewById(R.id.myorder_coupons_rl);
+		myorder_coupons_rl.setOnClickListener(this);
+
+		// 地址
+		myorder_address_rl = (RelativeLayout) headView
+				.findViewById(R.id.myorder_address_rl);
 		myorder_address_rl.setOnClickListener(this);
 		
 		//收货人，电话，详细地址
@@ -234,6 +289,8 @@ public class MyOrderActivity extends BaseActivity {
 		myorder_cart_listview.setAdapter(adapter);
 		myorder_cart_listview.addHeaderView(headView);
 		myorder_cart_listview.addFooterView(footView);
+		
+		couponslist = new ArrayList<CouponItem>();
 	}
 
 	/**
@@ -324,8 +381,148 @@ public class MyOrderActivity extends BaseActivity {
 		case R.id.submit_goods_btn://结算
 			submitOrders();
 			break;
+		case R.id.myorder_coupons_rl: // 选取优惠券
+			chooseCoupons();
+			break;
 		default:
 			break;
+		}
+	}
+	/**
+	 * 选择优惠券
+	 */
+	private void chooseCoupons() {
+		chooseCouponsDialog = new AlertDialog.Builder(MyOrderActivity.this).create();
+		chooseCouponsDialog.show();
+		chooseCouponsDialog.getWindow().setContentView(R.layout.dialog_choose_coupons);
+		couponsListView = (ListView) chooseCouponsDialog.findViewById(R.id.couponsListView);
+		couponsAdapter = showAdapter();
+		couponsListView.setAdapter(couponsAdapter);
+		delete_coupon_list_btn=(ImageButton) chooseCouponsDialog.findViewById(R.id.delete_coupon_list_btn);
+		/**
+		 * 关闭优惠券选择框
+		 */
+		delete_coupon_list_btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				chooseCouponsDialog.dismiss();
+			}
+		});
+		/**
+		 * 选中优惠券
+		 */
+		couponsListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long len) {
+				chooseCouponsDialog.dismiss();
+				CouponItem couponItem = (CouponItem)parent.getItemAtPosition(position);
+				float price = couponItem.getPrice();
+				coupons_text.setText("￥" + price + "元优惠券");
+				coupons_money = price;
+				adapter.setCoupons_money(coupons_money);
+				calMoney();
+			}
+		});
+	}
+
+	public CommonAdapter<CouponItem> showAdapter() {
+		return new CommonAdapter<CouponItem>(MyOrderActivity.this, couponslist,
+				R.layout.item_coupon_list) {
+
+			@Override
+			public void convert(ViewHolder helper, CouponItem item) {
+				helper.setText(R.id.item_price, "￥" + item.getPrice() + "元");
+				helper.setText(
+						R.id.item_date,DateUtil.format(item.getStartTime())
+								+ " 至 "
+								+ DateUtil.format(item.getEndTime()));
+			}
+		};
+	}
+	
+	//默认查询收货地址
+	private void queryAddress(){
+		int user_id = sessionManager.getUserId();
+		
+		String url = HttpUtil.BASE_URL + "/freqa/query.do?user_id="+user_id;
+		try {
+			String json = HttpUtil.getRequest(url);
+			if(json == null){
+				return;
+			}
+			List<AddressItem> list = JsonUtil.parse2ListAddressItem(json);
+			if(!list.isEmpty()){
+				AddressItem item = list.get(0);
+				my_order_name.setText(item.getUser_name());
+				my_order_tel.setText(item.getMobile());
+				my_order_address.setText(StringUtils.trimToEmpty(item.getProvince())
+						+ StringUtils.trimToEmpty(item.getCity())
+						+ StringUtils.trimToEmpty(item.getTown())
+						+ StringUtils.trimToEmpty(item.getAddress()));
+			}
+			list = null;
+		} catch (Exception e) {
+			LOGGER.error("查询常用地址失败", e);
+			CommonsUtil.showLongToast(getApplicationContext(), "查询常用地址失败");
+		}
+	
+	}
+	
+	//查询优惠券
+	private void queryCoupon(){
+		List<GoodsItem> cartGoodLists = app.getCartGoodLists();
+		if(cartGoodLists == null || cartGoodLists.isEmpty()){
+			return;
+		}
+		
+		int store_id = cartGoodLists.get(0).getStore_id();
+		int user_id = sessionManager.getUserId();
+		
+		String url = HttpUtil.BASE_URL + "/coupon/queryByCouponUserId.do";
+		
+		try {
+			Map<String,String> map = new HashMap<String, String>();
+			map.put("store_id", store_id + "");
+			map.put("buyer_user_id", user_id+"");
+			String listJson = HttpUtil.postRequest(url,map);
+			if(listJson == null){
+				return;
+			}
+			
+			List<Coupon> list = JsonUtil.parse2ListCoupon(listJson);
+			
+			int length = list.size();
+			for (int i = 0; i < length; i++) {
+				Coupon coupon = list.get(i);
+				CouponItem couponItem = new CouponItem();
+				couponItem.setRange(StringUtils.trimToEmpty(coupon.getDesc()));//优惠描述吧
+				couponItem.setPrice(coupon.getCoupon_money());
+				couponItem.setStartTime(DateUtil.parseDate(coupon.getStart_time(), new String[]{"yyyyMMddHHmmss"}));
+				couponItem.setEndTime(DateUtil.parseDate(coupon.getEnd_time(), new String[]{"yyyyMMddHHmmss"}));
+				
+				Date now = new Date();
+				if(couponItem.getStartTime().before(now) && couponItem.getEndTime().after(now)){
+					couponslist.add(couponItem);
+				}
+			}
+			if(couponslist.isEmpty()){
+				coupons_text.setText("");
+			}else{
+				CouponItem couponItem = couponslist.get(0);
+				coupons_text.setText("￥"+StringUtil.format2float(couponItem.getPrice())+"优惠券");
+				coupons_money = couponItem.getPrice();
+				adapter.setCoupons_money(coupons_money);
+			}
+			if(couponsAdapter != null){
+				couponsAdapter.notifyDataSetChanged();
+			}
+			list = null;
+		} catch (Exception e) {
+			LOGGER.error("查询优惠券信息失败", e);
+			CommonsUtil.showLongToast(getApplicationContext(), "查询优惠券信息失败");
 		}
 	}
 
@@ -373,12 +570,13 @@ public class MyOrderActivity extends BaseActivity {
 		Order order = new Order();
 		order.setBuyer_name(name);//收货人
 		order.setBuyer_mobile(tel);
+		order.setBuyer_phone(tel);
 		order.setAddress(address);//详细地址
 		order.setSend_time(receiveTime);//送货时间
 		order.setPay_type(payWayOnline);//付款方式
 		
 		int postage = CommonsUtil.postage(amount_money);
-		order.setAmount_money((float)amount_money + postage);//成交金额
+		order.setAmount_money((float)amount_money - coupons_money + postage);//成交金额
 		order.setFreight(postage);//邮费
 		
 		//买家ID和名称
@@ -389,10 +587,13 @@ public class MyOrderActivity extends BaseActivity {
 		order.setCurrency_unit("人民币");//币种
 		order.setInvoice_need("0");//默认不需要发票
 		
+		//卖家信息
+		
 		order.setBuyer_del("0");//默认未删除
 		order.setSeller_del("0");//默认未删除
 		order.setBuyer_score("0");//默认未评分
 		order.setSeller_score("0");//默认未评分
+		order.setStatus("0");//买方待付款
 		
 		//如果有多个商家的商品，将拆分订单。
 		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
@@ -410,12 +611,49 @@ public class MyOrderActivity extends BaseActivity {
 		
 		//还需要计算价格呢
 		
-		Intent submitIntent = new Intent();
-		submitIntent.setClass(MyOrderActivity.this,PayConfirmActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putSerializable("order", order);
-		submitIntent.putExtras(bundle);
-		startActivity(submitIntent);
+		
+		createOrder(order);
+	}
+	
+	/**
+	 * 创建订单
+	 * @param order
+	 */
+	private void createOrder(Order order){
+		String url = HttpUtil.BASE_URL + "/order/createOrder.do";
+		try {
+			String json = HttpUtil.postRequest(url, order);
+			if(json == null){
+				CommonsUtil.showLongToast(getApplicationContext(), "订单生成失败！");
+				return;
+			}
+			
+			ResponseInfo responseInfo = JsonUtil.parse2Object(json, ResponseInfo.class);
+			if(ResponseInfo.SUCCESS.equals(responseInfo.getStatus())){
+				/*Intent submitIntent = new Intent();
+				submitIntent.setClass(MyOrderActivity.this,PayConfirmActivity.class);
+				Bundle bundle = new Bundle();
+				order.setOrder_id(String.valueOf(responseInfo.getDataObj()));
+				bundle.putSerializable("order", order);
+				submitIntent.putExtras(bundle);
+				startActivity(submitIntent);*/
+				
+				//TODO 不再跳转到支付，跳转到其他商家提示页面
+				Intent intent = new Intent();
+				intent.putExtra("store_id", app.getStore_id());
+				intent.putExtra("store_name", app.getStore_name());
+				intent.setClass(MyOrderActivity.this, WaitOrderConfirmActivity.class);
+				startActivity(intent);
+				
+				//TODO 订单成功后，删除对应购物车里面的商品
+				
+			}
+			
+			CommonsUtil.showLongToast(getApplicationContext(), responseInfo.getDesc());
+		} catch (Exception e) {
+			LOGGER.error("生成订单失败", e);
+			CommonsUtil.showLongToast(getApplicationContext(), "生成订单失败");
+		}
 	}
 	
 	/**

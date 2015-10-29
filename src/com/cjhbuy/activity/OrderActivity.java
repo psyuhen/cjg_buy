@@ -67,6 +67,8 @@ public class OrderActivity extends BaseActivity {
 			//CommonsUtil.showLongToast(getApplicationContext(), "请先登录");
 			finish();
 			return;
+		}else{
+			sessionManager.resetLoginTime();
 		}
 		
 		count(0);

@@ -4,7 +4,7 @@
     <item android:state_pressed="false"><shape android:shape="rectangle">
 
             <!-- 填充颜色 -->
-            <solid android:color="#9DA590"></solid>
+            <solid android:color="@color/green"></solid>
             <!-- 矩形的圆角半径 -->
             <corners android:radius="10.0dp" />
 
@@ -13,7 +13,7 @@
     <item android:state_pressed="true"><shape android:shape="rectangle">
 
             <!-- 填充颜色 -->
-            <solid android:color="@color/orange"></solid>
+            <solid android:color="@color/cyan"></solid>
             <!-- 矩形的圆角半径 -->
             <corners android:radius="10.0dp" />
 

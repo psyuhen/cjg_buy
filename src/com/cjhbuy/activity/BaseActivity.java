@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVOSCloud;
 import com.cjhbuy.auth.SessionManager;
 
 @SuppressLint("NewApi")

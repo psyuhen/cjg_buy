@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip" >
+
+        <RelativeLayout
+            android:id="@+id/item_coupons_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/item_price"
+                style="@style/red_big_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10.0dip" />
+
+            <TextView
+                android:id="@+id/item_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_price"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                 />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8.0dip"
+            android:background="@drawable/arrow_right" />
+    </RelativeLayout>
+
+</LinearLayout>

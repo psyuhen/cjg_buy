@@ -2,9 +2,11 @@ package com.cjhbuy.activity;
 
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -39,11 +41,11 @@ public class SplashActivity extends Activity {
 	// 延迟3�?
 	private static final long SPLASH_DELAY_MILLIS = 3000;
 
-	private static final String SHAREDPREFERENCES_NAME = "first_pref";
+	private static final String SHAREDPREFERENCES_NAME = "buyer_first_pref";
 
 	/**
 	 */
-	private Handler mHandler = new Handler() {
+	@SuppressLint("HandlerLeak") private Handler mHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -84,6 +86,9 @@ public class SplashActivity extends Activity {
 		if (!isFirstIn) {
 			// 使用Handler的postDelayed方法�?秒后执行跳转到MainActivity
 			mHandler.sendEmptyMessageDelayed(GO_HOME, SPLASH_DELAY_MILLIS);
+			Editor edit = preferences.edit();
+			edit.putBoolean("isFirstIn", false);
+			edit.commit();
 		} else {
 			mHandler.sendEmptyMessageDelayed(GO_GUIDE, SPLASH_DELAY_MILLIS);
 		}

@@ -27,6 +27,7 @@ import com.cjhbuy.auth.SessionManager;
 import com.cjhbuy.bean.SellerItem;
 import com.cjhbuy.bean.Store;
 import com.cjhbuy.bean.StoreVisitHist;
+import com.cjhbuy.utils.AppContext;
 import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.utils.FileUtil;
 import com.cjhbuy.utils.HttpUtil;
@@ -118,7 +119,12 @@ public class HomeSaleFragment extends Fragment {
 				mBtn_buy.setOnClickListener(new MyButtonClick(item));
 				
 				//显示商家的logo
-				helper.setImageBitmap(R.id.item_home_image, item.getBitmap());
+				Bitmap bitmap = item.getBitmap();
+				if(bitmap != null){
+					helper.setImageBitmap(R.id.item_home_image, bitmap);
+				}else{
+					helper.setImageResource(R.id.item_home_image, R.drawable.login_head_icon);
+				}
 			}
 		};
 	}
@@ -136,6 +142,13 @@ public class HomeSaleFragment extends Fragment {
 			Intent intent = new Intent(getActivity(), GoodsActivity.class);
 			intent.putExtra("store_id", item.getId());
 			intent.putExtra("store_name", ""+item.getTitle());
+			
+			if(context instanceof HomeActivity){
+				HomeActivity homeActivity = (HomeActivity)context;
+				AppContext app = (AppContext)homeActivity.getApplication();
+				app.setStore_id(item.getId());
+				app.setStore_name(item.getTitle());
+			}
 			startActivity(intent);
 		}
 	}

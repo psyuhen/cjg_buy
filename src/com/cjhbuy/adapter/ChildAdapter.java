@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,7 +122,12 @@ public class ChildAdapter extends BaseAdapter {
 		}
 		final GoodsItem goodsItem = goodslist.get(position);
 		
-		holder.goodsImage.setImageBitmap(goodsItem.getBitmap());//商品图片
+		Bitmap bitmap = goodsItem.getBitmap();
+		if(bitmap != null){
+			holder.goodsImage.setImageBitmap(bitmap);//商品图片
+		}else{
+			holder.goodsImage.setImageResource(R.drawable.login_head_icon);
+		}
 		holder.weightText.setText(StringUtil.format2string(goodsItem.getWeight()) + StringUtils.trimToEmpty(goodsItem.getUnit()));
 		holder.tag1Text.setText(goodsItem.getTag1());
 		holder.tag2Text.setText(goodsItem.getTag2());

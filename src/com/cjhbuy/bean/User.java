@@ -23,6 +23,7 @@ public class User {
 	private String we_chat;
 	private int store_id;
 	private String store_name;
+	private String photo;
 
 	public int getUser_id() {
 		return user_id;
@@ -126,6 +127,14 @@ public class User {
 
 	public void setStore_name(String store_name) {
 		this.store_name = store_name;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
 	
 }

@@ -149,7 +149,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="4.0dip"
                 android:layout_toRightOf="@+id/my_order_pay_text"
-                android:text="@string/my_order_pay" />
+                android:text="@string/my_order_pay_later" />
 
             <ImageView
                 android:layout_width="@dimen/right_icon_width"
@@ -159,6 +159,44 @@
                 android:layout_marginRight="5.0dip"
                 android:background="@drawable/arrow_right" />
         </RelativeLayout>
+        
+         <ImageView style="@style/my_order_top_line" />
+
+        <RelativeLayout
+            android:id="@+id/myorder_coupons_rl"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/myorder_top_height"
+            android:background="@drawable/relative_btn"
+            android:clickable="true" >
+
+            <TextView
+                android:id="@+id/my_order_coupons_text"
+                style="@style/my_order_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:text="@string/my_order_coupon_text" />
+
+            <TextView
+                android:id="@+id/my_order_coupons"
+                style="@style/my_order_orange_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4.0dip"
+                android:layout_toRightOf="@+id/my_order_coupons_text"
+                />
+
+            <ImageView
+                android:layout_width="@dimen/right_icon_width"
+                android:layout_height="@dimen/right_icon_height"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5.0dip"
+                android:background="@drawable/arrow_right" />
+        </RelativeLayout>
+        
     </LinearLayout>
 
     <LinearLayout

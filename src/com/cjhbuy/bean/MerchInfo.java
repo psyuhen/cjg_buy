@@ -37,6 +37,7 @@ public class MerchInfo implements Serializable{
 	private String image_name;
 	private float weight;//重量
 	private String standard;//规格
+	private String store_name;//商家名称
 	
 	private List<MerchDisacount> merchDisacounts;
 	public int getMerch_id() {
@@ -171,6 +172,11 @@ public class MerchInfo implements Serializable{
 	public void setStandard(String standard) {
 		this.standard = standard;
 	}
-	
+	public String getStore_name() {
+		return store_name;
+	}
+	public void setStore_name(String store_name) {
+		this.store_name = store_name;
+	}
 	
 }

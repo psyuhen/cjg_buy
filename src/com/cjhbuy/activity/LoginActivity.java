@@ -35,6 +35,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private TextView login_retrieve;
 	private Button login_btn;
 	
+	private TextView retrievePswd; //找回密码
+	
 	//手机号和密码
 	private EditText mMobileView;
 	private EditText mPasswordView;
@@ -81,6 +83,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		login_retrieve.setOnClickListener(this);
 		login_btn = (Button) findViewById(R.id.login_btn);
 		login_btn.setOnClickListener(this);
+		retrievePswd=(TextView) findViewById(R.id.retrievePswd);
+		retrievePswd.setOnClickListener(this);
 		
 		// 初始化登录页面
 		mMobileView = (EditText) findViewById(R.id.login_username_edit);
@@ -120,6 +124,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				onBackPressed();
 			}
 			break;
+		case R.id.retrievePswd:
+			startActivity(new Intent(LoginActivity.this, RetrievePswdActivity.class));
+			break;
 		default:
 			break;
 		}
@@ -138,27 +145,21 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		String password = mPasswordView.getText().toString();
 		
 		boolean cancel = false;
-		View focusView = null;
-		
 		// 手机号码为必输入的以及正确输入.
 		if (TextUtils.isEmpty(mobile)) {
 			mMobileView.setError(getString(R.string.error_field_required));
-			focusView = mMobileView;
 			cancel = true;
 		} else if (!Validator.isMoblie(mobile)) {
 			mMobileView.setError(getString(R.string.error_invalid_mobile));
-			focusView = mMobileView;
 			cancel = true;
 		}
 
 		// 检验密码.
 		if (TextUtils.isEmpty(password)){
 			mPasswordView.setError(getString(R.string.error_field_required));
-			focusView = mPasswordView;
 			cancel = true;
 		}else if(!Validator.isPwdLength(password)){
 			mPasswordView.setError(getString(R.string.error_length_password));
-			focusView = mPasswordView;
 			cancel = true;
 		}
 		//老板说现在不用检验这么复杂
@@ -171,55 +172,59 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 		if (cancel) {
 			// 有错误，不登录，焦点在错误的输入框中，并显示错误
-			focusView.requestFocus();
-		}else{
-			//显示进度条，并发送登录请求，准备登录
-			password = SecureUtil.shaEncode(password);
+			return;
+		}
+		//显示进度条，并发送登录请求，准备登录
+		password = SecureUtil.shaEncode(password);
 
-			User user = new User();
-			user.setMobile(mobile);
-			user.setPassword(password);
-			user.setUser_type("1");//买家
-			// 发送登录请求
-			try{
-				//先检查手机号是否存在
-				String url = HttpUtil.BASE_URL + "/user/isregister.do?mobile="+mobile;
-				String json = HttpUtil.getRequest(url);
-				if(json == null){
-					CommonsUtil.showLongToast(getApplicationContext(), "手机号码不存在");
-					sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
-					return ;
-				}
-				
-				url = HttpUtil.BASE_URL + "/user/login.do";
-				json = HttpUtil.postRequest(url, user);
-				if(json == null){
-					CommonsUtil.showLongToast(getApplicationContext(), "登录失败,用户密码错误或者网络异常");
-					sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
-					return ;
-				}
-				
-				user = JsonUtil.parse2Object(json, User.class);
-				sessionManager.createLoginSession(user);
-				
-				if("AddressActivity".equals(from)){
-					setResult(RESULT_OK,new Intent());
-				}else if("OrderInFragment".equals(from)){//已进行订单跳转过来的
-					setResult(RESULT_OK,new Intent());
-				}else if("OrderCompletedFragment".equals(from)){//已完成订单跳转过来的
-					setResult(RESULT_OK,new Intent());
-				}else if("CartActivity".equals(from)){//购物车跳转过来的
-					setResult(RESULT_OK,new Intent());
-				}else if("GoodsActivity".equals(from)){
-					setResult(RESULT_OK,new Intent());
-				}else{
-					startActivity(new Intent(LoginActivity.this, MeActivity.class));
-				}
-				finish();
-			}catch (Exception e) {
-				LOGGER.error(">>> 用户登录失败", e);
-				CommonsUtil.showLongToast(getApplicationContext(), "用户登录失败");
+		User user = new User();
+		user.setMobile(mobile);
+		user.setPassword(password);
+		user.setUser_type("1");//买家
+		// 发送登录请求
+		try{
+			//先检查手机号是否存在
+			String url = HttpUtil.BASE_URL + "/user/isRegister.do?mobile="+mobile+"&user_type=1";
+			String json = HttpUtil.getRequest(url);
+			if(json == null){
+				CommonsUtil.showLongToast(getApplicationContext(), "网络或者服务器异常");
+				sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
+				return ;
 			}
+			if("false".equals(json)){
+				CommonsUtil.showLongToast(getApplicationContext(), "手机号码不存在");
+				sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
+				return ;
+			}
+			
+			url = HttpUtil.BASE_URL + "/user/login.do";
+			json = HttpUtil.postRequest(url, user);
+			if(json == null){
+				CommonsUtil.showLongToast(getApplicationContext(), "登录失败,用户密码错误或者网络异常");
+				sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
+				return ;
+			}
+			
+			user = JsonUtil.parse2Object(json, User.class);
+			sessionManager.createLoginSession(user);
+			
+			if("AddressActivity".equals(from)){
+				setResult(RESULT_OK,new Intent());
+			}else if("OrderInFragment".equals(from)){//已进行订单跳转过来的
+				setResult(RESULT_OK,new Intent());
+			}else if("OrderCompletedFragment".equals(from)){//已完成订单跳转过来的
+				setResult(RESULT_OK,new Intent());
+			}else if("CartActivity".equals(from)){//购物车跳转过来的
+				setResult(RESULT_OK,new Intent());
+			}else if("GoodsActivity".equals(from)){
+				setResult(RESULT_OK,new Intent());
+			}else{
+				startActivity(new Intent(LoginActivity.this, MeActivity.class));
+			}
+			finish();
+		}catch (Exception e) {
+			LOGGER.error(">>> 用户登录失败", e);
+			CommonsUtil.showLongToast(getApplicationContext(), "用户登录失败");
 		}
 	}
 }

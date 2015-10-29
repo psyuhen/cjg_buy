@@ -99,13 +99,12 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <Button
+     <Button
         android:id="@+id/login_btn"
         style="@style/login_hint_style"
-        android:layout_width="500.0dip"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20.0dip"
+        android:layout_margin="12.0dip"
         android:background="@drawable/btn_login"
         android:text="@string/login_btn_text" />
 
@@ -113,15 +112,15 @@
         android:id="@+id/login_registe_retrieve"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20.0dip" >
+        >
 
-        <TextView
+        <Button
             android:id="@+id/login_registe"
             style="@style/login_register_retrieve_style"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20.0dip"
+            android:layout_margin="10.0dip"
+            android:background="@drawable/orange_btn"
             android:text="@string/login_registe_text" />
 
         <TextView
@@ -135,6 +134,20 @@
             android:visibility="gone" />
     </RelativeLayout>
 
+    <RelativeLayout 
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     >
+     <TextView 
+         android:id="@+id/retrievePswd"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         style="@style/black_normal_style"
+         android:layout_marginRight="10.0dip"
+         android:layout_alignParentRight="true"
+         android:text="@string/retrievePswd_text"/>
+    </RelativeLayout>
+    
     <LinearLayout
         android:id="@+id/content"
         android:layout_width="fill_parent"

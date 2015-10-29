@@ -5,18 +5,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-
-
-
-
-
-
-
-
-import com.cjhbuy.activity.R;
-import com.cjhbuy.bean.ChatMsgItem;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,6 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.cjhbuy.activity.R;
+import com.cjhbuy.bean.ChatMsgItem;
+import com.cjhbuy.utils.DateUtil;
 
 public class ChatMsgViewAdapter extends BaseAdapter {
 
@@ -64,19 +56,14 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 
 		if (convertView == null) {
 			if (isComing) {
-				convertView = mInflater.inflate(
-						R.layout.chatting_item_msg_left, null);
+				convertView = mInflater.inflate(R.layout.chatting_item_msg_left, null);
 			} else {
-				convertView = mInflater.inflate(
-						R.layout.chatting_item_msg_right, null);
+				convertView = mInflater.inflate(R.layout.chatting_item_msg_right, null);
 			}
 			viewHolder = new ViewHolder();
-			viewHolder.msg_sendtime = (TextView) convertView
-					.findViewById(R.id.msg_sendtime);
-			viewHolder.msg_text = (TextView) convertView
-					.findViewById(R.id.msg_text);
-			viewHolder.msg_username = (TextView) convertView
-					.findViewById(R.id.msg_username);
+			viewHolder.msg_sendtime = (TextView) convertView.findViewById(R.id.msg_sendtime);
+			viewHolder.msg_text = (TextView) convertView.findViewById(R.id.msg_text);
+			viewHolder.msg_username = (TextView) convertView.findViewById(R.id.msg_username);
 			viewHolder.isComing = isComing;
 			convertView.setTag(viewHolder);
 		} else {
@@ -84,11 +71,10 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		}
 		String regular = "appkefu_f0[0-9]{2}";
 		String str = entity.getContent();
-		SpannableString spannableString = ChatMsgViewAdapter
-				.getExpressionString(context, str, regular);
+		SpannableString spannableString = ChatMsgViewAdapter.getExpressionString(context, str, regular);
 
 		viewHolder.msg_text.setText(spannableString);
-		viewHolder.msg_sendtime.setText(entity.getSendDate()+"");
+		viewHolder.msg_sendtime.setText(DateUtil.format(entity.getSendDate())+"");
 		// viewHolder.msg_text.setText(entity.getText());
 		viewHolder.msg_username.setText(entity.getSendUser());
 		return convertView;

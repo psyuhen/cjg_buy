@@ -200,6 +200,8 @@
                 android:layout_marginTop="5.0dip"
                 android:background="@drawable/communication_btn"
                 android:focusable="false"
+                android:textSize="12sp"
+                android:width="1.0dip"
                 android:text="@string/commication_text" />
 
             <Button
@@ -214,6 +216,8 @@
                 android:layout_toLeftOf="@+id/order_communication_btn"
                 android:background="@drawable/complete_btn"
                 android:focusable="false"
+                android:textSize="12sp"
+                android:width="1.0dip"
                 android:text="@string/order_view" />
         </RelativeLayout>
 

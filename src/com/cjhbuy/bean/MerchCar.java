@@ -22,6 +22,7 @@ public class MerchCar {
 	private MerchInfo merch;
 	
 	private String image_name;
+	private String store_name;
 	
 	private List<MerchDisacount> merchDisacounts;
 	public int getCar_id() {
@@ -78,5 +79,13 @@ public class MerchCar {
 	public void setUser_id(int user_id) {
 		this.user_id = user_id;
 	}
+	public String getStore_name() {
+		return store_name;
+	}
+	public void setStore_name(String store_name) {
+		this.store_name = store_name;
+	}
+	
+	
 	
 }

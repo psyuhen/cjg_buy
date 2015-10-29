@@ -124,7 +124,9 @@
     <!-- 选择城市 -->
     <string name="hot_city_text">热门城市</string>
     <string name="all_city">所有城市</string>
-    <string name="submit_order_btn_text">结算</string>
+    <!-- <string name="submit_order_btn_text">结算</string> -->
+    <!-- <string name="submit_order_btn_text">确认</string> -->
+    <string name="submit_order_btn_text">完成</string>
     <string name="cart_text">购物车</string>
     <string name="goods_calculate_text">合计</string>
     <string name="goods_calculate_bottom_text">购物满49元免费配送</string>
@@ -139,6 +141,7 @@
     <string name="my_order_receive_time">24小时(0:00-24:00)</string>
     <string name="my_order_pay_text">付款方式:</string>
     <string name="my_order_pay">微信支付</string>
+    <string name="my_order_pay_later">货到付款</string>
     <string name="goods_myorder_shop_name_text">喜多多便利店</string>
     <string name="myorder_wantbuy_text">你可能想要</string>
       <!-- 我的详情 -->
@@ -227,5 +230,16 @@
     <string name="order_view">查看订单</string>
     <string name="order_search_edit">商品名、订单号、手机、姓名等</string>
     <string name="search_order_text">查找</string>
-
+    <string name="my_order_coupon_text">优惠券</string>
+    <string name="choose_coupons_text">选择优惠券</string>
+    	<!-- 找回密码 -->
+    <string name="retrievePswd_text">找回密码</string>
+    <string name="retrieve_pswd_tel_text">手机号:</string>
+    <string name="retrieve_pswd_tel_hint">请输入手机号</string>
+    <string name="retrieve_pswd_tel_send_code_btn_text">获取验证码</string>
+    <string name="retrieve_pswd_code_text">验证码:</string>
+    <string name="retrieve_pswd_code_hint">请输入获取到的验证码</string>
+    <string name="retrieve_pswd_new_pswd_text">新密码:</string>
+    <string name="retrieve_pswd_new_pswd_edit_hint">请输入要设置的新密码</string>
+    <string name="retrieve_pswd_confirm_btn">确认</string>
 </resources>

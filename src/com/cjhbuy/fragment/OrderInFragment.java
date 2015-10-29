@@ -2,7 +2,6 @@ package com.cjhbuy.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.kymjs.aframe.ui.widget.KJListView;
 import org.kymjs.aframe.ui.widget.KJListView.KJListViewListener;
@@ -185,6 +184,7 @@ public class OrderInFragment extends Fragment {
 				orderItem.setId(i);
 				orderItem.setBuyer_user_id(order.getBuyer_user_id()+"");
 				orderItem.setSeller_user_id(order.getSeller_user_id()+"");
+				orderItem.setSeller(order.getSeller_user_name());
 				orderItem.setSerialnum(order.getOrder_id());
 //				orderItem.setAddress("aaaa");
 				orderItem.setBuyer(order.getBuyer_user_name());

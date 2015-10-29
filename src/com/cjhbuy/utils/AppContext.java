@@ -10,6 +10,9 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 
+import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.im.v2.AVIMMessageManager;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.cjhbuy.auth.SessionManager;
 import com.cjhbuy.bean.CityItem;
 import com.cjhbuy.bean.GoodsItem;
@@ -25,6 +28,22 @@ public class AppContext extends Application {
 	private List<CityItem> cities;
 	private String city;
 	private List<GoodsItem> cartGoodLists;
+	
+	//商家ID和商家名称
+	private int store_id;
+	private String store_name;
+	public void setStore_id(int store_id) {
+		this.store_id = store_id;
+	}
+	public int getStore_id() {
+		return store_id;
+	}
+	public void setStore_name(String store_name) {
+		this.store_name = store_name;
+	}
+	public String getStore_name() {
+		return store_name;
+	}
  	
 	
 	@Override
@@ -39,6 +58,14 @@ public class AppContext extends Application {
 			setCities(cities);
 		} catch (IOException e) {
 			LOGGER.error("转换出错",e);
+		}
+		try{
+			AVOSCloud.initialize(this, "OMnLPjX7ykL6B82b7TeKNvcT", "TF17FlFxgKD9KFaFuPgRi9Xr");
+			// 必须在启动的时候注册 MessageHandler
+		    // 应用一启动就会重连，服务器会推送离线消息过来，需要 MessageHandler 来处理
+		    AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, new MessageHandler(this));
+		} catch (Exception e) {
+			LOGGER.error("AVOSCloud初始化失败",e);
 		}
 	}
 

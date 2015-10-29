@@ -37,7 +37,7 @@ public class SessionManager {
 	int PRIVATE_MODE = 0;
 
 	// Sharedpref file name
-	private static final String PREF_NAME = "SgamsSaleAppPref";
+	private static final String PREF_NAME = "SgamsbuyAppPref";
 
 	// All Shared Preferences Keys
 	public static final String IS_LOGIN = "IsLoggedIn";
@@ -59,6 +59,8 @@ public class SessionManager {
 	
 	//登录时间
 	public static final String LOGIN_TIME = "login_time";
+	//头像
+	public static final String KEY_PHOTO = "photo";
 
 	// Constructor
 	public SessionManager(Context context) {
@@ -92,6 +94,8 @@ public class SessionManager {
 		//存储登录时间
 		editor.putString(LOGIN_TIME, DateUtil.currentTime());
 
+		//头像
+		editor.putString(KEY_PHOTO, user.getPhoto());
 		// commit changes
 		editor.commit();
 	}
@@ -170,13 +174,14 @@ public class SessionManager {
 	 * Create login session
 	 * */
 	public void createLoginSession(String userId, String name, String mobile,
-			String qq, String weChat) {
+			String qq, String weChat, String photo) {
 		User user = new User();
 		user.setUser_id(Integer.parseInt(userId));
 		user.setName(name);
 		user.setMobile(mobile);
 		user.setQq(qq);
 		user.setWe_chat(weChat);
+		user.setPhoto(photo);
 
 		createLoginSession(user);
 	}
@@ -232,6 +237,8 @@ public class SessionManager {
 
 		// user we chat
 		user.put(KEY_WE_CHAT, pref.getString(KEY_WE_CHAT, null));
+		
+		user.put(KEY_PHOTO, pref.getString(KEY_PHOTO, null));
 
 		// return user
 		return user;
@@ -248,6 +255,7 @@ public class SessionManager {
 		user.setMobile(pref.getString(KEY_MOBILE, null));
 		user.setQq(pref.getString(KEY_QQ, null));
 		user.setWe_chat(pref.getString(KEY_WE_CHAT, null));
+		user.setPhoto(pref.getString(KEY_PHOTO, null));
 
 		// return user
 		return user;

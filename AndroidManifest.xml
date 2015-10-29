@@ -52,6 +52,18 @@
         <activity android:name="com.cjhbuy.activity.AboutUsActivity" />
         <activity android:name="com.cjhbuy.activity.CartActivity" />
         <activity android:name="com.cjhbuy.activity.OrderSearchActivity" />
+        <activity android:name="com.cjhbuy.activity.RetrievePswdActivity" />
+        
+        <!-- leancloud 相关类 -->
+        <service android:name="com.avos.avoscloud.PushService"
+         android:exported="true" />
+
+        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

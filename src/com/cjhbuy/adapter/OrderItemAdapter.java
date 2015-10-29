@@ -1,10 +1,12 @@
 package com.cjhbuy.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -100,13 +102,20 @@ public class OrderItemAdapter extends BaseAdapter {
 		
 		List<Bitmap> bitmapList = orderItem.getBitmapList();
 		if(bitmapList != null){
-			if(bitmapList.size() > 4){
+			if(bitmapList.isEmpty()){
+				bitmapList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.login_head_icon));
+				orderImageAdapter = new OrderImageAdapter(context,bitmapList);
+			}else if(bitmapList.size() > 4){
 				orderImageAdapter = new OrderImageAdapter(context, bitmapList.subList(0, 4));
 			}else{
 				orderImageAdapter = new OrderImageAdapter(context,bitmapList);
 			}
-			viewHolder.order_image.setAdapter(orderImageAdapter);
+		}else{
+			bitmapList = new ArrayList<Bitmap>();
+			bitmapList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.login_head_icon));
+			orderImageAdapter = new OrderImageAdapter(context,bitmapList);
 		}
+		viewHolder.order_image.setAdapter(orderImageAdapter);
 
 		viewHolder.order_view_btn.setOnClickListener(new OnClickListener() {
 			@Override

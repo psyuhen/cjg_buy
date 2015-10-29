@@ -3,6 +3,7 @@ package com.cjhbuy.adapter;
 import java.util.List;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,6 @@ import com.cjhbuy.activity.MyOrderActivity;
 import com.cjhbuy.activity.R;
 import com.cjhbuy.auth.SessionManager;
 import com.cjhbuy.bean.GoodsItem;
-import com.cjhbuy.bean.MerchDisacount;
 import com.cjhbuy.utils.AppContext;
 import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.utils.StringUtil;
@@ -33,10 +33,14 @@ public class MyOrderGoodsAdapter extends BaseAdapter {
 
 	private Activity activity;
 	private AppContext app;
-	/* 邮费 */
+	/* 商品数量 */
 	private int all_num;
+	//总价
 	private double all_money;
+	//优惠金额
 	private double discount_money;
+	/*优惠券的优惠金额*/
+	private double coupons_money = 0d;
 
 	private TextView all_money_text;
 	private TextView all_num_text;
@@ -46,6 +50,15 @@ public class MyOrderGoodsAdapter extends BaseAdapter {
 	public double getAll_money() {
 		return all_money;
 	}
+	
+	public double getCoupons_money() {
+		return coupons_money;
+	}
+
+	public void setCoupons_money(double coupons_money) {
+		this.coupons_money = coupons_money;
+	}
+
 	/**
 	 * 构造方法
 	 * 
@@ -95,7 +108,13 @@ public class MyOrderGoodsAdapter extends BaseAdapter {
 		holder.cart_goods_title.setText(item.getTitle());
 		holder.goods_item_stock.setText("" + item.getSellmount());
 //		holder.cart_goods_imageview.setImageResource(item.getImage());
-		holder.cart_goods_imageview.setImageBitmap(item.getBitmap());
+		
+		Bitmap bitmap = item.getBitmap();
+		if(bitmap != null){
+			holder.cart_goods_imageview.setImageBitmap(bitmap);
+		}else{
+			holder.cart_goods_imageview.setImageResource(R.drawable.login_head_icon);
+		}
 		
 		double price = app.getCalMoney(item);//价格
 		double disacountMoney = app.getDisacountMoney(item);
@@ -136,7 +155,6 @@ public class MyOrderGoodsAdapter extends BaseAdapter {
 			}else if(MyOrderGoodsAdapter.this.activity instanceof MyOrderActivity){
 				sessionManager = ((MyOrderActivity)MyOrderGoodsAdapter.this.activity).sessionManager;
 			}
-			
 			
 			
 			switch (v.getId()) {
@@ -182,7 +200,7 @@ public class MyOrderGoodsAdapter extends BaseAdapter {
 		all_num = all_num + num;
 		all_num_text.setText("共" + all_num + "件商品");
 		all_money_text.setText("￥ " + StringUtil.format2string(all_money));
-		discount_money_text.setText("￥" + StringUtil.format2string(discount_money));
+		discount_money_text.setText("￥" + StringUtil.format2string(discount_money + coupons_money));
 		discount_money_text.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 		postage_text.setText("￥ " + CommonsUtil.postage(all_money));
 	}

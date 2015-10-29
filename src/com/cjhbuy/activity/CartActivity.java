@@ -54,7 +54,7 @@ public class CartActivity extends BaseActivity {
 	private double discount_money;
 
 	private MyOrderGoodsAdapter adapter;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -79,6 +79,7 @@ public class CartActivity extends BaseActivity {
 
 	private void initData() {
 		title.setText("我的购物车");
+		
 		initMoney();
 		all_num.setText("共" + num + "件商品");
 		all_money.setText("￥ " + StringUtil.format2string(money));
@@ -99,7 +100,12 @@ public class CartActivity extends BaseActivity {
 	
 	//计算购物车里面的金额
 	private void initMoney() {
-		for (GoodsItem goodsItem : app.getCartGoodLists()) {
+		double[] listDisacount = app.getListDisacount();
+		num = (int)listDisacount[0];
+		discount_money = listDisacount[1];
+		money = listDisacount[2];
+		
+		/*for (GoodsItem goodsItem : app.getCartGoodLists()) {
 			int sellmount = goodsItem.getSellmount();
 			double price = goodsItem.getPrice();//原价格
 			
@@ -115,7 +121,7 @@ public class CartActivity extends BaseActivity {
 			num = num + sellmount;//购买数量
 			discount_money = discount_money + (disacountMoney * sellmount);//优惠金额
 			money = money + sellmount * (price - disacountMoney);//实际金额
-		}
+		}*/
 	}
 	
 	//查询购物车信息
@@ -138,11 +144,14 @@ public class CartActivity extends BaseActivity {
 					MerchCar merchCar = list.get(i);
 					
 					GoodsItem goodsItem = new GoodsItem();
+					goodsItem.setStore_name(goodsItem.getStore_name());
+					
 					goodsItem.setId(merchCar.getMerch_id());//商品ID
 					goodsItem.setSellmount(merchCar.getBuy_num());//购买数量
 					
 					MerchInfo merchInfo = merchCar.getMerch();
 					if(merchInfo != null){
+						goodsItem.setStore_id(merchInfo.getStore_id());
 						goodsItem.setTitle(merchInfo.getName());
 						goodsItem.setPrice(merchInfo.getPrice());//价格
 						
@@ -239,13 +248,26 @@ public class CartActivity extends BaseActivity {
 			if(!sessionManager.isLoggedIn()){
 				start2Login();
 				return;
+			}else{
+				sessionManager.resetLoginTime();
 			}
-			startActivity(new Intent(CartActivity.this, MyOrderActivity.class));
+//			startActivity(new Intent(CartActivity.this, MyOrderActivity.class));
+			start2MyOrderActivity();
 			break;
 
 		default:
 			break;
 		}
+	}
+	
+	//跳转到结算页面
+	private void start2MyOrderActivity(){
+		Intent intent = new Intent();
+		AppContext app = (AppContext)getApplication();
+		intent.putExtra("store_id", app.getStore_id());
+		intent.putExtra("store_name", app.getStore_name());
+		intent.setClass(CartActivity.this, MyOrderActivity.class);//结算
+		startActivity(intent);
 	}
 	
 	@Override
@@ -254,8 +276,11 @@ public class CartActivity extends BaseActivity {
 		case Constants.CAR_REQUEST_CODE:
 			if(!sessionManager.isLoggedIn()){//如果还没登录，即直接返回
 				return;
+			}else{
+				sessionManager.resetLoginTime();
 			}
-			startActivity(new Intent(CartActivity.this, MyOrderActivity.class));
+//			startActivity(new Intent(CartActivity.this, MyOrderActivity.class));
+			start2MyOrderActivity();
 			break;
 		default:
 			break;

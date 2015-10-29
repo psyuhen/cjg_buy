@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar" />
+
+    <RelativeLayout
+        android:id="@+id/login_top_rl"
+        android:layout_width="match_parent"
+        android:layout_height="150.0dip"
+        android:background="@drawable/head_bg" >
+
+        <ImageView
+            android:id="@+id/login_top_head"
+            android:layout_width="100.0dip"
+            android:layout_height="100.0dip"
+            android:layout_centerInParent="true"
+            android:background="@drawable/login_head_icon" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/retrieve_pswd_center_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5.0dip"
+        android:background="@color/white_bg"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/retrieve_pswd_tel_rl"
+            android:layout_width="match_parent"
+            android:layout_height="60.0dip"
+            android:background="@color/white" >
+
+            <TextView
+                android:id="@+id/retrieve_pswd_tel_text"
+                style="@style/login_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30.0dip"
+                android:text="@string/retrieve_pswd_tel_text" />
+
+            <EditText
+                android:id="@+id/retrieve_pswd_tel_edit"
+                style="@style/login_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/retrieve_pswd_tel_text"
+                android:background="@color/white_bg"
+                android:hint="@string/retrieve_pswd_tel_hint"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/retrieve_pswd_tel_send_code_btn"
+                style="@style/white_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="40.0dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10.0dip"
+                android:background="@drawable/orange_btn"
+                android:text="@string/retrieve_pswd_tel_send_code_btn_text" />
+        </RelativeLayout>
+
+        <ImageView style="@style/login_line" />
+
+        <RelativeLayout
+            android:id="@+id/retrieve_pswd_code_rl"
+            android:layout_width="match_parent"
+            android:layout_height="60.0dip"
+            android:background="@color/white" >
+
+            <TextView
+                android:id="@+id/retrieve_pswd_code_text"
+                style="@style/login_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30.0dip"
+                android:text="@string/retrieve_pswd_code_text" />
+
+            <EditText
+                android:id="@+id/retrieve_pswd_code_edit"
+                style="@style/login_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:layout_toRightOf="@+id/retrieve_pswd_code_text"
+                android:background="@color/white_bg"
+                android:hint="@string/retrieve_pswd_code_hint"
+                android:inputType="number" />
+        </RelativeLayout>
+
+        <ImageView style="@style/login_line" />
+
+        <RelativeLayout
+            android:id="@+id/retrieve_pswd_new_pswd_rl"
+            android:layout_width="match_parent"
+            android:layout_height="60.0dip"
+            android:background="@color/white" >
+
+            <TextView
+                android:id="@+id/retrieve_pswd_new_pswd_text"
+                style="@style/login_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30.0dip"
+                android:text="@string/retrieve_pswd_new_pswd_text" />
+
+            <EditText
+                android:id="@+id/retrieve_pswd_new_pswd_edit"
+                style="@style/login_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:layout_toRightOf="@+id/retrieve_pswd_new_pswd_text"
+                android:background="@color/white_bg"
+                android:hint="@string/retrieve_pswd_new_pswd_edit_hint"
+                android:inputType="textPassword" />
+
+            <com.cjhbuy.utils.SwitchButton
+                android:id="@+id/retrieve_pswd_show_password"
+                style="@style/defaultSwitchButton"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10.0dip"
+                android:background="@drawable/switch_btn" />
+        </RelativeLayout>
+        <ImageView style="@style/login_line" />
+    </LinearLayout>
+
+    
+     <Button
+        android:id="@+id/retrieve_pswd_confirm_btn"
+        style="@style/login_hint_style"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12.0dip"
+        android:background="@drawable/btn_login"
+        android:text="@string/retrieve_pswd_confirm_btn" />
+
+</LinearLayout>

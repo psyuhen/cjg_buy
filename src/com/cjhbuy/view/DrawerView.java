@@ -51,11 +51,9 @@ public class DrawerView implements OnClickListener {
 
 	private void initView() {
 		
-		left_home_rl = (RelativeLayout) activity
-				.findViewById(R.id.left_home_rl);
+		left_home_rl = (RelativeLayout) activity.findViewById(R.id.left_home_rl);
 		left_home_rl.setOnClickListener(this);
-		left_myorder_rl = (RelativeLayout) activity
-				.findViewById(R.id.left_myorder_rl);
+		left_myorder_rl = (RelativeLayout) activity.findViewById(R.id.left_myorder_rl);
 		left_myorder_rl.setOnClickListener(this);
 		left_me_rl = (RelativeLayout) activity.findViewById(R.id.left_me_rl);
 		left_me_rl.setOnClickListener(this);

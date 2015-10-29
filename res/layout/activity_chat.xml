@@ -14,7 +14,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
         android:layout_alignParentBottom="true"
-        android:background="@color/gray" >
+        android:background="@color/white" >
 
         <ImageButton
             android:id="@+id/chat_face_imagebtn"
@@ -32,7 +32,7 @@
             android:layout_marginLeft="4.0dip"
             android:layout_marginTop="5.0dip"
             android:layout_toRightOf="@+id/chat_face_imagebtn"
-            android:background="@drawable/chat_add_icon" />
+            android:background="@drawable/sound_on" />
 
         <EditText
             android:id="@+id/chat_send_edit_msg"
@@ -48,11 +48,9 @@
         <Button
             android:id="@+id/chat_send_message_btn"
             android:layout_width="80dp"
-            android:layout_height="60dp"
-            android:background="@drawable/btn_common"
+            android:layout_height="@dimen/chat_imgbtn_icon_height"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            style="@style/white_normal_style"
             android:layout_marginRight="4.0dip"
             android:text="@string/chat_send_btn_text" />
     </RelativeLayout>

@@ -179,11 +179,14 @@ public class GoodsActivity extends BaseActivity {
 					MerchCar merchCar = list.get(i);
 					
 					GoodsItem goodsItem = new GoodsItem();
+					goodsItem.setStore_name(goodsItem.getStore_name());
+					
 					goodsItem.setId(merchCar.getMerch_id());//商品ID
 					goodsItem.setSellmount(merchCar.getBuy_num());//购买数量
 					
 					MerchInfo merchInfo = merchCar.getMerch();
 					if(merchInfo != null){
+						goodsItem.setStore_id(merchInfo.getStore_id());
 						goodsItem.setTitle(merchInfo.getName());
 						goodsItem.setPrice(merchInfo.getPrice());//价格
 						
@@ -240,10 +243,7 @@ public class GoodsActivity extends BaseActivity {
 			if(!sessionManager.isLoggedIn()){
 				return;
 			}
-			Intent intent = new Intent();
-			intent.putExtra("store_name", store_name);
-			intent.setClass(GoodsActivity.this, MyOrderActivity.class);//结算
-			startActivity(intent);
+			start2MyOrderActivity();
 			break;
 
 		default:
@@ -263,19 +263,28 @@ public class GoodsActivity extends BaseActivity {
 //				startActivity(intent);
 				startActivityForResult(intent, Constants.GOODS_REQUEST_CODE);
 				return;
+			}else{
+				sessionManager.resetLoginTime();
 			}
+			start2MyOrderActivity();
 			
-			Intent intent = new Intent();
-			intent.putExtra("store_name", store_name);
-			intent.setClass(GoodsActivity.this, MyOrderActivity.class);//结算
-			startActivity(intent);
 			break;
 		case R.id.goods_cart_image:
-			startActivity(new Intent(GoodsActivity.this, CartActivity.class));//购物车
+			Intent intent = new Intent(GoodsActivity.this, CartActivity.class);
+			startActivity(intent);//购物车
 			break;
 		default:
 			break;
 		}
+	}
+	
+	//跳转到结算页面
+	private void start2MyOrderActivity(){
+		Intent intent = new Intent();
+		intent.putExtra("store_id", store_id);
+		intent.putExtra("store_name", store_name);
+		intent.setClass(GoodsActivity.this, MyOrderActivity.class);//结算
+		startActivity(intent);
 	}
 
 	//查询所有商品分类
@@ -330,6 +339,9 @@ public class GoodsActivity extends BaseActivity {
 				allgoodsList.clear();
 				for (MerchInfo merchInfo : merchList) {
 					GoodsItem goodsItem = new GoodsItem();
+					goodsItem.setStore_id(merchInfo.getStore_id());
+					goodsItem.setStore_name(merchInfo.getStore_name());
+					
 					goodsItem.setId(merchInfo.getMerch_id());//ID
 					goodsItem.setTitle(merchInfo.getName());//名称
 					goodsItem.setStock(merchInfo.getIn_stock());//库存

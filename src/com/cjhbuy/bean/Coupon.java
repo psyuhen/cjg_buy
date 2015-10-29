@@ -26,6 +26,7 @@ public class Coupon implements Serializable{
 	private String create_time;
 	private String desc;
 	private int has_coupon_num;
+	private int user_coupon_id;
 	public int getCoupon_id() {
 		return coupon_id;
 	}
@@ -91,6 +92,12 @@ public class Coupon implements Serializable{
 	}
 	public void setStore_id(int store_id) {
 		this.store_id = store_id;
+	}
+	public int getUser_coupon_id() {
+		return user_coupon_id;
+	}
+	public void setUser_coupon_id(int user_coupon_id) {
+		this.user_coupon_id = user_coupon_id;
 	}
 	
 }
