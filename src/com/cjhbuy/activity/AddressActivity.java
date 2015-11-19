@@ -157,7 +157,7 @@ public class AddressActivity extends BaseActivity implements OnWheelChangedListe
 		from = intent.getStringExtra("from");
 		
 		//如果没登录要先登录
-		boolean isLogin = sessionManager.isLoggedIn();
+		boolean isLogin = sessionManager.isLoggedInAndLongOper();
 		if(!isLogin){
 			/*Intent intent1 = new Intent();
 			intent1.setClass(AddressActivity.this, LoginActivity.class);

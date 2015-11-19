@@ -11,6 +11,11 @@ public class Constants {
 	public static final int CAR_REQUEST_CODE = 7;
 	public static final int GOODS_REQUEST_CODE = 8;
 	public static final String IMAGE_FILE_NAME = "tmp.png";
+	
+	public static final String READED = "1";
+	public static final String NOT_READED = "0";
+	public static final String MINE = "1";
+	public static final String YOURS = "0";
 	 
 	 public static final String[][] MIME_MapTable = {
 			// {后缀名，MIME类型}
@@ -76,4 +81,16 @@ public class Constants {
 			{ ".wps", "application/vnd.ms-works" }, { ".xml", "text/plain" },
 			{ ".z", "application/x-compress" },
 			{ ".zip", "application/x-zip-compressed" }, { "", "*/*" } }; 
+	 
+	 /*LEAN CLOUD MESSAGE*/
+	 private static final String LEANMESSAGE_CONSTANTS_PREFIX = "com.cjh.im.";
+	 public static final String CLIENT_ID = getPrefixConstant("client_id");
+	 public static final String MEMBER_ID = getPrefixConstant("member_id");
+	 public static final String CONVERSATION_ID = getPrefixConstant("conversation_id");
+	 public static final String ACTIVITY_TITLE = getPrefixConstant("activity_title");
+	 public static final String SQUARE_CONVERSATION_ID = "55cd829e60b2b52cda834469";
+
+	 private static String getPrefixConstant(String str) {
+	    return LEANMESSAGE_CONSTANTS_PREFIX + str;
+	 }
 }

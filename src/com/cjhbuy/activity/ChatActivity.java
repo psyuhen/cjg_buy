@@ -224,7 +224,10 @@ public class ChatActivity extends BaseActivity {
 			public void done(AVIMClient client, AVIMException e) {
 				if (e == null) {
 					HashMap<String,Object> attributes=new HashMap<String, Object>();
+		            attributes.put("buyer_user_id", user.getUser_id());
+		            attributes.put("buyer_user_name", user.getName());
 		            attributes.put("seller_user_id", seller_user_id);
+		            attributes.put("seller_user_name", seller_user_name);
 					// 创建与Jerry之间的对话
 					client.createConversation(Arrays.asList(seller_user_mobile), seller_user_name, attributes, new AVIMConversationCreatedCallback() {
 						@Override

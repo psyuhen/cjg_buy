@@ -289,4 +289,18 @@ public class SessionManager {
 	public boolean isLoggedIn() {
 		return pref.getBoolean(IS_LOGIN, false);
 	}
+	/**
+	 * Quick check for login
+	 * 
+	 */
+	// Get Login State
+	public boolean isLoggedInAndLongOper() {
+		boolean isLogin = pref.getBoolean(IS_LOGIN, false);
+		if(isLogin && loginLongTime() > 30){
+			return false;
+		}
+		return isLogin;
+	}
+	
+	
 }

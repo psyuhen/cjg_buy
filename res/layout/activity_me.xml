@@ -71,7 +71,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10.0dip"
                         android:layout_toLeftOf="@+id/setting_name_image_arrow"
-                        android:text="张店长" />
+                        android:text="" />
 
                     <ImageView
                         android:id="@+id/setting_name_image_arrow"
@@ -83,7 +83,7 @@
                 </RelativeLayout>
 
                 <ImageView
-                    android:id="@+id/setting_me_line"
+                    android:id="@+id/setting_me_line_iv"
                     style="@style/left_drawer_item_line" />
 
                 <RelativeLayout

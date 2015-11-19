@@ -50,7 +50,7 @@ public class CouponActivity extends BaseActivity {
 	}
 
 	private void initData() {
-		if(!sessionManager.isLoggedIn()){
+		if(!sessionManager.isLoggedInAndLongOper()){
 			CommonsUtil.showLongToast(getApplicationContext(), "请先登录");
 			finish();
 			return;

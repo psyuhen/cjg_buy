@@ -60,7 +60,7 @@ public class OrderActivity extends BaseActivity {
 	
 	
 	private void initData() {
-		if(!sessionManager.isLoggedIn()){
+		if(!sessionManager.isLoggedInAndLongOper()){
 			Intent intent = new Intent(OrderActivity.this, LoginActivity.class);
 			intent.putExtra("from", "OrderActivity");
 			startActivity(intent);

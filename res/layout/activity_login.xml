@@ -35,7 +35,9 @@
             android:id="@+id/login_username_rl"
             android:layout_width="match_parent"
             android:layout_height="60.0dip"
-            android:background="@color/white" >
+            android:background="@color/white" 
+            android:focusable="true" 
+			android:focusableInTouchMode="true">
 
             <TextView
                 android:id="@+id/login_username_text"

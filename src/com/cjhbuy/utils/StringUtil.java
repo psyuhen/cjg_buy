@@ -30,4 +30,15 @@ public class StringUtil {
     	bd = bd.setScale(2, RoundingMode.HALF_UP);  
     	return bd.floatValue();  
     } 
+    /**
+     * trim obj
+     * @param obj
+     * @return
+     */
+    public static String trimToEmpty(Object obj){
+    	if(obj == null){
+    		return "";
+    	}
+    	return obj.toString().trim();
+    }
 }

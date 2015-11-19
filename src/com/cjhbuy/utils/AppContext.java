@@ -12,12 +12,12 @@ import android.content.res.AssetManager;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
-import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.cjhbuy.auth.SessionManager;
 import com.cjhbuy.bean.CityItem;
 import com.cjhbuy.bean.GoodsItem;
 import com.cjhbuy.bean.MerchCar;
 import com.cjhbuy.bean.MerchDisacount;
+import com.cjhbuy.sqlite.ChatSQLiteHelper;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
@@ -28,6 +28,8 @@ public class AppContext extends Application {
 	private List<CityItem> cities;
 	private String city;
 	private List<GoodsItem> cartGoodLists;
+	public SessionManager sessionManager;
+	public ChatSQLiteHelper openHelper;
 	
 	//商家ID和商家名称
 	private int store_id;
@@ -60,13 +62,22 @@ public class AppContext extends Application {
 			LOGGER.error("转换出错",e);
 		}
 		try{
+			sessionManager = new SessionManager(this);
+			AVOSCloud.setDebugLogEnabled(true);
 			AVOSCloud.initialize(this, "OMnLPjX7ykL6B82b7TeKNvcT", "TF17FlFxgKD9KFaFuPgRi9Xr");
 			// 必须在启动的时候注册 MessageHandler
 		    // 应用一启动就会重连，服务器会推送离线消息过来，需要 MessageHandler 来处理
-		    AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, new MessageHandler(this));
+		    AVIMMessageManager.registerDefaultMessageHandler(new MessageHandler(this));
+		    
+		    initDbData();
 		} catch (Exception e) {
 			LOGGER.error("AVOSCloud初始化失败",e);
 		}
+	}
+	
+	private void initDbData(){
+		//准备数据库，存取聊天记录
+        openHelper=new ChatSQLiteHelper(this,"cjh_buyer_chat.db",null,1) ;
 	}
 
 	public String getA() throws IOException {

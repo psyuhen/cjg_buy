@@ -76,7 +76,9 @@ public class WaitOrderConfirmActivity extends BaseActivity {
 			pushMsg2Seller();
 			break;
 		case R.id.contact_seller_btn:
-			startActivity(new Intent(WaitOrderConfirmActivity.this, ChatActivity.class));
+			Intent intent2 = new Intent(WaitOrderConfirmActivity.this, CommunicationActivity.class);
+			intent2.putExtra("store_id", app.getStore_id());
+			startActivity(intent2);
 			break;
 		default:
 			break;

@@ -146,7 +146,7 @@ public class GoodsActivity extends BaseActivity {
 		super.onResume();
 		
 		//登录了，查询数据库的购物车
-		if(sessionManager.isLoggedIn()){
+		if(sessionManager.isLoggedInAndLongOper()){
 			queryMerchCar();
 		}
 		
@@ -240,7 +240,7 @@ public class GoodsActivity extends BaseActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case Constants.GOODS_REQUEST_CODE:
-			if(!sessionManager.isLoggedIn()){
+			if(!sessionManager.isLoggedInAndLongOper()){
 				return;
 			}
 			start2MyOrderActivity();
@@ -257,7 +257,7 @@ public class GoodsActivity extends BaseActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.submit_goods_btn:
-			if(!sessionManager.isLoggedIn()){
+			if(!sessionManager.isLoggedInAndLongOper()){
 				Intent intent = new Intent(GoodsActivity.this, LoginActivity.class);
 				intent.putExtra("from", "GoodsActivity");
 //				startActivity(intent);
@@ -366,8 +366,8 @@ public class GoodsActivity extends BaseActivity {
 	private void addMerchVisit(int merch_id){
 		try {
 			int user_id = 0;
-			if(sessionManager.isLoggedIn()){
-				user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+			if(sessionManager.isLoggedInAndLongOper()){
+				user_id = sessionManager.getUserId();
 			}
 			
 			MerchVisitHist merchVisitHist = new MerchVisitHist();

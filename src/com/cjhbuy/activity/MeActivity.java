@@ -74,7 +74,7 @@ public class MeActivity extends BaseActivity {
 	}
 	
 	public void initData(){
-		boolean isLogin = sessionManager.isLoggedIn();
+		boolean isLogin = sessionManager.isLoggedInAndLongOper();
 		if(isLogin){
 			goods_top_rl.setVisibility(View.GONE);
 			order_top_rl.setVisibility(View.VISIBLE);
@@ -93,7 +93,7 @@ public class MeActivity extends BaseActivity {
 			startActivity(new Intent(MeActivity.this, LoginActivity.class));
 			break;
 		case R.id.me_order_rl:
-			if(!sessionManager.isLoggedIn()){
+			if(!sessionManager.isLoggedInAndLongOper()){
 				CommonsUtil.showLongToast(getApplicationContext(), "请先登录");
 				return;
 			}

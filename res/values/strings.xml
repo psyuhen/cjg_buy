@@ -242,4 +242,8 @@
     <string name="retrieve_pswd_new_pswd_text">新密码:</string>
     <string name="retrieve_pswd_new_pswd_edit_hint">请输入要设置的新密码</string>
     <string name="retrieve_pswd_confirm_btn">确认</string>
+    
+    <!-- leancloud -->
+    <string name="unspport_message_type">不支持的消息类型</string>
+    <string name="audio_message_type">你有一条语音信息，请查收</string>
 </resources>

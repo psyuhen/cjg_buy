@@ -13,6 +13,9 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    
 
     <application
         android:name="com.cjhbuy.utils.AppContext"
@@ -36,6 +39,7 @@
         <activity android:name="com.cjhbuy.activity.GoodsViewActivity" />
         <activity android:name="com.cjhbuy.activity.EvaluateActivity" />
         <activity android:name="com.cjhbuy.activity.ChatActivity" />
+        <activity android:name="com.cjhbuy.activity.CommunicationActivity" />
         <activity android:name="com.cjhbuy.activity.LoginActivity" />
         <activity android:name="com.cjhbuy.activity.RegisteActivity" />
         <activity android:name="com.cjhbuy.activity.MainActivity" />
@@ -55,15 +59,16 @@
         <activity android:name="com.cjhbuy.activity.RetrievePswdActivity" />
         
         <!-- leancloud 相关类 -->
-        <service android:name="com.avos.avoscloud.PushService"
-         android:exported="true" />
+        <service android:name="com.avos.avoscloud.PushService"/>
 
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+        <receiver android:name="com.cjhbuy.utils.NotificationBroadcastReceiver"/>
     </application>
 
 </manifest>

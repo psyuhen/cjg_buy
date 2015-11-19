@@ -46,7 +46,7 @@ public class AVImClientManager {
 	public AVIMClient getClient() {
 		return avimClient;
 	}
-
+	
 	public String getClientId() {
 		if (TextUtils.isEmpty(clientId)) {
 			throw new IllegalStateException("Please call AVImClientManager.open first");

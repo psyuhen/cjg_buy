@@ -74,10 +74,14 @@ public class SplashActivity extends Activity {
 	}
 
 	private void init() {
+		SessionManager sessionManager = new SessionManager(getApplicationContext());
+		if(sessionManager.isLoggedIn() && sessionManager.loginLongTime() > 30){
+			sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
+		}
+		
 		// 读取SharedPreferences中需要的数据
 		// 使用SharedPreferences来记录程序的使用次数
-		SharedPreferences preferences = getSharedPreferences(
-				SHAREDPREFERENCES_NAME, MODE_PRIVATE);
+		SharedPreferences preferences = getSharedPreferences(SHAREDPREFERENCES_NAME, MODE_PRIVATE);
 
 		// 取得相应的�?，如果没有该值，说明还未写入，用true作为默认�?
 		isFirstIn = preferences.getBoolean("isFirstIn", true);
@@ -86,21 +90,16 @@ public class SplashActivity extends Activity {
 		if (!isFirstIn) {
 			// 使用Handler的postDelayed方法�?秒后执行跳转到MainActivity
 			mHandler.sendEmptyMessageDelayed(GO_HOME, SPLASH_DELAY_MILLIS);
+		} else {
 			Editor edit = preferences.edit();
 			edit.putBoolean("isFirstIn", false);
 			edit.commit();
-		} else {
 			mHandler.sendEmptyMessageDelayed(GO_GUIDE, SPLASH_DELAY_MILLIS);
 		}
 
 	}
 
 	private void goHome() {
-		SessionManager sessionManager = new SessionManager(getApplicationContext());
-		if(sessionManager.isLoggedIn() && sessionManager.loginLongTime() > 30){
-			sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
-		}
-		
 		Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
 		SplashActivity.this.startActivity(intent);
 		SplashActivity.this.finish();

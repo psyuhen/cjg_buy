@@ -131,4 +131,31 @@ public class DateUtil {
         long ei=el-sl;           
         return (int)(ei/(60000));
     }
+	
+	/**
+	 * 根据long的时间截，转换为字符串形式
+	 * @param timestamp
+	 * @return
+	 */
+	public static String getDateStrByLong(long timestamp){
+		Calendar instance = Calendar.getInstance();
+		instance.setTimeInMillis(timestamp);
+		
+		return format(instance.getTime(), "yyyy-MM-dd HH:mm");
+	}
+	
+	/**
+	 * 根据字符串，转为long形式
+	 * @param date
+	 * @return
+	 */
+	public static long getDateLongByStr(String date){
+		Date parseDate = parseDate(date, new String[]{"yyyy-MM-dd HH:mm"});
+		
+		if(parseDate == null){
+			return new Date().getTime();
+		}
+		
+		return parseDate.getTime();
+	}
 }

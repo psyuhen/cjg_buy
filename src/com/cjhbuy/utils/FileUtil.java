@@ -24,17 +24,25 @@ import com.google.code.microlog4android.LoggerFactory;
 public class FileUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
 	private final static String FOLDER = "cjh_buyer";
+	private final static String AUDIO_FOLDER = "audio";
 
 	/**
-	 * 创建目录，相对于Environment#getExternalStorageDirectory
-	 * 
-	 * @param folderName
+	 * 创建目录，在父目录下，创建一个新目录
+	 * @param parentDir 父目录的路径
+	 * @param folderName 目录
 	 */
-	public static void createDir(String folderName) {
-		File folder = new File(Environment.getExternalStorageDirectory() + "/"
-				+ folderName);
+	public static void createDir(String parentDir, String folderName) {
+		createDir(parentDir + "/" + folderName);
+	}
+	/**
+	 * 创建目录，SD card下创建目录
+	 * 
+	 * @param folderPath 目录路径
+	 */
+	public static void createDir(String folderPath) {
+		File folder = new File(folderPath);
 		if (!folder.exists()) {
-			folder.mkdir();
+			folder.mkdirs();
 		}
 	}
 
@@ -46,12 +54,27 @@ public class FileUtil {
 	}
 
 	/**
+	 * 创建APP目录下的audio目录
+	 */
+	public static void createAudioFolder() {
+		createDir(getAudioFolder());
+	}
+	
+	/**
 	 * 获取APP目录
 	 * 
 	 * @return
 	 */
 	public static String getAppFolder() {
 		return Environment.getExternalStorageDirectory() + "/" + FOLDER;
+	}
+	/**
+	 * 获取APP目录下的audio路径
+	 * 
+	 * @return
+	 */
+	public static String getAudioFolder() {
+		return getAppFolder() + "/" + AUDIO_FOLDER;
 	}
 	/**
 	 * 获取APP目录
@@ -68,6 +91,14 @@ public class FileUtil {
 	 */
 	public static File getAppFolderFile(String fileName) {
 		return new File(getAppFolder() + "/" + fileName);
+	}
+	/**
+	 * 获取APP目录的audio路径
+	 * 
+	 * @return
+	 */
+	public static File getAudioFolderFile() {
+		return getAppFolderFile(AUDIO_FOLDER);
 	}
 	/**
 	 * 判断文件是否存在
@@ -150,5 +181,44 @@ public class FileUtil {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * 获取远程的语音文件,若文件在本地存在，就不再取了。
+	 * @param url
+	 * @param fileName 
+	 */
+	public static void getRemoteFile(String url, String fileName){
+		FileOutputStream fos = null;
+		BufferedOutputStream bos = null;
+		try {
+			File file = new File(getAudioFolder() + "/" + fileName);
+			if(file.exists()){
+				return;
+			}
+			
+			byte[] fileBytes = HttpUtil.getRequestBype(url);
+			fos = new FileOutputStream(file);
+			bos = new BufferedOutputStream(fos);
+			
+			bos.write(fileBytes);
+		} catch (Exception e) {
+			LOGGER.error("获取语音文件失败", e);
+		}finally{
+			if(fos != null){
+				try {
+					fos.close();
+				} catch (IOException e) {
+					LOGGER.error("关闭流失败", e);
+				}
+			}
+			if(bos != null){
+				try {
+					bos.close();
+				} catch (IOException e) {
+					LOGGER.error("关闭流失败", e);
+				}
+			}
+		}
 	}
 }

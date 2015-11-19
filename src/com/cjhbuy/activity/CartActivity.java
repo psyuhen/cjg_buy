@@ -93,7 +93,7 @@ public class CartActivity extends BaseActivity {
 		cartListView.setAdapter(adapter);
 		
 		//登录了，查询数据库的购物车
-		if(sessionManager.isLoggedIn()){
+		if(sessionManager.isLoggedInAndLongOper()){
 			queryMerchCar();
 		}
 	}
@@ -245,7 +245,7 @@ public class CartActivity extends BaseActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.cart_submit_btn://下单
-			if(!sessionManager.isLoggedIn()){
+			if(!sessionManager.isLoggedInAndLongOper()){
 				start2Login();
 				return;
 			}else{
@@ -274,7 +274,7 @@ public class CartActivity extends BaseActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case Constants.CAR_REQUEST_CODE:
-			if(!sessionManager.isLoggedIn()){//如果还没登录，即直接返回
+			if(!sessionManager.isLoggedInAndLongOper()){//如果还没登录，即直接返回
 				return;
 			}else{
 				sessionManager.resetLoginTime();
