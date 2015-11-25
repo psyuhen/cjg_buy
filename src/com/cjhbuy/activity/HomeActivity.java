@@ -18,11 +18,11 @@ public class HomeActivity extends BaseActivity {
 
 	private ViewPager fragment_home_viewpager;
 	private RelativeLayout frament_home_selector_ll1;
-	private RelativeLayout frament_home_selector_ll2;
+//	private RelativeLayout frament_home_selector_ll2;
 	private RelativeLayout frament_home_selector_ll3;
 
 	private View fragment_home_left_line;
-	private View fragment_home_center_line;
+//	private View fragment_home_center_line;
 	private View fragment_home_right_line;
 	private HomeFragmentAdapter mFragmentAdapter;
 	private ImageView frament_home_top_image;
@@ -100,13 +100,13 @@ public class HomeActivity extends BaseActivity {
 		super.initView();
 		frament_home_selector_ll1 = (RelativeLayout) findViewById(R.id.frament_home_selector_ll1);
 		frament_home_selector_ll1.setOnClickListener(this);
-		frament_home_selector_ll2 = (RelativeLayout) findViewById(R.id.frament_home_selector_ll2);
-		frament_home_selector_ll2.setOnClickListener(this);
+		/*frament_home_selector_ll2 = (RelativeLayout) findViewById(R.id.frament_home_selector_ll2);
+		frament_home_selector_ll2.setOnClickListener(this);*/
 		frament_home_selector_ll3 = (RelativeLayout) findViewById(R.id.frament_home_selector_ll3);
 		frament_home_selector_ll3.setOnClickListener(this);
 		fragment_home_viewpager = (ViewPager) findViewById(R.id.fragment_home_viewpager);
 		fragment_home_left_line = findViewById(R.id.fragment_home_left_line);
-		fragment_home_center_line = findViewById(R.id.fragment_home_center_line);
+//		fragment_home_center_line = findViewById(R.id.fragment_home_center_line);
 		fragment_home_right_line = findViewById(R.id.fragment_home_right_line);
 		frament_home_top_image = (ImageView) findViewById(R.id.frament_home_top_image);
 		frament_home_top_image.setOnClickListener(this);
@@ -122,46 +122,37 @@ public class HomeActivity extends BaseActivity {
 		// Bundle bundle = getArguments();
 		// String city = bundle.getString("city");
 		// search_head_address_text.setText(city);
-		fragment_home_viewpager
-				.setOnPageChangeListener(new OnPageChangeListener() {
-					@Override
-					public void onPageSelected(int position) {
-						
-						switch (position) {
-						case 0:
-							fragment_home_left_line.setVisibility(View.VISIBLE);
-							fragment_home_center_line
-									.setVisibility(View.INVISIBLE);
-							fragment_home_right_line
-									.setVisibility(View.INVISIBLE);
-							break;
-						case 1:
-							fragment_home_left_line
-									.setVisibility(View.INVISIBLE);
-							fragment_home_center_line
-									.setVisibility(View.VISIBLE);
-							fragment_home_right_line
-									.setVisibility(View.INVISIBLE);
-							break;
-						case 2:
-							fragment_home_left_line
-									.setVisibility(View.INVISIBLE);
-							fragment_home_center_line
-									.setVisibility(View.INVISIBLE);
-							fragment_home_right_line
-									.setVisibility(View.VISIBLE);
-							break;
-						}
-					}
+		fragment_home_viewpager.setOnPageChangeListener(new OnPageChangeListener() {
+			@Override
+			public void onPageSelected(int position) {
+				
+				switch (position) {
+				case 0:
+					fragment_home_left_line.setVisibility(View.VISIBLE);
+//							fragment_home_center_line.setVisibility(View.INVISIBLE);
+					fragment_home_right_line.setVisibility(View.INVISIBLE);
+					break;
+				/*case 1:
+					fragment_home_left_line.setVisibility(View.INVISIBLE);
+					fragment_home_center_line.setVisibility(View.VISIBLE);
+					fragment_home_right_line.setVisibility(View.INVISIBLE);
+					break;*/
+				case 1:
+					fragment_home_left_line.setVisibility(View.INVISIBLE);
+//							fragment_home_center_line.setVisibility(View.INVISIBLE);
+					fragment_home_right_line.setVisibility(View.VISIBLE);
+					break;
+				}
+			}
 
-					@Override
-					public void onPageScrolled(int arg0, float arg1, int arg2) {
-					}
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+			}
 
-					@Override
-					public void onPageScrollStateChanged(int arg0) {
-					}
-				});
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+			}
+		});
 	}
 
 	@Override
@@ -170,21 +161,21 @@ public class HomeActivity extends BaseActivity {
 		switch (v.getId()) {
 		case R.id.frament_home_selector_ll1:
 			fragment_home_left_line.setVisibility(View.VISIBLE);
-			fragment_home_center_line.setVisibility(View.INVISIBLE);
+//			fragment_home_center_line.setVisibility(View.INVISIBLE);
 			fragment_home_right_line.setVisibility(View.INVISIBLE);
 			fragment_home_viewpager.setCurrentItem(0);
 			break;
-		case R.id.frament_home_selector_ll2:
+/*		case R.id.frament_home_selector_ll2:
 			fragment_home_left_line.setVisibility(View.INVISIBLE);
 			fragment_home_center_line.setVisibility(View.VISIBLE);
 			fragment_home_right_line.setVisibility(View.INVISIBLE);
 			fragment_home_viewpager.setCurrentItem(1);
-			break;
+			break;*/
 		case R.id.frament_home_selector_ll3:
 			fragment_home_left_line.setVisibility(View.INVISIBLE);
-			fragment_home_center_line.setVisibility(View.INVISIBLE);
+//			fragment_home_center_line.setVisibility(View.INVISIBLE);
 			fragment_home_right_line.setVisibility(View.VISIBLE);
-			fragment_home_viewpager.setCurrentItem(2);
+			fragment_home_viewpager.setCurrentItem(1);
 			break;
 		case R.id.frament_home_top_image:
 			startActivity(new Intent(HomeActivity.this, GoodsViewActivity.class));
@@ -195,8 +186,7 @@ public class HomeActivity extends BaseActivity {
 			// Editor editor = preferences.edit();
 			// editor.putInt("isnext", 3);
 			// editor.commit();
-			startActivity(new Intent(HomeActivity.this,
-					SelectCityActivity.class));
+			startActivity(new Intent(HomeActivity.this, SelectCityActivity.class));
 			break;
 		case R.id.search_top_more_left:
 			if (side_drawer.isMenuShowing()) {

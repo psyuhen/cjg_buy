@@ -26,7 +26,7 @@
         android:layout_toRightOf="@+id/cart_goods_select_checkbox" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="12.0dip"
@@ -36,7 +36,7 @@
         <TextView
             android:id="@+id/cart_goods_title"
             style="@style/black_normal_style"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3.0dip" />
 
@@ -48,7 +48,7 @@
                 android:id="@+id/cart_goods_price"
                 android:layout_marginLeft="5.0dip"
                 style="@style/cart_goods_list_text_style"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3.0dip" />
 
@@ -58,7 +58,7 @@
                 style="@style/gray_small_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3.0dip" />
+                android:layout_marginTop="3.0dip" android:visibility="gone"/>
         </LinearLayout>
 
         <RelativeLayout

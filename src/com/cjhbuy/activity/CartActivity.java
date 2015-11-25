@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -124,60 +125,72 @@ public class CartActivity extends BaseActivity {
 		}*/
 	}
 	
-	//查询购物车信息
-	private void queryMerchCar(){
-		int user_id = sessionManager.getUserId();
-		String url = HttpUtil.BASE_URL + "/merchcar/queryMerchCarByUser.do?user_id="+user_id;
-		
-		try {
-			String json = HttpUtil.getRequest(url);
-			if(json == null){
-				//CommonsUtil.showLongToast(getApplicationContext(), "查询购物车信息失败");
-				return;
-			}
+	private class queryMerchCarTask extends AsyncTask<Void, Void, Void>{
+		@Override
+		protected Void doInBackground(Void... params) {
+			int user_id = sessionManager.getUserId();
+			String url = HttpUtil.BASE_URL + "/merchcar/queryMerchCarByUser.do?user_id="+user_id;
 			
-			List<MerchCar> list = JsonUtil.parse2ListMerchCar(json);
-			if(list != null){
-				int length = list.size();
-				List<GoodsItem> goodsList = new ArrayList<GoodsItem>();
-				for (int i = 0; i < length; i++) {
-					MerchCar merchCar = list.get(i);
-					
-					GoodsItem goodsItem = new GoodsItem();
-					goodsItem.setStore_name(goodsItem.getStore_name());
-					
-					goodsItem.setId(merchCar.getMerch_id());//商品ID
-					goodsItem.setSellmount(merchCar.getBuy_num());//购买数量
-					
-					MerchInfo merchInfo = merchCar.getMerch();
-					if(merchInfo != null){
-						goodsItem.setStore_id(merchInfo.getStore_id());
-						goodsItem.setTitle(merchInfo.getName());
-						goodsItem.setPrice(merchInfo.getPrice());//价格
-						
-						goodsItem.setUnit(merchInfo.getUnit());//单位
-						goodsItem.setStandard(merchInfo.getStandard());//规格
-						goodsItem.setWeight(merchInfo.getWeight());
-						
-						goodsItem.setBitmap(FileUtil.getCacheFile(merchInfo.getImage_name()));//商品图片
-						
-					}
-					
-					List<MerchDisacount> merchDisacounts = merchCar.getMerchDisacounts();
-					goodsItem.setMerchDisacounts(merchDisacounts);
-					
-					goodsList.add(goodsItem);
+			try {
+				String json = HttpUtil.getRequest(url);
+				if(json == null){
+					//CommonsUtil.showLongToast(getApplicationContext(), "查询购物车信息失败");
+					return null;
 				}
 				
-				app.getCartGoodLists().clear();
-				app.getCartGoodLists().addAll(goodsList);
-				initMoney();
+				List<MerchCar> list = JsonUtil.parse2ListMerchCar(json);
+				if(list != null){
+					int length = list.size();
+					List<GoodsItem> goodsList = new ArrayList<GoodsItem>();
+					for (int i = 0; i < length; i++) {
+						MerchCar merchCar = list.get(i);
+						
+						GoodsItem goodsItem = new GoodsItem();
+						goodsItem.setStore_name(goodsItem.getStore_name());
+						
+						goodsItem.setId(merchCar.getMerch_id());//商品ID
+						goodsItem.setSellmount(merchCar.getBuy_num());//购买数量
+						
+						MerchInfo merchInfo = merchCar.getMerch();
+						if(merchInfo != null){
+							goodsItem.setStore_id(merchInfo.getStore_id());
+							goodsItem.setTitle(merchInfo.getName());
+							goodsItem.setPrice(merchInfo.getPrice());//价格
+							
+							goodsItem.setUnit(merchInfo.getUnit());//单位
+							goodsItem.setStandard(merchInfo.getStandard());//规格
+							goodsItem.setWeight(merchInfo.getWeight());
+							
+							goodsItem.setBitmap(FileUtil.getCacheFile(merchInfo.getImage_name()));//商品图片
+							
+						}
+						
+						List<MerchDisacount> merchDisacounts = merchCar.getMerchDisacounts();
+						goodsItem.setMerchDisacounts(merchDisacounts);
+						
+						goodsList.add(goodsItem);
+					}
+					app.getCartGoodLists().clear();
+					app.getCartGoodLists().addAll(goodsList);
+					initMoney();
+				}
+			}catch (Exception e) {
+				LOGGER.error(">>> 查询商品信息失败",e);
+				CommonsUtil.showLongToast(getApplicationContext(), "查询商品信息失败");
 			}
-			adapter.notifyDataSetChanged();
-		}catch (Exception e) {
-			LOGGER.error(">>> 查询商品信息失败",e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询商品信息失败");
+			return null;
 		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			adapter.notifyDataSetChanged();
+		}
+	}
+	
+	//查询购物车信息
+	private void queryMerchCar(){
+		new queryMerchCarTask().execute();
 	}
 
 	/**

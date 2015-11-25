@@ -9,6 +9,7 @@ import java.util.List;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.os.AsyncTask;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
@@ -63,7 +64,7 @@ public class AppContext extends Application {
 		}
 		try{
 			sessionManager = new SessionManager(this);
-			AVOSCloud.setDebugLogEnabled(true);
+//			AVOSCloud.setDebugLogEnabled(true);
 			AVOSCloud.initialize(this, "OMnLPjX7ykL6B82b7TeKNvcT", "TF17FlFxgKD9KFaFuPgRi9Xr");
 			// 必须在启动的时候注册 MessageHandler
 		    // 应用一启动就会重连，服务器会推送离线消息过来，需要 MessageHandler 来处理
@@ -284,26 +285,38 @@ public class AppContext extends Application {
 			return;
 		}
 		
-		String url = "";
-		MerchCar merchCar = new MerchCar();
-		int user_id = sessionManager.getUserId();
-		if(oper == 0){//新增
-			url = HttpUtil.BASE_URL + "/merchcar/addMerchCar.do";
-		}else if(oper == 1){//修改
-			url = HttpUtil.BASE_URL + "/merchcar/updateMerchCarBy.do";
-		}else if(oper == 2){//删除
-			url = HttpUtil.BASE_URL + "/merchcar/deleteMerchCarBy.do";
-		}
-		
-		try {
-			merchCar.setMerch_id(merch_id);
-			merchCar.setBuy_num(buy_num);
-			merchCar.setUser_id(user_id);
+		new doMerchCarTask().execute(sessionManager.getUserId(), merch_id, buy_num, oper);
+	}
+	
+	//购物车的异步操作
+	private class doMerchCarTask extends AsyncTask<Integer, Void, Void>{
+		@Override
+		protected Void doInBackground(Integer... params) {
+			int user_id = params[0];
+			int merch_id = params[1];
+			int buy_num = params[2];
+			int oper = params[3];
 			
-			HttpUtil.postRequest(url, merchCar);
-		} catch (Exception e) {
-			LOGGER.error(">>> 保存商品信息到购物车失败",e);
+			String url = "";
+			MerchCar merchCar = new MerchCar();
+			if(oper == 0){//新增
+				url = HttpUtil.BASE_URL + "/merchcar/addMerchCar.do";
+			}else if(oper == 1){//修改
+				url = HttpUtil.BASE_URL + "/merchcar/updateMerchCarBy.do";
+			}else if(oper == 2){//删除
+				url = HttpUtil.BASE_URL + "/merchcar/deleteMerchCarBy.do";
+			}
+			
+			try {
+				merchCar.setMerch_id(merch_id);
+				merchCar.setBuy_num(buy_num);
+				merchCar.setUser_id(user_id);
+				
+				HttpUtil.postRequest(url, merchCar);
+			} catch (Exception e) {
+				LOGGER.error(">>> 保存商品信息到购物车失败",e);
+			}
+			return null;
 		}
-		
 	}
 }

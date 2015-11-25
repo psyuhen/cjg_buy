@@ -1,6 +1,7 @@
 package com.cjhbuy.activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -75,17 +76,39 @@ public class OrderActivity extends BaseActivity {
 		count(1);
 	}
 	
+	//异步统计已完成数量和进行中数量
+	private class countOrderTask extends AsyncTask<Integer, Void, String>{
+		private int operType ;
+		@Override
+		protected String doInBackground(Integer... params) {
+			int oper = params[0];
+			operType = oper;
+			
+			String url = "";
+			if(oper == 0){
+				url = HttpUtil.BASE_URL + "/order/countInOrderInfo.do";
+			}else if(oper == 1){
+				url = HttpUtil.BASE_URL + "/order/countCompletedOrder.do";
+			}
+			
+			return countIn(url);
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			
+			if(operType == 0){
+				order_in_num.setText(result);
+			}else if(operType == 1){
+				order_complete_num.setText(result);
+			}
+		}
+	}
 	
 	//统计已完成数量和进行中数量
 	private void count(int oper){
-		String url = "";
-		if(oper == 0){
-			url = HttpUtil.BASE_URL + "/order/countInOrderInfo.do";
-			order_in_num.setText(countIn(url));
-		}else if(oper == 1){
-			url = HttpUtil.BASE_URL + "/order/countCompletedOrder.do";
-			order_complete_num.setText(countIn(url));
-		}
+		new countOrderTask().execute(oper);
 	}
 	private String countIn(String url){
 		int user_id = sessionManager.getUserId();

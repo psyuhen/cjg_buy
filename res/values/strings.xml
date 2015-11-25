@@ -21,7 +21,7 @@
     <string name="order_horn_text">你还有未领取的商家补贴</string>
     <string name="order_complete_num_text">0</string>
     <string name="order_complete_text">已完成</string>
-    <string name="order_sell_num_text">1</string>
+    <string name="order_sell_num_text">0</string>
     <string name="order_sell_text">进行中</string>
     <string name="order_in">进行中</string>
     <string name="order_complete">已完成</string>

@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.cjhbuy.bean.ResponseInfo;
 import com.cjhbuy.bean.User;
+import com.cjhbuy.fragment.HomeSaleFragment;
 import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.utils.HttpUtil;
 import com.cjhbuy.utils.JsonUtil;
@@ -18,8 +19,16 @@ import com.cjhbuy.utils.SecureUtil;
 import com.cjhbuy.utils.SwitchButton;
 import com.cjhbuy.utils.SwitchButton.OnCheckChangeListener;
 import com.cjhbuy.utils.Validator;
-
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
+/**
+ * 找回密码
+ * @author pansen
+ *
+ */
 public class RetrievePswdActivity extends BaseActivity {
+	private static final Logger LOGGER = LoggerFactory.getLogger(HomeSaleFragment.class);
+
 	//手机号
 	private EditText retrieve_pswd_tel_edit;	
 	//验证码
@@ -152,11 +161,13 @@ public class RetrievePswdActivity extends BaseActivity {
 				Intent intent = new Intent(RetrievePswdActivity.this, LoginActivity.class);
 				intent.putExtra("mobile", mobile);
 				intent.putExtra("password", password);
+				intent.putExtra("from", "RetrievePswdActivity");
 				startActivity(intent);
 				finish();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(),e);
+			CommonsUtil.showLongToast(getApplicationContext(), "找回密码失败:"+e.getMessage());
 		}
 	}
 }

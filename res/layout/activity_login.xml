@@ -51,7 +51,7 @@
             <EditText
                 android:id="@+id/login_username_edit"
                 style="@style/login_text_style"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10.0dip"
@@ -84,7 +84,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10.0dip"
+                android:layout_marginRight="10.0dip"
                 android:layout_toRightOf="@+id/login_password_text"
+                android:layout_toLeftOf="@+id/login_show_password"
                 android:background="@color/white_bg"
                 android:hint="@string/login_password_edit_hint"
                 android:inputType="textPassword" />

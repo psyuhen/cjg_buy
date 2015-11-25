@@ -58,10 +58,11 @@
                     android:text="@string/fragment_home_selector_sale_text" />
             </RelativeLayout>
 
+            <!-- 按距离，隐藏 -->
             <ImageView
                 android:layout_width="2.0dip"
                 android:layout_height="fill_parent"
-                android:background="@color/gray_bg" />
+                android:background="@color/gray_bg" android:visibility="gone"/>
 
             <RelativeLayout
                 android:id="@+id/frament_home_selector_ll2"
@@ -69,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20.0dip"
-                android:layout_weight="1" >
+                android:layout_weight="1"  android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/fragment_home_selector_distance_image"

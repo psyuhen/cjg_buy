@@ -58,11 +58,12 @@ public class RegisteActivity extends BaseActivity{
 					if(TextUtils.isEmpty(mobile)){
 						return;
 					}
-					String url0 = HttpUtil.BASE_URL + "/user/isregister.do?mobile=" + mobile;
+					String url0 = HttpUtil.BASE_URL + "/user/isRegister.do?mobile=" + mobile + "&user_type=1";
 					try {
 						String request = HttpUtil.getRequest(url0);
 						if(request != null && "true".equals(request)){
 							mMobileView.setError("手机号码已被注册！");
+							CommonsUtil.showLongToast(getApplicationContext(), "手机号码已被注册！");
 						}
 						if(request == null){
 							CommonsUtil.showLongToast(getApplicationContext(), "网络或者服务器异常");

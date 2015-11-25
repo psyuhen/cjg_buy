@@ -58,6 +58,12 @@ public class WaitOrderConfirmActivity extends BaseActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		pushMsg2Seller();
+	}
+	
+	@Override
 	public void onClick(View v) {
 		super.onClick(v);
 		switch (v.getId()) {

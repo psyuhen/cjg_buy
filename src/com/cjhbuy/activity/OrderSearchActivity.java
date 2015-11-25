@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
@@ -55,7 +54,7 @@ public class OrderSearchActivity extends BaseActivity{
 	
 	@Override
 	public void initView() {
-		super.initView();
+//		super.initView();
 		mListView=(ListView) findViewById(R.id.search_order_list);
 		order_search_edit = (EditText)findViewById(R.id.order_search_edit);
 		back=(TextView) findViewById(R.id.back);

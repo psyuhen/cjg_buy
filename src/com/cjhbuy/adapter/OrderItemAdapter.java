@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cjhbuy.activity.CommunicationActivity;
-import com.cjhbuy.activity.EvaluateActivity;
+import com.cjhbuy.activity.OrderDetailsActivity;
 import com.cjhbuy.activity.R;
 import com.cjhbuy.bean.OrderItem;
 import com.cjhbuy.utils.CommonsUtil;
@@ -120,7 +120,7 @@ public class OrderItemAdapter extends BaseAdapter {
 		viewHolder.order_view_btn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(context, EvaluateActivity.class);
+				Intent intent = new Intent(context, OrderDetailsActivity.class);
 				intent.putExtra("order_id", orderItem.getSerialnum());
 				context.startActivity(intent);
 			}

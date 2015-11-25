@@ -15,6 +15,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -182,10 +183,9 @@ public class MyOrderActivity extends BaseActivity {
 		String store_name = intent.getStringExtra("store_name");
 		goods_myorder_shop_name.setText(store_name);
 		
-		queryAddress();
+		new queryAddressTask().execute();
 		
-		queryCoupon();
-		
+		new queryCouponTask().execute();
 		
 		// 计算金额
 		initMoney();
@@ -236,8 +236,7 @@ public class MyOrderActivity extends BaseActivity {
 		myorder_coupons_rl.setOnClickListener(this);
 
 		// 地址
-		myorder_address_rl = (RelativeLayout) headView
-				.findViewById(R.id.myorder_address_rl);
+		myorder_address_rl = (RelativeLayout) headView.findViewById(R.id.myorder_address_rl);
 		myorder_address_rl.setOnClickListener(this);
 		
 		//收货人，电话，详细地址
@@ -443,17 +442,33 @@ public class MyOrderActivity extends BaseActivity {
 		};
 	}
 	
-	//默认查询收货地址
-	private void queryAddress(){
-		int user_id = sessionManager.getUserId();
+	//查询收货地址的异步操作
+	private class queryAddressTask extends AsyncTask<Void, Void, List<AddressItem>>{
+		@Override
+		protected List<AddressItem> doInBackground(Void... params) {
+			int user_id = sessionManager.getUserId();
+			String url = HttpUtil.BASE_URL + "/freqa/query.do?user_id="+user_id;
+			try {
+				String json = HttpUtil.getRequest(url);
+				if(json == null){
+					return null;
+				}
+				List<AddressItem> list = JsonUtil.parse2ListAddressItem(json);
+				return list;
+			} catch (Exception e) {
+				LOGGER.error("查询常用地址失败", e);
+				CommonsUtil.showLongToast(getApplicationContext(), "查询常用地址失败");
+			}
+			return null;
+		}
 		
-		String url = HttpUtil.BASE_URL + "/freqa/query.do?user_id="+user_id;
-		try {
-			String json = HttpUtil.getRequest(url);
-			if(json == null){
+		@Override
+		protected void onPostExecute(List<AddressItem> list) {
+			super.onPostExecute(list);
+			if(list == null){
 				return;
 			}
-			List<AddressItem> list = JsonUtil.parse2ListAddressItem(json);
+			
 			if(!list.isEmpty()){
 				AddressItem item = list.get(0);
 				my_order_name.setText(item.getUser_name());
@@ -464,36 +479,48 @@ public class MyOrderActivity extends BaseActivity {
 						+ StringUtils.trimToEmpty(item.getAddress()));
 			}
 			list = null;
-		} catch (Exception e) {
-			LOGGER.error("查询常用地址失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询常用地址失败");
 		}
-	
 	}
 	
 	//查询优惠券
-	private void queryCoupon(){
-		List<GoodsItem> cartGoodLists = app.getCartGoodLists();
-		if(cartGoodLists == null || cartGoodLists.isEmpty()){
-			return;
-		}
-		
-		int store_id = cartGoodLists.get(0).getStore_id();
-		int user_id = sessionManager.getUserId();
-		
-		String url = HttpUtil.BASE_URL + "/coupon/queryByCouponUserId.do";
-		
-		try {
-			Map<String,String> map = new HashMap<String, String>();
-			map.put("store_id", store_id + "");
-			map.put("buyer_user_id", user_id+"");
-			String listJson = HttpUtil.postRequest(url,map);
-			if(listJson == null){
-				return;
+	private class queryCouponTask extends AsyncTask<Void, Void, List<Coupon>>{
+		@Override
+		protected List<Coupon> doInBackground(Void... params) {
+			List<GoodsItem> cartGoodLists = app.getCartGoodLists();
+			if(cartGoodLists == null || cartGoodLists.isEmpty()){
+				return null;
 			}
 			
-			List<Coupon> list = JsonUtil.parse2ListCoupon(listJson);
+			int store_id = cartGoodLists.get(0).getStore_id();
+			int user_id = sessionManager.getUserId();
 			
+			String url = HttpUtil.BASE_URL + "/coupon/queryByCouponUserId.do";
+			
+			try {
+				Map<String,String> map = new HashMap<String, String>();
+				map.put("store_id", store_id + "");
+				map.put("buyer_user_id", user_id+"");
+				String listJson = HttpUtil.postRequest(url,map);
+				if(listJson == null){
+					return null;
+				}
+				
+				List<Coupon> list = JsonUtil.parse2ListCoupon(listJson);
+				
+				return list;
+			} catch (Exception e) {
+				LOGGER.error("查询优惠券信息失败", e);
+				CommonsUtil.showLongToast(getApplicationContext(), "查询优惠券信息失败");
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(List<Coupon> list) {
+			super.onPostExecute(list);
+			if(list == null){
+				return;
+			}
 			int length = list.size();
 			for (int i = 0; i < length; i++) {
 				Coupon coupon = list.get(i);
@@ -520,12 +547,9 @@ public class MyOrderActivity extends BaseActivity {
 				couponsAdapter.notifyDataSetChanged();
 			}
 			list = null;
-		} catch (Exception e) {
-			LOGGER.error("查询优惠券信息失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询优惠券信息失败");
 		}
 	}
-
+	
 	private void submitOrders(){
 		//点击结算之前，先判断有没有选择地址了/有没有选择送货时间了/有没有选择商品了
 		String name = my_order_name.getText().toString();//姓名
@@ -647,6 +671,7 @@ public class MyOrderActivity extends BaseActivity {
 				
 				//TODO 订单成功后，删除对应购物车里面的商品
 				
+				finish();
 			}
 			
 			CommonsUtil.showLongToast(getApplicationContext(), responseInfo.getDesc());

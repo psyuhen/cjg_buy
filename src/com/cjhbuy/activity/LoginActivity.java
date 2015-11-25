@@ -218,8 +218,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				setResult(RESULT_OK,new Intent());
 			}else if("GoodsActivity".equals(from)){
 				setResult(RESULT_OK,new Intent());
-			}else{
-				startActivity(new Intent(LoginActivity.this, MeActivity.class));
+			}else if("RetrievePswdActivity".equals(from)){//找回密码后，跳转到首页
+				startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+			}else{//默认都是跳转到首页的
+				startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 			}
 			finish();
 		}catch (Exception e) {

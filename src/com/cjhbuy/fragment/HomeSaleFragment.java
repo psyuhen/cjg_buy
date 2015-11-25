@@ -10,6 +10,7 @@ import org.kymjs.aframe.ui.widget.KJListView.KJListViewListener;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -82,6 +83,7 @@ public class HomeSaleFragment extends Fragment {
 		kjListView.setKJListViewListener(new KJListViewListener() {
 			@Override
 			public void onRefresh() {
+				HomeSaleFragment.this.start = PageUtil.START;
 				queryData(PageUtil.START);
 			}
 
@@ -153,27 +155,94 @@ public class HomeSaleFragment extends Fragment {
 		}
 	}
 	
+	//增加商家访问量
+	private class addStoreVisitTask extends AsyncTask<Integer, Void, Void>{
+		@Override
+		protected Void doInBackground(Integer... params) {
+			try {
+				int store_id = params[0];
+				int user_id = 0;
+				if(context instanceof HomeActivity){
+					HomeActivity homeActivity = (HomeActivity)context;
+					
+					SessionManager sessionManager = homeActivity.sessionManager;
+					if(sessionManager.isLoggedIn()){
+						user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+					}
+				}
+				
+				StoreVisitHist storeVisitHist = new StoreVisitHist();
+				storeVisitHist.setStore_id(store_id);
+				storeVisitHist.setUser_id(user_id);
+				
+				String url =  HttpUtil.BASE_URL + "/storevisit/addStoreVisitHist.do";
+				HttpUtil.postRequest(url,storeVisitHist);
+			} catch (Exception e) {
+				LOGGER.error(">>> 新增商家访问记录失败", e);
+			}
+			return null;
+		}	
+	}
+	
 	//增加商家访客记录
 	private void addStoreVisit(int store_id){
-		try {
-			int user_id = 0;
-			if(context instanceof HomeActivity){
-				HomeActivity homeActivity = (HomeActivity)context;
+		new addStoreVisitTask().execute(store_id);
+	}
+	
+	//查询商家
+	private class queryStoreTask extends AsyncTask<Integer, Void, Void>{
+		@Override
+		protected Void doInBackground(Integer... params) {
+			int start = params[0];
+
+			List<Store> list = null;
+			if(HomeSaleFragment.this.type == 0){
+				String url = HttpUtil.BASE_URL + "/store/queryStoreBySalesVolumePage.do?start="+start+"&limit="+PageUtil.LIMIT;
+				list = queryStoreBy(url);
+			}else if(HomeSaleFragment.this.type == 1){
 				
-				SessionManager sessionManager = homeActivity.sessionManager;
-				if(sessionManager.isLoggedIn()){
-					user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
-				}
+			}else if(HomeSaleFragment.this.type == 2){
+				String url = HttpUtil.BASE_URL + "/store/queryStoreByFavoriteCountPage.do?start="+start+"&limit="+PageUtil.LIMIT;
+				list = queryStoreBy(url);
+			}
+			if(list == null){
+				list = new ArrayList<Store>();
 			}
 			
-			StoreVisitHist storeVisitHist = new StoreVisitHist();
-			storeVisitHist.setStore_id(store_id);
-			storeVisitHist.setUser_id(user_id);
+			//默认开始的时候，先清空列表数据
+			if(start == PageUtil.START){
+				sellerlist.clear();
+			}
 			
-			String url =  HttpUtil.BASE_URL + "/storevisit/addStoreVisitHist.do";
-			HttpUtil.postRequest(url,storeVisitHist);
-		} catch (Exception e) {
-			LOGGER.error(">>> 新增商家访问记录失败", e);
+			for (Store store : list) {
+				SellerItem sellerItem = new SellerItem();
+				sellerItem.setId(store.getStore_id());
+				sellerItem.setTitle(store.getName());
+				sellerItem.setAddress(store.getAddress());
+//				sellerItem.setDistance(100);
+				sellerItem.setPhone(store.getPhone());
+//				sellerItem.setTempImage(store.getLogo());
+				//再从7牛上获取图片
+				//先在本地查看，如果有就不从7牛中获取了
+				String logoName = store.getLogo();
+				
+				Bitmap bitmap = FileUtil.getCacheFile(logoName);
+				sellerItem.setBitmap(bitmap);
+				
+				sellerlist.add(sellerItem);
+			}
+			
+			HomeSaleFragment.this.start += PageUtil.LIMIT;//每次改变start的值 
+			
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			
+			commonAdapter.notifyDataSetChanged();
+			kjListView.stopRefreshData();
 		}
 	}
 	
@@ -197,45 +266,6 @@ public class HomeSaleFragment extends Fragment {
 	
 	//查询商家数据
 	private void queryData(int start){
-		List<Store> list = null;
-		if(this.type == 0){
-			String url = HttpUtil.BASE_URL + "/store/queryStoreBySalesVolumePage.do?start="+start+"&limit="+PageUtil.LIMIT;
-			list = queryStoreBy(url);
-		}else if(this.type == 1){
-			
-		}else if(this.type == 2){
-			String url = HttpUtil.BASE_URL + "/store/queryStoreByFavoriteCountPage.do?start="+start+"&limit="+PageUtil.LIMIT;
-			list = queryStoreBy(url);
-		}
-		if(list == null){
-			list = new ArrayList<Store>();
-		}
-		
-		//默认开始的时候，先清空列表数据
-		if(start == PageUtil.START){
-			sellerlist.clear();
-		}
-		
-		for (Store store : list) {
-			SellerItem sellerItem = new SellerItem();
-			sellerItem.setId(store.getStore_id());
-			sellerItem.setTitle(store.getName());
-			sellerItem.setAddress(store.getAddress());
-//			sellerItem.setDistance(100);
-			sellerItem.setPhone(store.getPhone());
-//			sellerItem.setTempImage(store.getLogo());
-			//再从7牛上获取图片
-			//先在本地查看，如果有就不从7牛中获取了
-			String logoName = store.getLogo();
-			
-			Bitmap bitmap = FileUtil.getCacheFile(logoName);
-			sellerItem.setBitmap(bitmap);
-			
-			sellerlist.add(sellerItem);
-		}
-		
-		this.start += PageUtil.LIMIT;//每次改变start的值 
-		commonAdapter.notifyDataSetChanged();
-		kjListView.stopRefreshData();
+		new queryStoreTask().execute(start);
 	}
 }
