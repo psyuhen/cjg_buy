@@ -26,7 +26,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
  *
  */
 public class OrderActivity extends BaseActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(OrderInFragment.class);
+	private Logger LOGGER = LoggerFactory.getLogger(OrderInFragment.class);
 
 	private ViewPager mViewPager;
 	private OrderFragmentAdapter mFragmentAdapter;
@@ -47,12 +47,15 @@ public class OrderActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_order);
-		initSlidingMenu();
-		initView();
-		initData();
+		try{
+			initSlidingMenu();
+			initView();
+			initData();
+		}catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 	}
 
 	private void initSlidingMenu() {
@@ -97,6 +100,7 @@ public class OrderActivity extends BaseActivity {
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
+			stopProgressDialog();
 			
 			if(operType == 0){
 				order_in_num.setText(result);
@@ -108,6 +112,7 @@ public class OrderActivity extends BaseActivity {
 	
 	//统计已完成数量和进行中数量
 	private void count(int oper){
+		startProgressDialog();
 		new countOrderTask().execute(oper);
 	}
 	private String countIn(String url){

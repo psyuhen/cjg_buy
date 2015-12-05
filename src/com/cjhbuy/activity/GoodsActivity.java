@@ -39,7 +39,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class GoodsActivity extends BaseActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(GoodsActivity.class);
 
 	private List<CategoryItem> categoryList;
 	private List<GoodsItem> allgoodsList;
@@ -67,13 +67,18 @@ public class GoodsActivity extends BaseActivity {
 	
 	private AppContext app;
 	
+	private boolean isAddToMerchCar;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_goods);
-		initView();
-		initData();
+		try{
+			setContentView(R.layout.activity_goods);
+			initView();
+			initData();
+		}catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 	}
 	
 	@Override
@@ -155,6 +160,7 @@ public class GoodsActivity extends BaseActivity {
 			int user_id = sessionManager.getUserId();
 			String url = HttpUtil.BASE_URL + "/merchcar/queryMerchCarByUser.do?user_id="+user_id;
 			
+			List<GoodsItem> goodsList = new ArrayList<GoodsItem>();
 			try {
 				String json = HttpUtil.getRequest(url);
 				if(json == null){
@@ -164,7 +170,6 @@ public class GoodsActivity extends BaseActivity {
 				List<MerchCar> list = JsonUtil.parse2ListMerchCar(json);
 				if(list != null){
 					int length = list.size();
-					List<GoodsItem> goodsList = new ArrayList<GoodsItem>();
 					for (int i = 0; i < length; i++) {
 						MerchCar merchCar = list.get(i);
 						
@@ -182,7 +187,7 @@ public class GoodsActivity extends BaseActivity {
 							
 							goodsItem.setUnit(merchInfo.getUnit());//单位
 							goodsItem.setStandard(merchInfo.getStandard());//规格
-							goodsItem.setWeight(merchInfo.getWeight());
+							goodsItem.setWeight(merchInfo.getWeight());//重量
 							
 							goodsItem.setBitmap(FileUtil.getCacheFile(merchInfo.getImage_name()));//商品图片
 							
@@ -193,14 +198,12 @@ public class GoodsActivity extends BaseActivity {
 						
 						goodsList.add(goodsItem);
 					}
-					
-					return goodsList;
 				}
 			}catch (Exception e) {
 				LOGGER.error(">>> 查询商品信息失败",e);
 				CommonsUtil.showLongToast(getApplicationContext(), "查询商品信息失败");
 			}
-			return null;
+			return goodsList;
 		}
 		
 		@Override
@@ -245,12 +248,62 @@ public class GoodsActivity extends BaseActivity {
 
 	}
 	
+	//购物车的异步操作
+	private class doMerchCarTask extends AsyncTask<Integer, Void, String>{
+		private List<MerchCar> merchCars;
+		public doMerchCarTask(List<MerchCar> merchCars) {
+			this.merchCars = merchCars;
+		}
+		@Override
+		protected String doInBackground(Integer... params) {
+			String url = HttpUtil.BASE_URL + "/merchcar/batchAddMerchCar.do";
+			
+			try {
+				String postRequest = HttpUtil.postRequest(url, merchCars);
+				return postRequest;
+			} catch (Exception e) {
+				LOGGER.error(">>> 保存商品信息到购物车失败",e);
+			}
+			return null;
+		}
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			stopProgressDialog();
+		}
+	}
+	
+	//如果还没登录时添加的，那么就先保存到购物车先
+	private void addToMerchCar(){
+		List<GoodsItem> cartGoodLists = app.getCartGoodLists();
+		if(cartGoodLists.isEmpty()){
+			return;
+		}
+		
+		int user_id = sessionManager.getUserId();
+		List<MerchCar> merchCars = new ArrayList<MerchCar>();
+		for (GoodsItem goodsItem : cartGoodLists) {
+			MerchCar merchCar = new MerchCar();
+			merchCar.setBuy_num(goodsItem.getSellmount());//购买数量
+			merchCar.setMerch_id(goodsItem.getId());
+			merchCar.setUser_id(user_id);
+			merchCars.add(merchCar);
+		}
+		
+		startProgressDialog();
+		new doMerchCarTask(merchCars).execute();
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case Constants.GOODS_REQUEST_CODE:
 			if(!sessionManager.isLoggedInAndLongOper()){
 				return;
+			}
+			if(isAddToMerchCar){
+				isAddToMerchCar = false;
+				addToMerchCar();
 			}
 			start2MyOrderActivity();
 			break;
@@ -267,6 +320,7 @@ public class GoodsActivity extends BaseActivity {
 		switch (v.getId()) {
 		case R.id.submit_goods_btn:
 			if(!sessionManager.isLoggedInAndLongOper()){
+				isAddToMerchCar = true;
 				Intent intent = new Intent(GoodsActivity.this, LoginActivity.class);
 				intent.putExtra("from", "GoodsActivity");
 //				startActivity(intent);
@@ -297,25 +351,22 @@ public class GoodsActivity extends BaseActivity {
 	}
 
 	//查询分类的异步操作
-	private class queryClassifyTask extends AsyncTask<Void, Void, Void>{
+	private class queryClassifyTask extends AsyncTask<Void, Void, List<CategoryItem>>{
 		@Override
-		protected Void doInBackground(Void... params) {
+		protected List<CategoryItem> doInBackground(Void... params) {
 			String url = HttpUtil.BASE_URL + "/classify/queryClassifyByStoreId.do?store_id="+store_id;
+			List<CategoryItem> categoryList = new ArrayList<CategoryItem>();
 			try {
 				String jsons = HttpUtil.getRequest(url);
 				if(jsons == null){
-					CommonsUtil.showShortToast(getApplicationContext(), "查询分类信息失败");
-					return null;
+					return categoryList;
 				}
 				List<ClassifyInfo> list = JsonUtil.parse2ListClassifyInfo(jsons);
 				if(list == null){
 					LOGGER.error(">>> 转换分类列表信息失败");
-					CommonsUtil.showShortToast(getApplicationContext(), "查询不到分类信息");
-					return null;
+					return categoryList;
 				}
 				
-				//先清除
-				categoryList.clear();
 				for (ClassifyInfo classifyInfo : list) {
 					CategoryItem categoryItem=new CategoryItem();
 					categoryItem.setId(classifyInfo.getClassify_id());
@@ -326,13 +377,16 @@ public class GoodsActivity extends BaseActivity {
 				}
 			} catch (Exception e) {
 				LOGGER.error(">>> 查询分类列表失败",e);
-				CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
 			}
-			return null;
+			return categoryList;
 		}
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(List<CategoryItem> result) {
 			super.onPostExecute(result);
+			stopProgressDialog();
+			
+			categoryList.clear();
+			categoryList.addAll(result);
 			
 			if(groupAdapter != null){
 				groupAdapter.notifyDataSetChanged();
@@ -347,13 +401,14 @@ public class GoodsActivity extends BaseActivity {
 	
 	//查询所有商品分类
 	private void queryclassify() {
+		startProgressDialog();
 		new queryClassifyTask().execute();
 	}
 	
 	//查询根据分类Id查询商品的异步操作
-	private class queryMerchByIdTask extends AsyncTask<Integer, Void, Void>{
+	private class queryMerchByIdTask extends AsyncTask<Integer, Void, List<GoodsItem>>{
 		@Override
-		protected Void doInBackground(Integer ... params) {
+		protected List<GoodsItem> doInBackground(Integer ... params) {
 			int classify_id = params[0];
 			
 			String url = HttpUtil.BASE_URL + "/merch/queryby.do";
@@ -362,9 +417,9 @@ public class GoodsActivity extends BaseActivity {
 			info.setClassify_id(classify_id);
 			info.setOut_published("0");
 			String json = null;
+			List<GoodsItem> goodsList = new ArrayList<GoodsItem>();
 			try {
 				json = HttpUtil.postRequest(url, info);
-				allgoodsList.clear();
 				if(json != null){
 					List<MerchInfo> merchList = JsonUtil.parse2ListMerchInfo(json);
 					for (MerchInfo merchInfo : merchList) {
@@ -379,22 +434,25 @@ public class GoodsActivity extends BaseActivity {
 						goodsItem.setPrice(merchInfo.getPrice());//价格
 						goodsItem.setUnit(merchInfo.getUnit());//单位
 						goodsItem.setStandard(merchInfo.getStandard());//规格
-						goodsItem.setWeight(merchInfo.getWeight());
+						goodsItem.setWeight(merchInfo.getWeight());//重量
 						
 						goodsItem.setBitmap(FileUtil.getCacheFile(merchInfo.getImage_name()));//商品图片
 						goodsItem.setMerchDisacounts(merchInfo.getMerchDisacounts());//商品优惠信息
-						allgoodsList.add(goodsItem);
+						goodsList.add(goodsItem);
 					}
 				}
 			} catch (Exception e) {
 				LOGGER.error(">>> 查询商品信息失败",e);
-				CommonsUtil.showShortToast(getApplicationContext(), "查询商品信息失败");
 			}
-			return null;
+			return goodsList;
 		}
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(List<GoodsItem> result) {
 			super.onPostExecute(result);
+			stopProgressDialog();
+			
+			allgoodsList.clear();
+			allgoodsList.addAll(result);
 			
 			childAdapter.setChildData(allgoodsList);
 			childAdapter.notifyDataSetChanged();
@@ -404,6 +462,7 @@ public class GoodsActivity extends BaseActivity {
 	
 	//根据商店ID和类型查询商品信息
 	private void queryByClassifyId(int classify_id){
+		startProgressDialog();
 		new queryMerchByIdTask().execute(classify_id);
 	}
 	

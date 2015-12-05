@@ -36,7 +36,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class OrderSearchActivity extends BaseActivity{
-	private static final Logger LOGGER = LoggerFactory.getLogger(OrderSearchActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(OrderSearchActivity.class);
 
 	private ListView mListView;
 	private TextView back;

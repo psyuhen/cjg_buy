@@ -262,6 +262,15 @@ public class SessionManager {
 	}
 
 	/**
+	 * 清空用户信息
+	 */
+	public void clearData(){
+		// Clearing all data from Shared Preferences
+		editor.clear();
+		editor.commit();
+	}
+	
+	/**
 	 * Clear session details
 	 * */
 	public void logoutUser() {
@@ -275,7 +284,7 @@ public class SessionManager {
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 		// Add new Flag to start new Activity
-		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		// Staring Login Activity
 		_context.startActivity(i);

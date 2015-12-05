@@ -30,7 +30,7 @@ import de.greenrobot.event.EventBus;
  * 处理离线信息等等
  */
 public class MessageHandler extends AVIMMessageHandler {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AppContext.class);
+	private Logger LOGGER = LoggerFactory.getLogger(AppContext.class);
 
 	private Context context;
 
@@ -88,7 +88,7 @@ public class MessageHandler extends AVIMMessageHandler {
 		 AppContext appContext = (AppContext)context;
 		 User user = appContext.sessionManager.getUserDetails();
 		 
-		 appContext.openHelper.insertChat(event.message, user, seller_user_id, seller_user_moblie, Constants.READED, Constants.YOURS);
+		 appContext.openHelper.insertChat((AVIMTypedMessage)message, user, seller_user_id, seller_user_moblie, Constants.READED, Constants.YOURS);
 	}
 
 	/**

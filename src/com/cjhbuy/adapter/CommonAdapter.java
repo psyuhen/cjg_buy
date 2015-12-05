@@ -61,7 +61,7 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
 		final ViewHolder viewHolder = getViewHolder(position, convertView,
 				parent);
 
-		Log.i("gao_chun", position + "");
+		Log.d("gao_chun", position + "");
 		convert(viewHolder, getItem(position));
 
 		return viewHolder.getConvertView();

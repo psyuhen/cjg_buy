@@ -57,7 +57,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class ChatActivity extends BaseActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ChatActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(ChatActivity.class);
 
 	private ChatMsgViewAdapter mAdapter;
 	private ListView mListView;

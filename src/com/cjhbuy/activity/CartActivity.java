@@ -33,7 +33,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class CartActivity extends BaseActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CartActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(CartActivity.class);
 
 	private ListView cartListView;
 
@@ -60,8 +60,12 @@ public class CartActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cart);
-		initView();
-		initData();
+		try{
+			initView();
+			initData();
+		}catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 	}
 
 	@Override
@@ -125,23 +129,23 @@ public class CartActivity extends BaseActivity {
 		}*/
 	}
 	
-	private class queryMerchCarTask extends AsyncTask<Void, Void, Void>{
+	private class queryMerchCarTask extends AsyncTask<Void, Void, List<GoodsItem>>{
 		@Override
-		protected Void doInBackground(Void... params) {
+		protected List<GoodsItem> doInBackground(Void... params) {
 			int user_id = sessionManager.getUserId();
 			String url = HttpUtil.BASE_URL + "/merchcar/queryMerchCarByUser.do?user_id="+user_id;
 			
+			List<GoodsItem> goodsList = new ArrayList<GoodsItem>();
 			try {
 				String json = HttpUtil.getRequest(url);
 				if(json == null){
 					//CommonsUtil.showLongToast(getApplicationContext(), "查询购物车信息失败");
-					return null;
+					return goodsList;
 				}
 				
 				List<MerchCar> list = JsonUtil.parse2ListMerchCar(json);
 				if(list != null){
 					int length = list.size();
-					List<GoodsItem> goodsList = new ArrayList<GoodsItem>();
 					for (int i = 0; i < length; i++) {
 						MerchCar merchCar = list.get(i);
 						
@@ -170,26 +174,29 @@ public class CartActivity extends BaseActivity {
 						
 						goodsList.add(goodsItem);
 					}
-					app.getCartGoodLists().clear();
-					app.getCartGoodLists().addAll(goodsList);
-					initMoney();
 				}
 			}catch (Exception e) {
 				LOGGER.error(">>> 查询商品信息失败",e);
 				CommonsUtil.showLongToast(getApplicationContext(), "查询商品信息失败");
 			}
-			return null;
+			return goodsList;
 		}
 		
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(List<GoodsItem> result) {
 			super.onPostExecute(result);
+			stopProgressDialog();
+			
+			app.getCartGoodLists().clear();
+			app.getCartGoodLists().addAll(result);
+			initMoney();
 			adapter.notifyDataSetChanged();
 		}
 	}
 	
 	//查询购物车信息
 	private void queryMerchCar(){
+		startProgressDialog();
 		new queryMerchCarTask().execute();
 	}
 

@@ -144,14 +144,14 @@
         <item name="android:textSize">18.0sp</item>
     </style>
 
-    <style name="me_item_rl">
+    <!-- <style name="me_item_rl">
         <item name="android:background">@drawable/me_ll_selector</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">@dimen/me_ll</item>
         <item name="android:minHeight">50.0dip</item>
         <item name="android:clickable">true</item>
         <item name="android:paddingLeft">30.0dip</item>
-    </style>
+    </style> -->
 
     <style name="setting_text_details_style">
         <item name="android:textColor">@color/black</item>
@@ -451,11 +451,11 @@
         <item name="android:paddingLeft">40.0dip</item>
     </style>
 
-    <style name="left_drawer_item_line">
+    <!-- <style name="left_drawer_item_line">
         <item name="android:background">@color/left_drawer_item_line</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">1.0dip</item>
-    </style>
+    </style> -->
 
     <style name="me_item_rl">
         <item name="android:background">@drawable/me_ll_selector</item>

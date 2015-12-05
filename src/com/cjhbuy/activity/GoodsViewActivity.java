@@ -35,7 +35,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class GoodsViewActivity extends BaseActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsViewActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(GoodsViewActivity.class);
 
 	private ListView goodsViewListView;
 	private LinearLayout goods_view_head_ll;
@@ -90,13 +90,15 @@ public class GoodsViewActivity extends BaseActivity {
 		right_text.setVisibility(View.VISIBLE);
 		right_text.setText("刷新");
 		
+		right_text.setVisibility(View.GONE);
+		
 		goods_view_iv01.setImageBitmap(null);
 		goods_view_iv01.setBackgroundDrawable(null);
 		
 		Intent intent = getIntent();
 		merch_id = intent.getStringExtra("merch_id");
 		
-		queryMerch();
+		//queryMerch();
 	}
 
 	

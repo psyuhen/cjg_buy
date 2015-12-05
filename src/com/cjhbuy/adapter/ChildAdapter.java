@@ -34,7 +34,7 @@ import com.google.code.microlog4android.LoggerFactory;
  * 
  */
 public class ChildAdapter extends BaseAdapter {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(GoodsActivity.class);
 
 	Context mContext;
 	// String[] mChildArr;// 子item标题数组

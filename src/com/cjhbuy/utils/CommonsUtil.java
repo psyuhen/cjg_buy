@@ -89,7 +89,7 @@ public class CommonsUtil {
 	 */
 	public static  int postage(Double money){
 		if (money<49) {
-			return 6;
+			return 0;
 		}
 		return 0;
 	}

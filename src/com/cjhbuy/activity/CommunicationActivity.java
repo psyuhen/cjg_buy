@@ -68,7 +68,7 @@ import de.greenrobot.event.EventBus;
  *
  */
 public class CommunicationActivity extends BaseActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CommunicationActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(CommunicationActivity.class);
 
 	private Button mBtnSend;
 	private TextView mBtnRcd;
@@ -113,12 +113,16 @@ public class CommunicationActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_communication);
-		// 启动activity时不自动弹出软键盘
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		initView();
-		initData();
-		
-		EventBus.getDefault().register(this);
+		try{
+			// 启动activity时不自动弹出软键盘
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+			initView();
+			initData();
+			
+			EventBus.getDefault().register(this);
+		}catch (Exception e) {
+			LOGGER.error(e.getMessage(),e);
+		}
 	}
 	
 	@Override
@@ -255,6 +259,7 @@ public class CommunicationActivity extends BaseActivity {
 					HashMap<String, Object> attributes = new HashMap<String, Object>();
 					attributes.put("audio_time", audio_time);
 					attributes.put("photo", photo);
+					attributes.put("file_name", text);
 					audioMessage.setAttrs(attributes);
 					audioMessage.setTimestamp(timestamp);
 					audioMessage.setFrom(user_mobile);
@@ -386,7 +391,7 @@ public class CommunicationActivity extends BaseActivity {
 	 */
 	protected boolean filterException(Exception e) {
 		if (e != null) {
-			CommonsUtil.showShortToast(getApplicationContext(), e.getMessage());
+			//CommonsUtil.showShortToast(getApplicationContext(), e.getMessage());
 			LOGGER.error(e.getMessage(), e);
 			return false;
 		} else {

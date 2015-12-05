@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.cjhbuy.auth.SessionManager;
+import com.cjhbuy.utils.LoadingDialog;
 
 @SuppressLint("NewApi")
 public class BaseActivity extends FragmentActivity implements OnClickListener {
@@ -39,6 +40,28 @@ public class BaseActivity extends FragmentActivity implements OnClickListener {
 		back.setOnClickListener(this);
 		right_imgbtn = (ImageButton) findViewById(R.id.right_imgbtn);
 		right_imgbtn.setOnClickListener(this);
+	}
+	
+	private LoadingDialog progressDialog;//进度条
+	/**
+	 * 加载开始
+	 */
+	public void startProgressDialog() {
+		if (progressDialog == null) {
+			progressDialog = new LoadingDialog(BaseActivity.this);
+			progressDialog.setCancelable(false);
+		}
+		progressDialog.show();
+	}
+
+	/**
+	 * 加载结束
+	 */
+	public void stopProgressDialog() {
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+			progressDialog = null;
+		}
 	}
 
 	@SuppressLint("NewApi")

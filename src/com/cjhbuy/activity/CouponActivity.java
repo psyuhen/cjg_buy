@@ -25,7 +25,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class CouponActivity extends BaseActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CouponActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(CouponActivity.class);
 
 	private ListView couponListView;
 	private List<CouponItem> couponList;

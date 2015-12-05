@@ -31,7 +31,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class MultipleItemAdapter extends BaseAdapter {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MultipleItemAdapter.class);
+	private Logger LOGGER = LoggerFactory.getLogger(MultipleItemAdapter.class);
 
 
 	public static interface IMsgViewType {
@@ -146,6 +146,9 @@ public class MultipleItemAdapter extends BaseAdapter {
 			String url = avFile.getUrl();
 			fileName = StringUtil.trimToEmpty(attrs.get("file_name"));
 			FileUtil.getRemoteFile(url, fileName);
+			
+			//为语音增加播放事件
+			viewHolder.tvContent.setOnClickListener(new PlayFileClick(isAudio, fileName));
 		}
 		
 		if(!isAudio){//文本的处理
@@ -165,7 +168,6 @@ public class MultipleItemAdapter extends BaseAdapter {
 			}
 		}
 		
-		viewHolder.tvContent.setOnClickListener(new PlayFileClick(isAudio, fileName));
 		viewHolder.tvUserName.setText("");
 		
 		return convertView;
@@ -211,7 +213,8 @@ public class MultipleItemAdapter extends BaseAdapter {
 			mMediaPlayer.start();
 			mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 				public void onCompletion(MediaPlayer mp) {
-
+					mMediaPlayer.stop();
+					mMediaPlayer.release();
 				}
 			});
 

@@ -25,7 +25,7 @@ import com.google.code.microlog4android.LoggerFactory;
 /**
  * HTTP 工具类
  * @author ps
- *
+ * 
  */
 public class HttpUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtil.class);
@@ -33,8 +33,13 @@ public class HttpUtil {
 //	public static final String IP = "192.168.1.103";
 	public static final String IP = "203.195.245.171";
 //	public static final String IP = "192.168.43.67";
-//	public static final String IP = "128.128.80.58";
+//	public static final String IP = "128.128.85.102";
 	public static final String BASE_URL = "http://"+ IP +":8001/sgams";
+	private static final int CONNECT_TIME_OUT = 10000;
+	
+	private HttpUtil() {
+	}
+	
 	
 	/**
 	 * 
@@ -50,7 +55,7 @@ public class HttpUtil {
 				try{
 					RestTemplate restTemplate = new RestTemplate();
 					SimpleClientHttpRequestFactory requestFactory = (SimpleClientHttpRequestFactory)restTemplate.getRequestFactory();
-					requestFactory.setConnectTimeout(300);
+					requestFactory.setConnectTimeout(CONNECT_TIME_OUT);
 					ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 					if(HttpStatus.OK.equals(response.getStatusCode())){
 						return response.getBody();
@@ -79,7 +84,7 @@ public class HttpUtil {
 			public byte[] call() throws Exception {
 				try{
 					HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-					factory.setConnectTimeout(300);
+					factory.setConnectTimeout(CONNECT_TIME_OUT);
 					RestTemplate restTemplate = new RestTemplate(factory);
 					restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());    
 					HttpHeaders headers = new HttpHeaders();
@@ -115,7 +120,7 @@ public class HttpUtil {
 				try{
 					RestTemplate restTemplate = new RestTemplate();
 					SimpleClientHttpRequestFactory requestFactory = (SimpleClientHttpRequestFactory)restTemplate.getRequestFactory();
-					requestFactory.setConnectTimeout(300);
+					requestFactory.setConnectTimeout(CONNECT_TIME_OUT);
 					ResponseEntity<String> response = restTemplate.postForEntity(url, params, String.class);
 					if(HttpStatus.OK.equals(response.getStatusCode())){
 						return response.getBody();
@@ -145,7 +150,7 @@ public class HttpUtil {
 				try{
 					RestTemplate restTemplate = new RestTemplate();
 					SimpleClientHttpRequestFactory requestFactory = (SimpleClientHttpRequestFactory)restTemplate.getRequestFactory();
-					requestFactory.setConnectTimeout(300);
+					requestFactory.setConnectTimeout(CONNECT_TIME_OUT);
 					ResponseEntity<String> response = restTemplate.postForEntity(url, params, String.class);
 					return response;
 				}catch (Exception e) {

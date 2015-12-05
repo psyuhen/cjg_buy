@@ -38,6 +38,8 @@
     <string name="setting_me_text">头像</string>
     <string name="setting_name_text">名字</string>
     <string name="setting_city_text">所在城市</string>
+    <string name="setting_qq_text">QQ</string>
+    <string name="setting_wechat_text">微信号</string>
     <string name="setting_card_text">关联卡号</string>
     <string name="setting_password_text">重置取现密码</string>
     <string name="setting_remind_text">提示音</string>
@@ -129,7 +131,8 @@
     <string name="submit_order_btn_text">完成</string>
     <string name="cart_text">购物车</string>
     <string name="goods_calculate_text">合计</string>
-    <string name="goods_calculate_bottom_text">购物满49元免费配送</string>
+    <!-- <string name="goods_calculate_bottom_text">购物满49元免费配送</string> -->
+    <string name="goods_calculate_bottom_text">免费配送</string>
     <string name="goods_calculate">￥：0</string>
     <!-- myorder -->
     <string name="myorder_top_tip_text">7月新款爆品，同城跨区域支持快递限时送达！</string>
@@ -242,6 +245,11 @@
     <string name="retrieve_pswd_new_pswd_text">新密码:</string>
     <string name="retrieve_pswd_new_pswd_edit_hint">请输入要设置的新密码</string>
     <string name="retrieve_pswd_confirm_btn">确认</string>
+    
+    <string name="setting_logout_btn">注销</string>
+    <string name="setting_exit_btn">退出</string>
+    
+    <string name="goods_view_build_text">商品详情还在建设中....</string>
     
     <!-- leancloud -->
     <string name="unspport_message_type">不支持的消息类型</string>

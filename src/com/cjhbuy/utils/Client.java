@@ -23,7 +23,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class Client {
-	private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
+	private Logger LOGGER = LoggerFactory.getLogger(Client.class);
 
 	//private String ip = "192.168.43.191";
 	private String ip = HttpUtil.IP;

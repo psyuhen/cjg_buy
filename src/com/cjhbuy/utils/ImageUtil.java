@@ -15,7 +15,7 @@ import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
 public class ImageUtil {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ImageUtil.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(ImageUtil.class);
 
 
 	/**

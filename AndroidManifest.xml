@@ -57,6 +57,7 @@
         <activity android:name="com.cjhbuy.activity.CartActivity" />
         <activity android:name="com.cjhbuy.activity.OrderSearchActivity" />
         <activity android:name="com.cjhbuy.activity.RetrievePswdActivity" />
+        <activity android:name="com.cjhbuy.activity.SettingActivity" />
         
         <!-- leancloud 相关类 -->
         <service android:name="com.avos.avoscloud.PushService"/>

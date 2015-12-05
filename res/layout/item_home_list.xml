@@ -5,7 +5,7 @@
     android:background="@drawable/kjlibrary_bg"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/top_ll"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/item_home_image_height"
@@ -15,29 +15,31 @@
 
         <ImageView
             android:id="@+id/item_home_image"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="@dimen/item_home_image_height"
-            android:layout_weight="7" />
+            android:layout_marginLeft="5.0dip"
+            android:layout_toLeftOf="@+id/item_home_buy_btn" />
 
         <View
             android:layout_width="3.0dip"
             android:layout_height="fill_parent"
             android:layout_marginBottom="10.0dip"
             android:layout_marginTop="10.0dip"
+            android:layout_toRightOf="@+id/item_home_image"
             android:background="@color/gray_bg" />
 
         <Button
             android:id="@+id/item_home_buy_btn"
             style="@style/white_normal_style"
-            android:layout_width="wrap_content"
+            android:layout_width="100.0dip"
             android:layout_height="40.0dip"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="20.0dip"
-            android:layout_marginRight="10.0dip"
-            android:layout_weight="3"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20.0dip"
+            android:layout_marginRight="20.0dip"
             android:background="@drawable/orange_btn"
             android:text="@string/item_home_buy_btn_text" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/center_ll"

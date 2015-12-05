@@ -11,7 +11,13 @@
     <ListView
         android:id="@+id/goodsViewListView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
     </ListView>
+
+    <TextView android:layout_width="match_parent" 
+        android:layout_height="match_parent"
+        android:text="@string/goods_view_build_text"
+        android:textSize="46px"/>
 
 </LinearLayout>

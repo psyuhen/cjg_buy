@@ -7,17 +7,21 @@ import android.os.Bundle;
 
 import com.cjhbuy.activity.R;
 
-
+/**
+ * 加载框
+ * @author pansen
+ *
+ */
 public class LoadingDialog extends ProgressDialog {
     private Context context = null;
 
     public LoadingDialog(Context context) {
-        super(context);
-        this.context = context;
+       this(context, 0);
     }
 
     public LoadingDialog(Context context, int theme) {
         super(context, theme);
+        this.context = context;
     }
 
     @Override

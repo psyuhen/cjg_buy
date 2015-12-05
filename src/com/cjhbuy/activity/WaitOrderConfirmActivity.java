@@ -72,6 +72,7 @@ public class WaitOrderConfirmActivity extends BaseActivity {
 			intent.putExtra("store_id", app.getStore_id());
 			intent.putExtra("store_name", app.getStore_name());
 			startActivity(intent);
+			WaitOrderConfirmActivity.this.finish();
 			break;
 		case R.id.confirm_order_btn:
 			finish();
@@ -85,6 +86,7 @@ public class WaitOrderConfirmActivity extends BaseActivity {
 			Intent intent2 = new Intent(WaitOrderConfirmActivity.this, CommunicationActivity.class);
 			intent2.putExtra("store_id", app.getStore_id());
 			startActivity(intent2);
+			WaitOrderConfirmActivity.this.finish();
 			break;
 		default:
 			break;

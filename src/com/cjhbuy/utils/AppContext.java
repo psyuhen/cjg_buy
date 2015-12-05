@@ -23,7 +23,7 @@ import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
 public class AppContext extends Application {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AppContext.class);
+	private Logger LOGGER = LoggerFactory.getLogger(AppContext.class);
 
 	private SharedPreferences preferences;
 	private List<CityItem> cities;

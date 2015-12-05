@@ -1,7 +1,11 @@
 package com.cjhbuy.activity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
@@ -30,7 +34,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class LoginActivity extends BaseActivity implements OnClickListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(LoginActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(LoginActivity.class);
 	private TextView login_register;
 	private TextView login_retrieve;
 	private Button login_btn;
@@ -182,30 +186,68 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		user.setPassword(password);
 		user.setUser_type("1");//买家
 		// 发送登录请求
-		try{
-			//先检查手机号是否存在
-			String url = HttpUtil.BASE_URL + "/user/isRegister.do?mobile="+mobile+"&user_type=1";
-			String json = HttpUtil.getRequest(url);
-			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "网络或者服务器异常");
-				sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
-				return ;
+		startProgressDialog();
+		new LoginTask(user).execute();
+	}
+	
+	private class LoginTask extends AsyncTask<Void, Void, Map<String, String>>{
+		
+		private User user;
+		
+		public LoginTask(User user) {
+			this.user = user;
+		}
+		@Override
+		protected Map<String, String> doInBackground(Void... params) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("status", "false");
+			try{
+				//先检查手机号是否存在
+				String url = HttpUtil.BASE_URL + "/user/isRegister.do?mobile="+user.getMobile()+"&user_type=1";
+				String json = HttpUtil.getRequest(url);
+				if(json == null){
+					map.put("errmsg", "网络或者服务器异常");
+					return map;
+				}
+				if("false".equals(json)){
+					map.put("errmsg", "手机号码不存在");
+					return map;
+				}
+				
+				url = HttpUtil.BASE_URL + "/user/login.do";
+				json = HttpUtil.postRequest(url, user);
+				if(json == null){
+					map.put("errmsg", "登录失败,用户密码错误或者网络异常");
+					return map;
+				}
+				
+				user = JsonUtil.parse2Object(json, User.class);
+				
+				map.put("status", "true");
+				map.put("errmsg", "登录成功");
+				return map;
+			}catch (Exception e) {
+				LOGGER.error(">>> 用户登录失败", e);
 			}
-			if("false".equals(json)){
-				CommonsUtil.showLongToast(getApplicationContext(), "手机号码不存在");
-				sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
-				return ;
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Map<String, String> result) {
+			super.onPostExecute(result);
+			stopProgressDialog();
+			
+			if(result == null){
+				CommonsUtil.showLongToast(getApplicationContext(), "用户登录失败");
+				return;
 			}
 			
-			url = HttpUtil.BASE_URL + "/user/login.do";
-			json = HttpUtil.postRequest(url, user);
-			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "登录失败,用户密码错误或者网络异常");
+			CommonsUtil.showLongToast(getApplicationContext(), result.get("errmsg"));
+			if("false".equals(result.get("status"))){
 				sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
-				return ;
+				return;
 			}
 			
-			user = JsonUtil.parse2Object(json, User.class);
 			sessionManager.createLoginSession(user);
 			
 			if("AddressActivity".equals(from)){
@@ -223,10 +265,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			}else{//默认都是跳转到首页的
 				startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 			}
-			finish();
-		}catch (Exception e) {
-			LOGGER.error(">>> 用户登录失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "用户登录失败");
+			LoginActivity.this.finish();
 		}
 	}
 }

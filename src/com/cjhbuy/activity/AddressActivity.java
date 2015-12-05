@@ -51,7 +51,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class AddressActivity extends BaseActivity implements OnWheelChangedListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AddressActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(AddressActivity.class);
 	// 所在省
 	protected String[] mProvinceDatas;
 	// key - 省 value - 市

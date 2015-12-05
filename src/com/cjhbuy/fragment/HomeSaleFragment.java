@@ -36,9 +36,13 @@ import com.cjhbuy.utils.JsonUtil;
 import com.cjhbuy.utils.PageUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
-//
+/**
+ * 首页的按销量、距离、人气类
+ * @author pansen
+ *
+ */
 public class HomeSaleFragment extends Fragment {
-	private static final Logger LOGGER = LoggerFactory.getLogger(HomeSaleFragment.class);
+	private Logger LOGGER = LoggerFactory.getLogger(HomeSaleFragment.class);
 
 	private KJListView kjListView;
 	private List<SellerItem> sellerlist;
@@ -48,6 +52,7 @@ public class HomeSaleFragment extends Fragment {
 	
 	private CommonAdapter<SellerItem> commonAdapter;
 	private int start = PageUtil.START;//分页的开始
+//	private boolean isLoadFreshList = false;
 	
 	public void setContext(Context context) {
 		this.context = context;
@@ -74,27 +79,43 @@ public class HomeSaleFragment extends Fragment {
 			Bundle savedInstanceState) {
 		
 		View contentView = inflater.inflate(R.layout.view_home_sale, container, false);
-		kjListView = (KJListView) contentView.findViewById(R.id.home_fragment_listview);
-		sellerlist = new ArrayList<SellerItem>();
-		commonAdapter = showAdapter();
-		kjListView.setAdapter(commonAdapter);
-		//上下拉刷新
-		kjListView.setPullLoadEnable(true);
-		kjListView.setKJListViewListener(new KJListViewListener() {
-			@Override
-			public void onRefresh() {
-				HomeSaleFragment.this.start = PageUtil.START;
-				queryData(PageUtil.START);
-			}
+		try{
+			kjListView = (KJListView) contentView.findViewById(R.id.home_fragment_listview);
+			sellerlist = new ArrayList<SellerItem>();
+			commonAdapter = showAdapter();
+			kjListView.setAdapter(commonAdapter);
+			//上下拉刷新
+			kjListView.setPullLoadEnable(true);
+			kjListView.setKJListViewListener(new KJListViewListener() {
+				@Override
+				public void onRefresh() {
+					HomeSaleFragment.this.start = PageUtil.START;
+					queryData(PageUtil.START);
+				}
 
-			@Override
-			public void onLoadMore() {
-				queryData(HomeSaleFragment.this.start);
-			}
-		});
+				@Override
+				public void onLoadMore() {
+					queryData(HomeSaleFragment.this.start);
+				}
+			});
+			
+			initData();
+		}catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 		
-		initData();
 		return contentView;
+	}
+	
+	private void loadProgress(boolean isStart){
+		if(context instanceof HomeActivity){
+			HomeActivity activity = (HomeActivity)context;
+			if(isStart){
+				activity.startProgressDialog();
+			}else{
+				activity.stopProgressDialog();
+			}
+		}
 	}
 
 	private void initData() {
@@ -157,19 +178,16 @@ public class HomeSaleFragment extends Fragment {
 	
 	//增加商家访问量
 	private class addStoreVisitTask extends AsyncTask<Integer, Void, Void>{
+		private int user_id = 0;
+		public addStoreVisitTask(int user_id) {
+			this.user_id = user_id;
+		}
 		@Override
 		protected Void doInBackground(Integer... params) {
 			try {
 				int store_id = params[0];
-				int user_id = 0;
-				if(context instanceof HomeActivity){
-					HomeActivity homeActivity = (HomeActivity)context;
-					
-					SessionManager sessionManager = homeActivity.sessionManager;
-					if(sessionManager.isLoggedIn()){
-						user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
-					}
-				}
+				int user_id = this.user_id;
+				
 				
 				StoreVisitHist storeVisitHist = new StoreVisitHist();
 				storeVisitHist.setStore_id(store_id);
@@ -186,27 +204,57 @@ public class HomeSaleFragment extends Fragment {
 	
 	//增加商家访客记录
 	private void addStoreVisit(int store_id){
-		new addStoreVisitTask().execute(store_id);
+		int user_id = 0;
+		if(context instanceof HomeActivity){
+			HomeActivity homeActivity = (HomeActivity)context;
+			
+			SessionManager sessionManager = homeActivity.sessionManager;
+			if(sessionManager.isLoggedIn()){
+				user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+			}
+		}
+		new addStoreVisitTask(user_id).execute(store_id);
 	}
 	
 	//查询商家
-	private class queryStoreTask extends AsyncTask<Integer, Void, Void>{
+	private class queryStoreTask extends AsyncTask<Integer, Void, List<Store>>{
+		private int start;
 		@Override
-		protected Void doInBackground(Integer... params) {
+		protected List<Store> doInBackground(Integer... params) {
 			int start = params[0];
+			this.start = start;
 
-			List<Store> list = null;
-			if(HomeSaleFragment.this.type == 0){
-				String url = HttpUtil.BASE_URL + "/store/queryStoreBySalesVolumePage.do?start="+start+"&limit="+PageUtil.LIMIT;
-				list = queryStoreBy(url);
-			}else if(HomeSaleFragment.this.type == 1){
+			List<Store> list = new ArrayList<Store>();
+			try{
+				if(HomeSaleFragment.this.type == 0){
+					String url = HttpUtil.BASE_URL + "/store/queryStoreBySalesVolumePage.do?start="+start+"&limit="+PageUtil.LIMIT;
+					list = queryStoreBy(url);
+				}else if(HomeSaleFragment.this.type == 1){
+					
+				}else if(HomeSaleFragment.this.type == 2){
+					String url = HttpUtil.BASE_URL + "/store/queryStoreByVisitCountPage.do?start="+start+"&limit="+PageUtil.LIMIT;
+					list = queryStoreBy(url);
+				}
 				
-			}else if(HomeSaleFragment.this.type == 2){
-				String url = HttpUtil.BASE_URL + "/store/queryStoreByFavoriteCountPage.do?start="+start+"&limit="+PageUtil.LIMIT;
-				list = queryStoreBy(url);
+				if(list == null){
+					list = new ArrayList<Store>();
+				}
+				
+				return list;
+			}catch (Exception e) {
+				LOGGER.error(e.getMessage(), e);
 			}
-			if(list == null){
-				list = new ArrayList<Store>();
+			
+			return list;
+		}
+		
+		@Override
+		protected void onPostExecute(List<Store> result) {
+			super.onPostExecute(result);
+			loadProgress(false);
+			
+			if(result == null){
+				result = new ArrayList<Store>();
 			}
 			
 			//默认开始的时候，先清空列表数据
@@ -214,7 +262,7 @@ public class HomeSaleFragment extends Fragment {
 				sellerlist.clear();
 			}
 			
-			for (Store store : list) {
+			for (Store store : result) {
 				SellerItem sellerItem = new SellerItem();
 				sellerItem.setId(store.getStore_id());
 				sellerItem.setTitle(store.getName());
@@ -233,13 +281,6 @@ public class HomeSaleFragment extends Fragment {
 			}
 			
 			HomeSaleFragment.this.start += PageUtil.LIMIT;//每次改变start的值 
-			
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
 			
 			commonAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
@@ -266,6 +307,7 @@ public class HomeSaleFragment extends Fragment {
 	
 	//查询商家数据
 	private void queryData(int start){
+		loadProgress(true);
 		new queryStoreTask().execute(start);
 	}
 }

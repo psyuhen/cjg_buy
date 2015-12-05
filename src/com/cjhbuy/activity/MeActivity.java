@@ -22,8 +22,8 @@ public class MeActivity extends BaseActivity {
 	private Button me_login_btn;
 	private RelativeLayout me_order_rl;
 	private RelativeLayout me_address_rl;
-	private RelativeLayout me_coupon_rl;
-	private RelativeLayout me_share_rl;
+	private RelativeLayout me_coupon_rl;//我的优惠券
+	private RelativeLayout me_share_rl;//分享超家伙
 	private RelativeLayout me_remind_ll;
 	private RelativeLayout me_customerservice_rl;
 	private RelativeLayout me_aboutus_rl;
@@ -70,7 +70,12 @@ public class MeActivity extends BaseActivity {
 		//登录信息
 		goods_top_rl = (RelativeLayout) findViewById(R.id.goods_top_rl);
 		order_top_rl = (RelativeLayout) findViewById(R.id.order_top_rl);
+		order_top_rl.setOnClickListener(this);
 		order_title = (TextView) findViewById(R.id.order_title);
+		
+		//先隐藏我的优惠券和分享超家伙
+		me_coupon_rl.setVisibility(View.GONE);
+		me_share_rl.setVisibility(View.GONE);
 	}
 	
 	public void initData(){
@@ -89,6 +94,9 @@ public class MeActivity extends BaseActivity {
 	public void onClick(View v) {
 		
 		switch (v.getId()) {
+		case R.id.order_top_rl:
+			startActivity(new Intent(MeActivity.this, SettingActivity.class));
+			break;
 		case R.id.me_login_btn:
 			startActivity(new Intent(MeActivity.this, LoginActivity.class));
 			break;

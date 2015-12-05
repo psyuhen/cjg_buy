@@ -1,12 +1,5 @@
 package com.cjhbuy.fragment;
 
-import com.cjhbuy.activity.AddressActivity;
-import com.cjhbuy.activity.ChatActivity;
-import com.cjhbuy.activity.HomeActivity;
-import com.cjhbuy.activity.LoginActivity;
-import com.cjhbuy.activity.MainActivity;
-import com.cjhbuy.activity.R;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +10,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.cjhbuy.activity.AddressActivity;
+import com.cjhbuy.activity.ChatActivity;
+import com.cjhbuy.activity.HomeActivity;
+import com.cjhbuy.activity.LoginActivity;
+import com.cjhbuy.activity.R;
 
 public class MeFragment extends Fragment implements OnClickListener {
 	private Button me_login_btn;

@@ -16,7 +16,7 @@ import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
 public class EvaluateActivity extends BaseActivity{
-	private static final Logger LOGGER = LoggerFactory.getLogger(EvaluateActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(EvaluateActivity.class);
 
 	private RatingBar evaluate_ratingBar;
 	private EditText evaluate_edit;

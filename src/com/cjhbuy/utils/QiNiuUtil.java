@@ -21,7 +21,7 @@ import com.qiniu.android.storage.UploadManager;
  *
  */
 public class QiNiuUtil {
-	private static final Logger LOGGER = LoggerFactory.getLogger(QiNiuUtil.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(QiNiuUtil.class);
 	/**
 	 * 获取7牛上的图片并转换为bitmap
 	 * @param url

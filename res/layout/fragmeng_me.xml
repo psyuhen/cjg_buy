@@ -110,6 +110,7 @@
                         android:visibility="gone" />
                 </RelativeLayout>
 
+                <!-- 箭头 -->
                 <ImageView
                     android:id="@+id/order_top_right_image"
                     android:layout_width="30.0dip"
@@ -117,7 +118,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10.0dip"
-                    android:background="@drawable/arrow_right" android:visibility="gone" />
+                    android:background="@drawable/arrow_right" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -202,8 +203,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/goods_bottom_ll1"
-                    android:layout_marginTop="30.0dip"
-                    android:orientation="vertical" >
+                    android:orientation="vertical"  android:visibility="gone">
 
                     <RelativeLayout
                         android:id="@+id/me_coupon_rl"
@@ -267,7 +267,6 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/goods_bottom_ll2"
-                    android:layout_marginTop="30.0dip"
                     android:orientation="vertical" >
 
                     <RelativeLayout

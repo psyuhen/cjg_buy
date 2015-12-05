@@ -27,7 +27,7 @@ import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
 public class MyOrderGoodsAdapter extends BaseAdapter {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MyOrderGoodsAdapter.class);
+	private Logger LOGGER = LoggerFactory.getLogger(MyOrderGoodsAdapter.class);
 
 	private List<GoodsItem> goodslist;
 

@@ -1,6 +1,7 @@
 package com.cjhbuy.activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,7 +20,7 @@ import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
 public class RegisteActivity extends BaseActivity{
-	private static final Logger LOGGER = LoggerFactory.getLogger(RegisteActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(RegisteActivity.class);
 	private EditText mMobileView;
 	private EditText mPasswordView;
 	private EditText mComfirmPasswordView;
@@ -142,41 +143,53 @@ public class RegisteActivity extends BaseActivity{
 			String tmpPwd = password;
 			password = SecureUtil.shaEncode(password);
 			//显示进度条，并发送登录请求，准备登录
-			String url1 = HttpUtil.BASE_URL + "/user/register.do";
-//				String url2 = HttpUtil.BASE_URL + "/user/login.do";
 			
 			User user = new User();
 			user.setName(mobile);
 			user.setMobile(mobile);
 			user.setPassword(password);
 			user.setUser_type("1");//买家
+			
+			startProgressDialog();
+			new RegisteTask(user, tmpPwd).execute();
+		}
+	}
+	private class RegisteTask extends AsyncTask<Void, Void, String>{
+		private User user;
+		private String tmpPwd;
+		public RegisteTask(User user, String tmpPwd) {
+			this.user = user;
+			this.tmpPwd = tmpPwd;
+		}
+		
+		@Override
+		protected String doInBackground(Void... params) {
+			String url1 = HttpUtil.BASE_URL + "/user/register.do";
 			// 发送登录请求
 			try{
 				String request = HttpUtil.postRequest(url1, user);
-				if(request == null){
-					CommonsUtil.showLongToast(getApplicationContext(), "网络或者服务器异常!");
-					return;
-				}
-				//注册成功后，登录
-				/*String request2 = HttpUtil.postRequest(url2, user);
-				if(request2 == null){
-					Log.e(TAG, "手机号码注册成功，但登录失败!");
-					CommonsUtil.showLongToast(getApplicationContext(), "手机号码注册成功，但登录失败!");
-					return;
-				}*/
 				
-				//user = JsonUtil.parse2Object(request2, User.class);
-				CommonsUtil.showLongToast(getApplicationContext(), request);
-				if("注册成功!".equals(request)){
+				return request;
+			}catch (Exception e) {
+				LOGGER.error(">>> 注册失败",e);
+				return "注册失败";
+			}
+		}
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			stopProgressDialog();
+			if(result == null){
+				CommonsUtil.showLongToast(getApplicationContext(), "网络或者服务器异常!");
+			}else{
+				CommonsUtil.showLongToast(getApplicationContext(), result);
+				if("注册成功!".equals(result)){
 					Intent intent = new Intent(RegisteActivity.this, LoginActivity.class);
-					intent.putExtra("mobile", mobile);
+					intent.putExtra("mobile", user.getMobile());
 					intent.putExtra("password", tmpPwd);
 					startActivity(intent);
 					finish();
 				}
-			}catch (Exception e) {
-				LOGGER.error(">>> 注册失败",e);
-				CommonsUtil.showLongToast(getApplicationContext(), "注册失败");
 			}
 		}
 	}

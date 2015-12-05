@@ -30,7 +30,6 @@ import com.cjhbuy.bean.Order;
 import com.cjhbuy.bean.OrderDetail;
 import com.cjhbuy.bean.OrderItem;
 import com.cjhbuy.common.Constants;
-import com.cjhbuy.utils.CommonsUtil;
 import com.cjhbuy.utils.DateUtil;
 import com.cjhbuy.utils.FileUtil;
 import com.cjhbuy.utils.HttpUtil;
@@ -45,7 +44,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class OrderInFragment extends Fragment {
-	private static final Logger LOGGER = LoggerFactory.getLogger(OrderInFragment.class);
+	private Logger LOGGER = LoggerFactory.getLogger(OrderInFragment.class);
 
 	private KJListView kjListView;
 	private OrderItemAdapter orderItemAdapter;
@@ -73,53 +72,57 @@ public class OrderInFragment extends Fragment {
 		
 		View contentView = inflater.inflate(R.layout.view_in_order, container,false);
 		
-		activity = getActivity();
+		try{
+			activity = getActivity();
 
-		kjListView = (KJListView) contentView.findViewById(R.id.in_order_listview);
-		orderlist = new ArrayList<OrderItem>();
-		orderItemAdapter = new OrderItemAdapter(getActivity(), orderlist);
-		// initEvent();
-		kjListView.setAdapter(orderItemAdapter);
-		kjListView.setPullRefreshEnable(true);
-		kjListView.setPullLoadEnable(true);
-		kjListView.setLongClickable(true);
-		kjListView.setSelected(true);
-		kjListView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
-				OrderItem item = (OrderItem)parent.getItemAtPosition(position);
-				Intent intent = new Intent(getActivity(), OrderDetailsActivity.class);
-				intent.putExtra("order_id", item.getSerialnum());
-				startActivity(intent);
-			}
-		});
-		kjListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+			kjListView = (KJListView) contentView.findViewById(R.id.in_order_listview);
+			orderlist = new ArrayList<OrderItem>();
+			orderItemAdapter = new OrderItemAdapter(getActivity(), orderlist);
+			// initEvent();
+			kjListView.setAdapter(orderItemAdapter);
+			kjListView.setPullRefreshEnable(true);
+			kjListView.setPullLoadEnable(true);
+			kjListView.setLongClickable(true);
+			kjListView.setSelected(true);
+			kjListView.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position,
+						long id) {
+					OrderItem item = (OrderItem)parent.getItemAtPosition(position);
+					Intent intent = new Intent(getActivity(), OrderDetailsActivity.class);
+					intent.putExtra("order_id", item.getSerialnum());
+					startActivity(intent);
+				}
+			});
+			kjListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-			@Override
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				
-				Toast.makeText(activity, "", Toast.LENGTH_SHORT).show();
-				return false;
-			}
-		});
-		//上下拉刷新
-		kjListView.setPullLoadEnable(true);
-		kjListView.setKJListViewListener(new KJListViewListener() {
-			@Override
-			public void onRefresh() {
-				OrderInFragment.this.start = PageUtil.START;
-				getInOrderInfo(PageUtil.START);
-			}
+				@Override
+				public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					
+					Toast.makeText(activity, "", Toast.LENGTH_SHORT).show();
+					return false;
+				}
+			});
+			//上下拉刷新
+			kjListView.setPullLoadEnable(true);
+			kjListView.setKJListViewListener(new KJListViewListener() {
+				@Override
+				public void onRefresh() {
+					OrderInFragment.this.start = PageUtil.START;
+					getInOrderInfo(PageUtil.START);
+				}
 
-			@Override
-			public void onLoadMore() {
-				getInOrderInfo(OrderInFragment.this.start);
-			}
-		});
+				@Override
+				public void onLoadMore() {
+					getInOrderInfo(OrderInFragment.this.start);
+				}
+			});
 
-		initData();
+			initData();
+		}catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 		return contentView;
 	}
 
@@ -129,26 +132,22 @@ public class OrderInFragment extends Fragment {
 	
 	
 	//查询订单
-	private class queryOrderInfoTask extends AsyncTask<Integer, Void, Void>{
+	private class queryOrderInfoTask extends AsyncTask<Integer, Void, List<OrderItem>>{
+		private int user_id;
+		private int start;
+		public queryOrderInfoTask(int user_id) {
+			this.user_id = user_id;
+		}
 		@Override
-		protected Void doInBackground(Integer... params) {
+		protected List<OrderItem> doInBackground(Integer... params) {
 			int start = params[0];
-			int user_id = 0;
-			if(context instanceof OrderActivity){
-				OrderActivity activity = (OrderActivity)context;
-				if(activity.sessionManager.isLoggedIn()){
-					user_id = activity.sessionManager.getUserId();
-				}
-			}
-			/*else if(context instanceof MainActivity){
-				MainActivity activity = (MainActivity)context;
-				user = activity.sessionManager.getUserDetails();
-			}*/
+			this.start = start;
+			int user_id = this.user_id;
+			
+			List<OrderItem> tmpList = new ArrayList<OrderItem>();
 			
 			if(user_id == 0){
-//				CommonsUtil.showLongToast(getActivity(), "请先登录");
-//				start2Login();
-				return null;
+				return tmpList;
 			}
 			
 			String url = HttpUtil.BASE_URL + "/order/getInOrderInfoByPage.do?start="+start+"&limit="+PageUtil.LIMIT;
@@ -158,24 +157,18 @@ public class OrderInFragment extends Fragment {
 			try {
 				String listJson = HttpUtil.postRequest(url, order1);
 				if(listJson == null){
-					CommonsUtil.showLongToast(getActivity(), "查询订单列表失败");
-					return null;
+					return tmpList;
 				}
 				
 				List<Order> list = JsonUtil.parse2ListOrder(listJson);
 				if(list == null){
 					LOGGER.warn("转换订单列表信息失败");
-					return null;
+					return tmpList;
 				}
 				
 				int length = list.size();
 				if(length == 0){
-					return null;
-				}
-				
-				//默认开始的时候，先清空列表数据
-				if(start == PageUtil.START){
-					orderlist.clear();
+					return tmpList;
 				}
 				
 				for (int i = 0; i < length; i++) {
@@ -220,31 +213,57 @@ public class OrderInFragment extends Fragment {
 						}
 					}
 					
-					orderlist.add(orderItem);
+					tmpList.add(orderItem);
 				}
-				
-				OrderInFragment.this.start += PageUtil.LIMIT;//每次改变start的值 
 				
 			} catch (Exception e) {
 				LOGGER.error("查询订单列表失败", e);
-				CommonsUtil.showLongToast(getActivity(), "查询订单列表失败");
 			}
 			
-			return null;
+			return tmpList;
 		}
 		
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(List<OrderItem> result) {
 			super.onPostExecute(result);
+			loadProgress(false);
 			
+			//默认开始的时候，先清空列表数据
+			if(start == PageUtil.START){
+				orderlist.clear();
+			}
+			
+			orderlist.addAll(result);
+			
+			OrderInFragment.this.start += PageUtil.LIMIT;//每次改变start的值 
 			orderItemAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
 		}
 		
 	}
+	
+	private void loadProgress(boolean isStart){
+		if(context instanceof OrderActivity){
+			OrderActivity activity = (OrderActivity)context;
+			if(isStart){
+				activity.startProgressDialog();
+			}else{
+				activity.stopProgressDialog();
+			}
+		}
+	}
+	
 	//查询订单
 	private void getInOrderInfo(int start){
-		new queryOrderInfoTask().execute(start);
+		loadProgress(true);
+		int user_id = 0;
+		if(context instanceof OrderActivity){
+			OrderActivity activity = (OrderActivity)context;
+			if(activity.sessionManager.isLoggedIn()){
+				user_id = activity.sessionManager.getUserId();
+			}
+		}
+		new queryOrderInfoTask(user_id).execute(start);
 	}
 	
 	@Override

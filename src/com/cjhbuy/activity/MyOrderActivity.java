@@ -41,6 +41,7 @@ import com.cjhbuy.bean.AddressItem;
 import com.cjhbuy.bean.Coupon;
 import com.cjhbuy.bean.CouponItem;
 import com.cjhbuy.bean.GoodsItem;
+import com.cjhbuy.bean.MerchCar;
 import com.cjhbuy.bean.Order;
 import com.cjhbuy.bean.OrderDetail;
 import com.cjhbuy.bean.ResponseInfo;
@@ -60,7 +61,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class MyOrderActivity extends BaseActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MyOrderActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(MyOrderActivity.class);
 
 	// 订单列表
 	private ListView myorder_cart_listview;
@@ -167,8 +168,12 @@ public class MyOrderActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_myorder);
-		initView();
-		initData();
+		try{
+			initView();
+			initData();
+		}catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 	}
 
 	private void initData() {
@@ -183,9 +188,9 @@ public class MyOrderActivity extends BaseActivity {
 		String store_name = intent.getStringExtra("store_name");
 		goods_myorder_shop_name.setText(store_name);
 		
-		new queryAddressTask().execute();
+		queryAddress();
 		
-		new queryCouponTask().execute();
+		queryCoupon();
 		
 		// 计算金额
 		initMoney();
@@ -214,9 +219,9 @@ public class MyOrderActivity extends BaseActivity {
 		myorder_goods_num.setText("共" + allnum + "件商品");//共多少商品
 		// myorder_service_money.setText("￥ 0");
 		if (postage > 0) {
-			money_count.setText("￥" + money + "+" + postage);
+			money_count.setText("￥" + StringUtil.format2string(money) + "+" + postage);
 		} else {
-			money_count.setText("￥" + money);
+			money_count.setText("￥" + StringUtil.format2string(money));
 		}
 	}
 
@@ -267,6 +272,7 @@ public class MyOrderActivity extends BaseActivity {
 
 		//邮费
 		my_order_delivery_money = (TextView) footView.findViewById(R.id.my_order_delivery_money);
+		my_order_delivery_money.setVisibility(View.GONE);//一句话，先隐藏了
 		//优惠金额
 		myorder_favourable_money = (TextView) footView.findViewById(R.id.myorder_favourable_money);
 		//商品数量
@@ -285,9 +291,9 @@ public class MyOrderActivity extends BaseActivity {
 				app.getCartGoodLists(), money_count, myorder_goods_num,
 				my_order_delivery_money, myorder_favourable_money);
 		// myorder_cart_listview.setAdapter(showAdapter());
-		myorder_cart_listview.setAdapter(adapter);
 		myorder_cart_listview.addHeaderView(headView);
 		myorder_cart_listview.addFooterView(footView);
+		myorder_cart_listview.setAdapter(adapter);
 		
 		couponslist = new ArrayList<CouponItem>();
 	}
@@ -442,6 +448,11 @@ public class MyOrderActivity extends BaseActivity {
 		};
 	}
 	
+	private void queryAddress(){
+		startProgressDialog();
+		new queryAddressTask().execute();
+	}
+	
 	//查询收货地址的异步操作
 	private class queryAddressTask extends AsyncTask<Void, Void, List<AddressItem>>{
 		@Override
@@ -457,7 +468,6 @@ public class MyOrderActivity extends BaseActivity {
 				return list;
 			} catch (Exception e) {
 				LOGGER.error("查询常用地址失败", e);
-				CommonsUtil.showLongToast(getApplicationContext(), "查询常用地址失败");
 			}
 			return null;
 		}
@@ -465,7 +475,9 @@ public class MyOrderActivity extends BaseActivity {
 		@Override
 		protected void onPostExecute(List<AddressItem> list) {
 			super.onPostExecute(list);
+			stopProgressDialog();
 			if(list == null){
+				CommonsUtil.showLongToast(getApplicationContext(), "查询常用地址失败");
 				return;
 			}
 			
@@ -482,16 +494,25 @@ public class MyOrderActivity extends BaseActivity {
 		}
 	}
 	
+	private void queryCoupon(){
+		startProgressDialog();
+		List<GoodsItem> cartGoodLists = app.getCartGoodLists();
+		if(cartGoodLists == null || cartGoodLists.isEmpty()){
+			return ;
+		}
+		int store_id = cartGoodLists.get(0).getStore_id();
+		new queryCouponTask(store_id).execute();
+	}
+	
 	//查询优惠券
 	private class queryCouponTask extends AsyncTask<Void, Void, List<Coupon>>{
+		private int store_id;
+		public queryCouponTask(int store_id) {
+			this.store_id = store_id;
+		}
 		@Override
 		protected List<Coupon> doInBackground(Void... params) {
-			List<GoodsItem> cartGoodLists = app.getCartGoodLists();
-			if(cartGoodLists == null || cartGoodLists.isEmpty()){
-				return null;
-			}
-			
-			int store_id = cartGoodLists.get(0).getStore_id();
+			int store_id = this.store_id;
 			int user_id = sessionManager.getUserId();
 			
 			String url = HttpUtil.BASE_URL + "/coupon/queryByCouponUserId.do";
@@ -510,7 +531,6 @@ public class MyOrderActivity extends BaseActivity {
 				return list;
 			} catch (Exception e) {
 				LOGGER.error("查询优惠券信息失败", e);
-				CommonsUtil.showLongToast(getApplicationContext(), "查询优惠券信息失败");
 			}
 			return null;
 		}
@@ -519,6 +539,7 @@ public class MyOrderActivity extends BaseActivity {
 		protected void onPostExecute(List<Coupon> list) {
 			super.onPostExecute(list);
 			if(list == null){
+				CommonsUtil.showLongToast(getApplicationContext(), "查询优惠券信息失败");
 				return;
 			}
 			int length = list.size();
@@ -617,7 +638,7 @@ public class MyOrderActivity extends BaseActivity {
 		order.setSeller_del("0");//默认未删除
 		order.setBuyer_score("0");//默认未评分
 		order.setSeller_score("0");//默认未评分
-		order.setStatus("0");//买方待付款
+		order.setStatus("0");//买方待付款,买家下单
 		
 		//如果有多个商家的商品，将拆分订单。
 		List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
@@ -635,8 +656,9 @@ public class MyOrderActivity extends BaseActivity {
 		
 		//还需要计算价格呢
 		
-		
+		startProgressDialog();
 		createOrder(order);
+		stopProgressDialog();
 	}
 	
 	/**
@@ -669,8 +691,8 @@ public class MyOrderActivity extends BaseActivity {
 				intent.setClass(MyOrderActivity.this, WaitOrderConfirmActivity.class);
 				startActivity(intent);
 				
-				//TODO 订单成功后，删除对应购物车里面的商品
-				
+				//订单成功后，删除对应购物车里面的商品
+				deleteMerchCar();
 				finish();
 			}
 			
@@ -678,6 +700,39 @@ public class MyOrderActivity extends BaseActivity {
 		} catch (Exception e) {
 			LOGGER.error("生成订单失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "生成订单失败");
+		}
+	}
+	
+	private void deleteMerchCar(){
+		startProgressDialog();
+		int user_id = sessionManager.getUserId();
+		new doMerchCarTask(user_id).execute();
+	}
+	
+	//根据user_id删除购物车信息
+	private class doMerchCarTask extends AsyncTask<Integer, Void, Void>{
+		private int user_id;
+		public doMerchCarTask(int user_id) {
+			this.user_id = user_id;
+		}
+		@Override
+		protected Void doInBackground(Integer... params) {
+			String url = HttpUtil.BASE_URL + "/merchcar/deleteMerchCarBy.do";
+			MerchCar merchCar = new MerchCar();
+			
+			try {
+				merchCar.setUser_id(user_id);
+				
+				HttpUtil.postRequest(url, merchCar);
+			} catch (Exception e) {
+				LOGGER.error(">>> 根据user_id["+user_id+"]删除购物车信息",e);
+			}
+			return null;
+		}
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			stopProgressDialog();
 		}
 	}
 	
